@@ -2,7 +2,7 @@
 
 A browser-based virtual chemistry laboratory for students from Class 9 through Postgraduate level. No installations, no dependencies — open `index.html` and it works.
 
-**[Live Demo](https://YOUR-USERNAME.github.io/YOUR-REPO-NAME)**
+**[Live Demo](https://sdeepak-dev.github.io/vchemlab)**
 
 ---
 
@@ -78,4 +78,4 @@ Single-file architecture. Everything lives in `index.html` — styles, scripts, 
 
 S Deepak — B.Sc. Computer Science, VIT Vellore
 
-[GitHub](https://github.com/YOUR-USERNAME) · [LinkedIn](https://linkedin.com/in/YOUR-PROFILE)
+[GitHub](https://github.com/sdeepak-dev) · [LinkedIn](https://www.linkedin.com/in/deepak-s-a39147403)
