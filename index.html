@@ -125,9 +125,55 @@ body{zoom:1.1;}
   gap: 3rem;
   text-align: left;
 }
-.hero-eyebrow{
-  justify-content:flex-start;
-}.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.25rem}
+/* Hero Layout */
+.hero-left{flex:1;max-width:580px;animation:fadeUp .7s ease both}
+.hero-right{flex:0 0 400px;display:flex;align-items:center;justify-content:center;animation:fadeUp .7s .15s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+/* Eyebrow Badge */
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:var(--accent-glow);border:1px solid rgba(59,130,246,.3);border-radius:var(--radius-pill);padding:.28rem .9rem .28rem .55rem;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:1.25rem}
+.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+/* Lab Visual */
+.lab-visual-wrap{width:100%;max-width:400px;aspect-ratio:1;filter:drop-shadow(0 8px 40px rgba(59,130,246,.22))}
+.lab-visual-wrap svg{width:100%;height:100%}
+.e1,.e2,.e3{transform-origin:200px 200px}
+.e1{animation:orbit 3s linear infinite}
+.e2{animation:orbit 4.5s linear infinite;animation-delay:-1.5s}
+.e3{animation:orbit 3.8s linear infinite;animation-delay:-2.53s}
+@keyframes orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.el-float{animation:elFloat 4s ease-in-out infinite;animation-delay:var(--fd,0s)}
+@keyframes elFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+/* Stats Bar */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:3rem}
+.stat-item{background:var(--bg-card);padding:1.4rem 1rem;text-align:center;transition:background .2s}
+.stat-item:hover{background:var(--bg-card2)}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}
+.stat-lbl{font-size:.73rem;color:var(--text-soft);font-weight:500;text-transform:uppercase;letter-spacing:.07em}
+/* How It Works */
+.how-section{padding:1.5rem 0 2.5rem}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-top:2rem}
+.how-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 1.5rem;position:relative;overflow:hidden;transition:all .25s}
+.how-card:hover{border-color:var(--border-s);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.how-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--sc)}
+.how-step{width:34px;height:34px;border-radius:50%;background:var(--sc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;margin-bottom:1rem}
+.how-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.how-card p{font-size:.82rem;color:var(--text-soft);line-height:1.55}
+/* Scroll Reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.3s}.rd4{transition-delay:.4s}
+/* Footer */
+.site-footer{background:var(--bg-card);border-top:1px solid var(--border);padding:2rem 1.5rem;margin-top:2rem;text-align:center}
+.footer-inner{max-width:var(--max-w);margin:0 auto}
+.footer-logo{font-size:1.05rem;font-weight:700;margin-bottom:.75rem}
+.footer-logo strong{color:var(--accent)}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:.75rem}
+.footer-links a{font-size:.83rem;color:var(--text-soft);cursor:pointer;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-size:.75rem;color:var(--text-muted)}
+.navbar.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.18)}
+@media(max-width:768px){.hero-right{display:none}.stats-bar{grid-template-columns:repeat(2,1fr)}}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.25rem}
 .hero h1 span{color:var(--accent)}
 .hero p{
   margin-left:0;
@@ -478,8 +524,8 @@ body{zoom:1.1;}
   <div class="hero">
     <div class="hero-left">
     <div class="hero-eyebrow">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-      Virtual Laboratory Experience
+      <span class="eyebrow-dot"></span>
+      🔬 Virtual Laboratory Experience
     </div>
     <h1>Explore Chemistry<br><span>Through Virtual Experiments</span></h1>
     <p>A comprehensive virtual lab platform with 40 guided experiments, interactive apparatus guides, and per-experiment quizzes — designed for students from Class 9 to Postgraduate level.</p>
@@ -495,39 +541,87 @@ body{zoom:1.1;}
     </div>
   </div>
   <div class="hero-right">
-    <div class="lab-visual"></div>
+    <div class="lab-visual-wrap">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(59,130,246,0.18)"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="180" fill="url(#coreGlow)"/>
+        <ellipse cx="200" cy="200" rx="150" ry="52" fill="none" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+        <ellipse cx="200" cy="200" rx="150" ry="52" fill="none" stroke="rgba(6,182,212,0.2)" stroke-width="1.5" transform="rotate(60 200 200)"/>
+        <ellipse cx="200" cy="200" rx="150" ry="52" fill="none" stroke="rgba(168,85,247,0.2)" stroke-width="1.5" transform="rotate(120 200 200)"/>
+        <circle cx="200" cy="200" r="38" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="2"/>
+        <circle cx="200" cy="200" r="27" fill="#3b82f6"/>
+        <text x="200" y="205" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Outfit,sans-serif">H₂O</text>
+        <g class="e1"><circle cx="350" cy="200" r="11" fill="#3b82f6" opacity="0.9"/><circle cx="350" cy="200" r="6" fill="#93c5fd"/></g>
+        <g class="e2"><circle cx="350" cy="200" r="10" fill="#06b6d4" opacity="0.9"/><circle cx="350" cy="200" r="5.5" fill="#a5f3fc"/></g>
+        <g class="e3"><circle cx="350" cy="200" r="9" fill="#a855f7" opacity="0.9"/><circle cx="350" cy="200" r="5" fill="#d8b4fe"/></g>
+        <g class="el-float" style="--fd:0s">
+          <circle cx="68" cy="82" r="32" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+          <text x="68" y="78" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="800" font-family="Outfit,sans-serif">Na</text>
+          <text x="68" y="94" text-anchor="middle" fill="#3b82f6" font-size="9" opacity="0.7" font-family="Outfit,sans-serif">Sodium · 11</text>
+        </g>
+        <g class="el-float" style="--fd:-1s">
+          <circle cx="334" cy="80" r="30" fill="rgba(168,85,247,0.1)" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+          <text x="334" y="76" text-anchor="middle" fill="#a855f7" font-size="16" font-weight="800" font-family="Outfit,sans-serif">Fe</text>
+          <text x="334" y="92" text-anchor="middle" fill="#a855f7" font-size="9" opacity="0.7" font-family="Outfit,sans-serif">Iron · 26</text>
+        </g>
+        <g class="el-float" style="--fd:-2s">
+          <circle cx="328" cy="322" r="30" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.4)" stroke-width="1.5"/>
+          <text x="328" y="318" text-anchor="middle" fill="#22c55e" font-size="16" font-weight="800" font-family="Outfit,sans-serif">Cu</text>
+          <text x="328" y="334" text-anchor="middle" fill="#22c55e" font-size="9" opacity="0.7" font-family="Outfit,sans-serif">Copper · 29</text>
+        </g>
+        <g class="el-float" style="--fd:-3s">
+          <circle cx="68" cy="322" r="28" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+          <text x="68" y="318" text-anchor="middle" fill="#f59e0b" font-size="15" font-weight="800" font-family="Outfit,sans-serif">Au</text>
+          <text x="68" y="334" text-anchor="middle" fill="#f59e0b" font-size="9" opacity="0.7" font-family="Outfit,sans-serif">Gold · 79</text>
+        </g>
+      </svg>
+    </div>
   </div>
 </div>
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item reveal"><div class="stat-num">40+</div><div class="stat-lbl">Experiments</div></div>
+    <div class="stat-item reveal rd1"><div class="stat-num">20</div><div class="stat-lbl">Apparatus</div></div>
+    <div class="stat-item reveal rd2"><div class="stat-num">118</div><div class="stat-lbl">Elements</div></div>
+    <div class="stat-item reveal rd3"><div class="stat-num">4</div><div class="stat-lbl">Grade Levels</div></div>
+  </div>
+
+  <!-- Feature Cards -->
   <div class="feature-grid">
-    <div class="feature-card" onclick="navigateTo('experiments')">
+    <div class="feature-card reveal" onclick="navigateTo('experiments')">
       <div class="feature-icon" style="background:rgba(59,130,246,.15)">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11l-4 7h14l-4-7V3M14 3v11"/></svg>
       </div>
       <h3>Experiments</h3>
       <p>40 structured experiments across Class 9–10, 11–12, Undergraduate and Postgraduate levels</p>
     </div>
-    <div class="feature-card" onclick="navigateTo('apparatus')">
+    <div class="feature-card reveal rd1" onclick="navigateTo('apparatus')">
       <div class="feature-icon" style="background:rgba(6,182,212,.15)">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/><rect x="7" y="3" width="10" height="18" rx="2"/></svg>
       </div>
       <h3>Apparatus</h3>
       <p>20 laboratory instruments with detailed descriptions, usage guides and safety notes</p>
     </div>
-    <div class="feature-card" onclick="navigateTo('quiz')">
+    <div class="feature-card reveal rd2" onclick="navigateTo('quiz')">
       <div class="feature-icon" style="background:rgba(168,85,247,.15)">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       </div>
       <h3>Quiz</h3>
       <p>Per-experiment quizzes with difficulty ratings and progress tracking — test what you've learned</p>
     </div>
-    <div class="feature-card" onclick="navigateTo('elements')">
+    <div class="feature-card reveal rd3" onclick="navigateTo('elements')">
       <div class="feature-icon" style="background:rgba(34,197,94,.15)">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       </div>
       <h3>Periodic Table</h3>
       <p>Full interactive periodic table with all 118 elements, categories and detailed information</p>
     </div>
-    <div class="feature-card" onclick="navigateTo('progress')">
+    <div class="feature-card reveal rd4" onclick="navigateTo('progress')">
       <div class="feature-icon" style="background:rgba(245,158,11,.15)">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
       </div>
@@ -535,7 +629,50 @@ body{zoom:1.1;}
       <p>Track your learning journey — see which experiments you've completed and your quiz scores</p>
     </div>
   </div>
+
+  <!-- How It Works -->
+  <div class="how-section">
+    <div class="sec-title reveal">How It Works</div>
+    <div class="sec-sub reveal rd1">Four simple steps to master chemistry virtually</div>
+    <div class="how-grid">
+      <div class="how-card reveal" style="--sc:#3b82f6">
+        <div class="how-step">1</div>
+        <h3>Pick an Experiment</h3>
+        <p>Choose from 40 structured labs across Class 9–PG. Filter by level, category, or search by name.</p>
+      </div>
+      <div class="how-card reveal rd1" style="--sc:#06b6d4">
+        <div class="how-step">2</div>
+        <h3>Learn the Theory</h3>
+        <p>Read the objective, materials, procedure and chemical equations — all in one clean view.</p>
+      </div>
+      <div class="how-card reveal rd2" style="--sc:#a855f7">
+        <div class="how-step">3</div>
+        <h3>Explore Apparatus</h3>
+        <p>Understand every instrument used — with safety notes, usage guides and illustrations.</p>
+      </div>
+      <div class="how-card reveal rd3" style="--sc:#22c55e">
+        <div class="how-step">4</div>
+        <h3>Test Yourself</h3>
+        <p>Take per-experiment quizzes, earn XP, track progress and build chemistry mastery.</p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer" id="siteFooter">
+  <div class="footer-inner">
+    <div class="footer-logo">VChem<strong>Lab</strong></div>
+    <div class="footer-links">
+      <a onclick="navigateTo('experiments')">Experiments</a>
+      <a onclick="navigateTo('apparatus')">Apparatus</a>
+      <a onclick="navigateTo('quiz')">Quiz</a>
+      <a onclick="navigateTo('elements')">Periodic Table</a>
+      <a onclick="navigateTo('progress')">Progress</a>
+    </div>
+    <div class="footer-copy">© 2025 VChemLab · Designed for students from Class 9 to Postgraduate</div>
+  </div>
+</footer>
 
 <div id="page-experiments" class="page">
   <div class="sec-title">Experiment Labs</div>
@@ -1645,6 +1782,8 @@ function navigateTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page-' + page);
   if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  const footer = document.getElementById('siteFooter');
+  if (footer) footer.style.display = (page === 'home') ? 'block' : 'none';
   currentPage = page;
   document.querySelectorAll('.nav-link').forEach(l => {
     l.classList.toggle('active', l.dataset.page === page);
@@ -2240,6 +2379,33 @@ function showToast(msg, type = '') {
   t.className = 'toast show' + (type ? ' ' + type : '');
   setTimeout(() => t.className = 'toast', 3000);
 }
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+(function() {
+  function initReveal() {
+    var els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (!window.IntersectionObserver) {
+      els.forEach(function(el) { el.classList.add('in'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function(el) { obs.observe(el); });
+  }
+  setTimeout(initReveal, 80);
+})();
+
+// Navbar scroll shadow
+window.addEventListener('scroll', function() {
+  var nav = document.querySelector('.navbar');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
 
 // ============================================================
 // INIT
