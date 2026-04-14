@@ -56,10 +56,13 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;padding-top:var(--nav-h);font-size:15px;line-height:1.6}
+body{overflow-x:hidden;}
 a{color:inherit;text-decoration:none;cursor:pointer}
 button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;outline:none}
 input,select,textarea{font-family:'Outfit',sans-serif;outline:none;border:none}
 img{display:block;max-width:100%}
+html{font-size:110%;}
+body{zoom:1.1;}
 
 /* ─── NAVBAR ─── */
 .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--bg-card);border-bottom:1px solid var(--border-s);z-index:1000;backdrop-filter:blur(12px)}
@@ -112,12 +115,27 @@ img{display:block;max-width:100%}
 .badge-xp{background:var(--accent-glow);color:var(--accent)}
 
 /* ─── HOME PAGE ─── */
-.hero{text-align:center;padding:4rem 1rem 3rem;max-width:700px;margin:0 auto}
-.hero-eyebrow{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.25rem}
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5rem 2rem;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  gap: 3rem;
+  text-align: left;
+}
+.hero-eyebrow{
+  justify-content:flex-start;
+}.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.25rem}
 .hero h1 span{color:var(--accent)}
-.hero p{font-size:1.05rem;color:var(--text-soft);margin-bottom:2.25rem;max-width:520px;margin-left:auto;margin-right:auto}
-.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.hero p{
+  margin-left:0;
+  margin-right:0;
+}
+.hero-btns{
+  justify-content:flex-start;
+}
 .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;padding:2rem 0 3rem}
 .feature-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 1.5rem;cursor:pointer;transition:all .25s;text-align:left}
 .feature-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow-sm);transform:translateY(-3px)}
@@ -283,10 +301,10 @@ img{display:block;max-width:100%}
 .prog-state-dot{width:8px;height:8px;border-radius:50%}
 
 /* ─── ELEMENTS PAGE ─── */
-.pt-wrap{overflow-x:auto;padding-bottom:1rem}
+.pt-wrap{overflow-x:hidden;overflow-y:hidden;}
 .periodic-grid{display:grid;grid-template-columns:repeat(18,1fr);gap:3px;max-width:1380px;margin:1.5rem auto}
-.element-cell{aspect-ratio:1;background:var(--bg-card);border:1.5px solid var(--border);border-radius:5px;padding:4px;cursor:pointer;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-.element-cell:hover{transform:scale(1.12);z-index:10;box-shadow:0 6px 20px rgba(79,142,247,.3);border-color:var(--accent)}
+.element-cell{aspect-ratio:1;background:var(--bg-card);border:1.5px solid var(--border);border-radius:5px;padding:4px;cursor:pointer;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;transform-origin:center;}
+.element-cell:hover{transform:scale(1.12);z-index:20;box-shadow:0 6px 20px rgba(79,142,247,.3);border-color:var(--accent);}
 .el-number{font-size:.55rem;color:var(--text-muted);position:absolute;top:3px;left:3px}
 .el-sym{font-size:1.1rem;font-weight:700;color:inherit}
 .el-name{font-size:.45rem;color:inherit;opacity:.8;text-align:center;line-height:1.2}
@@ -300,7 +318,22 @@ img{display:block;max-width:100%}
 .el-post-transition{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-color:#10b981;color:#064e3b}
 .el-lanthanide{background:linear-gradient(135deg,#fed7aa,#fdba74);border-color:#fb923c;color:#431407}
 .el-actinide{background:linear-gradient(135deg,#fecaca,#fca5a5);border-color:#f87171;color:#450a0a}
-.el-unknown{background:var(--border-s);border-color:var(--border);color:var(--text-soft)}
+.special-cell{
+  font-size:1.2rem;     /* same visual size */
+  font-weight:700;      /* bold */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* LEFT EDGE */
+.periodic-grid .element-cell:nth-child(18n+1):hover{
+  transform-origin:left center;
+}
+
+/* RIGHT EDGE */
+.periodic-grid .element-cell:nth-child(18n):hover{
+  transform-origin:right center;
+}
 
 /* Element Legend */
 .pt-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin-top:1.5rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)}
@@ -309,8 +342,27 @@ img{display:block;max-width:100%}
 
 /* Lanthanide / Actinide rows */
 .series-gap{height:6px}
-.series-row{display:grid;grid-template-columns:52px repeat(15,1fr);align-items:center;gap:3px;min-width:900px;margin-bottom:3px}
-.el-series-label{font-size:.55rem;font-weight:700;color:var(--text-muted);width:52px;flex-shrink:0;text-align:right;padding-right:4px;line-height:1.2}
+.series-row{
+  display:grid;
+  grid-template-columns:52px repeat(17,1fr);
+  gap:3px;
+  max-width:1380px;
+  margin:0 auto 3px;
+}
+.el-series-label{
+  font-size:1rem;            /* 🔥 bigger */
+  font-weight:800;           /* bold */
+  color:var(--text);         /* remove faded look */
+  width:52px;
+  text-align:right;
+  padding-right:6px;
+
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+
+  white-space:nowrap;
+}
 
 /* Element Modal */
 .el-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:3000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
@@ -424,6 +476,7 @@ img{display:block;max-width:100%}
 <!-- ========== PAGES ========== -->
 <div id="page-home" class="page active">
   <div class="hero">
+    <div class="hero-left">
     <div class="hero-eyebrow">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
       Virtual Laboratory Experience
@@ -441,6 +494,10 @@ img{display:block;max-width:100%}
       </button>
     </div>
   </div>
+  <div class="hero-right">
+    <div class="lab-visual"></div>
+  </div>
+</div>
   <div class="feature-grid">
     <div class="feature-card" onclick="navigateTo('experiments')">
       <div class="feature-icon" style="background:rgba(59,130,246,.15)">
@@ -649,23 +706,7 @@ img{display:block;max-width:100%}
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script>
-
-// ==== FIXED CATEGORY FUNCTION ====
-function getCategory(num){
-  if ([3,11,19,37,55,87].includes(num)) return 'alkali';
-  if ([4,12,20,38,56,88].includes(num)) return 'alkaline';
-  if ([2,10,18,36,54,86,118].includes(num)) return 'noble-gas';
-  if ([9,17,35,53,85,117].includes(num)) return 'nonmetal';
-  if ([5,14,32,33,51,52].includes(num)) return 'metalloid';
-  if ([13,31,49,50,81,82,83,113,114,115,116].includes(num)) return 'post-transition';
-  if (num>=57 && num<=71) return 'lanthanide';
-  if (num>=89 && num<=103) return 'actinide';
-  if ((num>=21 && num<=30)||(num>=39 && num<=48)||(num>=72 && num<=80)||(num>=104 && num<=112)) return 'transition';
-  return 'nonmetal';
-}
-
-// data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 
 // ============================================================
 // DATA: EXPERIMENT CATEGORIES (40 total)
@@ -1566,11 +1607,11 @@ const periodicElements = [
   {n:103,sym:'Lr',name:'Lawrencium',w:'266',cat:'actinide',g:3,p:7},{n:104,sym:'Rf',name:'Rutherfordium',w:'267',cat:'transition',g:4,p:7},
   {n:105,sym:'Db',name:'Dubnium',w:'268',cat:'transition',g:5,p:7},{n:106,sym:'Sg',name:'Seaborgium',w:'271',cat:'transition',g:6,p:7},
   {n:107,sym:'Bh',name:'Bohrium',w:'272',cat:'transition',g:7,p:7},{n:108,sym:'Hs',name:'Hassium',w:'277',cat:'transition',g:8,p:7},
-  {n:109,sym:'Mt',name:'Meitnerium',w:'278',cat:'unknown',g:9,p:7},{n:110,sym:'Ds',name:'Darmstadtium',w:'281',cat:'unknown',g:10,p:7},
-  {n:111,sym:'Rg',name:'Roentgenium',w:'282',cat:'unknown',g:11,p:7},{n:112,sym:'Cn',name:'Copernicium',w:'285',cat:'unknown',g:12,p:7},
-  {n:113,sym:'Nh',name:'Nihonium',w:'286',cat:'unknown',g:13,p:7},{n:114,sym:'Fl',name:'Flerovium',w:'289',cat:'unknown',g:14,p:7},
-  {n:115,sym:'Mc',name:'Moscovium',w:'290',cat:'unknown',g:15,p:7},{n:116,sym:'Lv',name:'Livermorium',w:'293',cat:'unknown',g:16,p:7},
-  {n:117,sym:'Ts',name:'Tennessine',w:'294',cat:'unknown',g:17,p:7},{n:118,sym:'Og',name:'Oganesson',w:'294',cat:'unknown',g:18,p:7}
+  {n:109,sym:'Mt',name:'Meitnerium',w:'278',cat:'transition',g:9,p:7},{n:110,sym:'Ds',name:'Darmstadtium',w:'281',cat:'transition',g:10,p:7},
+  {n:111,sym:'Rg',name:'Roentgenium',w:'282',cat:'transition',g:11,p:7},{n:112,sym:'Cn',name:'Copernicium',w:'285',cat:'transition',g:12,p:7},
+  {n:113,sym:'Nh',name:'Nihonium',w:'286',cat:'post-transition',g:13,p:7},{n:114,sym:'Fl',name:'Flerovium',w:'289',cat:'post-transition',g:14,p:7},
+  {n:115,sym:'Mc',name:'Moscovium',w:'290',cat:'post-transition',g:15,p:7},{n:116,sym:'Lv',name:'Livermorium',w:'293',cat:'post-transition',g:16,p:7},
+  {n:117,sym:'Ts',name:'Tennessine',w:'294',cat:'nonmetal',g:17,p:7},{n:118,sym:'Og',name:'Oganesson',w:'294',cat:'noble-gas',g:18,p:7}
 ];
 
 // ============================================================
@@ -2049,10 +2090,6 @@ function renderProgress() {
   });
   document.getElementById('progressList').innerHTML = html;
 }
-
-// ============================================================
-// PERIODIC TABLE
-// ============================================================
 // ============================================================
 // PERIODIC TABLE
 // ============================================================
@@ -2088,8 +2125,8 @@ function renderPeriodicTable() {
       var el = (mainTable[period] && mainTable[period][group]) || null;
       // In period 6 col 3 and period 7 col 3, show placeholder star cell
       if ((period === 6 || period === 7) && group === 3) {
-        var lbl = period === 6 ? '*' : '**';
-        cells.push('<div class="element-cell el-' + (period === 6 ? 'lanthanide' : 'actinide') + '" style="cursor:default;font-size:.7rem;font-weight:800;opacity:.85">' + lbl + '</div>');
+        var lbl = period === 6 ? 'Ln' : 'An';
+        cells.push('<div class="element-cell el-' + (period === 6 ? 'lanthanide' : 'actinide') + ' special-cell">' + lbl + '</div>');
       } else if (el) {
         cells.push('<div class="element-cell el-' + el.cat + '" onclick="showElementModal(' + el.n + ')" title="' + el.name + '">' +
           '<span class="el-number">' + el.n + '</span>' +
@@ -2104,45 +2141,54 @@ function renderPeriodicTable() {
   grid.innerHTML = cells.join('');
 
   // --- Build lanthanide row ---
-  var lantRow = document.getElementById('lanthanideRow');
-  if (lantRow) {
-    var lCells = '<div class="el-series-label">* Lanthanides</div>';
-    lanthanides.forEach(function(el) {
-      lCells += '<div class="element-cell el-' + el.cat + '" onclick="showElementModal(' + el.n + ')" title="' + el.name + '">' +
-        '<span class="el-number">' + el.n + '</span>' +
-        '<span class="el-sym">' + el.sym + '</span>' +
-        '<span class="el-name">' + el.name + '</span>' +
-      '</div>';
-    });
-    lantRow.innerHTML = lCells;
-  }
+var lantRow = document.getElementById('lanthanideRow');
+if (lantRow) {
+  var lCells = '<div class="el-series-label">Ln</div>';
 
-  // --- Build actinide row ---
-  var actRow = document.getElementById('actinideRow');
-  if (actRow) {
-    var aCells = '<div class="el-series-label">** Actinides</div>';
-    actinides.forEach(function(el) {
-      aCells += '<div class="element-cell el-' + el.cat + '" onclick="showElementModal(' + el.n + ')" title="' + el.name + '">' +
-        '<span class="el-number">' + el.n + '</span>' +
-        '<span class="el-sym">' + el.sym + '</span>' +
-        '<span class="el-name">' + el.name + '</span>' +
-      '</div>';
-    });
-    actRow.innerHTML = aCells;
-  }
+  // alignment spacers
+  lCells += '<div class="el-spacer"></div>';
+
+  lanthanides.forEach(function(el) {
+    lCells += '<div class="element-cell el-' + el.cat + '" onclick="showElementModal(' + el.n + ')" title="' + el.name + '">' +
+      '<span class="el-number">' + el.n + '</span>' +
+      '<span class="el-sym">' + el.sym + '</span>' +
+      '<span class="el-name">' + el.name + '</span>' +
+    '</div>';
+  });
+
+  lantRow.innerHTML = lCells;
+}
+
+// --- Build actinide row ---
+var actRow = document.getElementById('actinideRow');
+if (actRow) {
+  var aCells = '<div class="el-series-label">An</div>';
+
+  // alignment spacers
+  aCells += '<div class="el-spacer"></div>';
+
+  actinides.forEach(function(el) {
+    aCells += '<div class="element-cell el-' + el.cat + '" onclick="showElementModal(' + el.n + ')" title="' + el.name + '">' +
+      '<span class="el-number">' + el.n + '</span>' +
+      '<span class="el-sym">' + el.sym + '</span>' +
+      '<span class="el-name">' + el.name + '</span>' +
+    '</div>';
+  });
+
+  actRow.innerHTML = aCells;
+}
 
   // --- Build bottom legend ---
   var legendItems = [
-    {label:'alkali',          bg:'linear-gradient(135deg,#fde68a,#fcd34d)', border:'#f59e0b'},
-    {label:'alkaline',        bg:'linear-gradient(135deg,#fdba74,#fb923c)', border:'#f97316'},
-    {label:'transition',      bg:'linear-gradient(135deg,#fca5a5,#f87171)', border:'#ef4444'},
-    {label:'post transition', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', border:'#10b981'},
-    {label:'metalloid',       bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)', border:'#6366f1'},
-    {label:'nonmetal',        bg:'linear-gradient(135deg,#bfdbfe,#93c5fd)', border:'#3b82f6'},
-    {label:'noble gas',       bg:'linear-gradient(135deg,#fbcfe8,#f9a8d4)', border:'#ec4899'},
-    {label:'lanthanide',      bg:'linear-gradient(135deg,#fed7aa,#fdba74)', border:'#fb923c'},
-    {label:'actinide',        bg:'linear-gradient(135deg,#fecaca,#fca5a5)', border:'#f87171'},
-    {label:'unknown',         bg:'var(--border-s)',                          border:'var(--border)'}
+    {label:'Alkali',          bg:'linear-gradient(135deg,#fde68a,#fcd34d)', border:'#f59e0b'},
+    {label:'Akaline',        bg:'linear-gradient(135deg,#fdba74,#fb923c)', border:'#f97316'},
+    {label:'Transition',      bg:'linear-gradient(135deg,#fca5a5,#f87171)', border:'#ef4444'},
+    {label:'Post transition', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', border:'#10b981'},
+    {label:'Metalloid',       bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)', border:'#6366f1'},
+    {label:'Nonmetal',        bg:'linear-gradient(135deg,#bfdbfe,#93c5fd)', border:'#3b82f6'},
+    {label:'Noble gas',       bg:'linear-gradient(135deg,#fbcfe8,#f9a8d4)', border:'#ec4899'},
+    {label:'Lanthanide',      bg:'linear-gradient(135deg,#fed7aa,#fdba74)', border:'#fb923c'},
+    {label:'Actinide',        bg:'linear-gradient(135deg,#fecaca,#fca5a5)', border:'#f87171'}
   ];
   var legendEl = document.getElementById('ptLegend');
   if (legendEl) {
