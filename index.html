@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Virtual Chemistry Lab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ─── RESET & THEMING VARIABLES (from Commit 1) ─── */
+
+    /* ─── RESET & VARIABLES (OLD BASE) ─── */
     * {
       margin: 0;
       padding: 0;
@@ -16,475 +17,1111 @@
     }
 
     :root {
-      --bg: #0a0f1e;
-      --bg-card: #111827;
-      --bg-card2: #1a2235;
-      --bg-input: #0f1729;
-      --accent: #3b82f6;
-      --accent-h: #2563eb;
-      --accent-glow: rgba(59,130,246,0.18);
-      --text: #f1f5f9;
-      --text-soft: #94a3b8;
-      --text-muted: #64748b;
-      --border: rgba(255,255,255,0.07);
-      --border-s: rgba(255,255,255,0.14);
-      --shadow: 0 4px 24px rgba(0,0,0,0.45);
-      --shadow-sm: 0 2px 10px rgba(0,0,0,0.3);
-      --radius: 12px;
-      --radius-lg: 18px;
-      --radius-pill: 999px;
-      --nav-h: 64px;
-      --max-w: 1240px;
+      --bg-primary:    #f3f6fb;
+      --bg-white:      #fff;
+      --accent:        #38bdf8;
+      --accent-dark:   #0ea5e9;
+      --text-primary:  #1e293b;
+      --text-secondary:#64748b;
+      --border:        #e2e8f0;
+      --success:       #10b981;
+      --danger:        #ef4444;
+      --warning:       #f59e0b;
+      --gradient-bg:   linear-gradient(135deg, #f3f6fb 0%, #e0e7ff 100%);
+      
+      /* Additional vars for new features */
+      --bg-card2:      #f8fafc;
+      --accent2:       #0284c7;
+      --accent-glow:   rgba(56, 189, 248, 0.15);
+      --radius:        12px;
     }
 
-    [data-theme="light"] {
-      --bg: #f0f4ff;
-      --bg-card: #ffffff;
-      --bg-card2: #f8faff;
-      --bg-input: #f0f4ff;
-      --accent: #2563eb;
-      --accent-h: #1d4ed8;
-      --accent-glow: rgba(37,99,235,0.12);
-      --text: #0f172a;
-      --text-soft: #475569;
-      --text-muted: #94a3b8;
-      --border: rgba(0,0,0,0.08);
-      --border-s: rgba(0,0,0,0.16);
-      --shadow: 0 4px 24px rgba(0,0,0,0.1);
-      --shadow-sm: 0 2px 10px rgba(0,0,0,0.07);
+    /* ─── DARK MODE ─── */
+    body.dark-mode {
+      --bg-primary:    #0f172a;
+      --bg-white:      #1e293b;
+      --text-primary:  #f1f5f9;
+      --text-secondary:#94a3b8;
+      --border:        #334155;
+      --gradient-bg:   linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --bg-card2:      #162032;
     }
 
-    html { scroll-behavior: smooth; }
-
+    /* ─── BASE ─── */
     body {
       font-family: 'Outfit', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--gradient-bg);
+      color: var(--text-primary);
       min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
-      padding-top: var(--nav-h);
-      font-size: 15px;
-      line-height: 1.6;
+      transition: all 0.3s;
     }
 
-    /* ─── NAVBAR (Commit 1) ─── */
-    .navbar {
-      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
-      background: var(--bg-card); border-bottom: 1px solid var(--border-s);
-      z-index: 1000; backdrop-filter: blur(12px);
+    .app-container {
+      display: flex;
+      min-height: 100vh;
     }
-    .nav-inner {
-      max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; height: 100%;
-      display: flex; align-items: center; gap: 2rem;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; flex-shrink: 0; }
-    .nav-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
-    .nav-logo span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
-    .nav-logo span strong { color: var(--accent); }
-    .nav-links { display: flex; align-items: center; gap: 0.25rem; flex: 1; justify-content: center; }
-    .nav-link {
-      padding: 0.45rem 0.9rem; border-radius: var(--radius-pill); font-size: 0.9rem;
-      font-weight: 500; color: var(--text-soft); transition: all 0.2s; cursor: pointer; white-space: nowrap;
-    }
-    .nav-link:hover { color: var(--text); background: var(--border); }
-    .nav-link.active { color: var(--accent); background: var(--accent-glow); }
-    
-    .nav-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
-    .icon-btn {
-      width: 38px; height: 38px; border-radius: 50%; background: var(--border);
-      display: flex; align-items: center; justify-content: center; color: var(--text-soft);
-      transition: all 0.2s; cursor: pointer;
-    }
-    .icon-btn:hover { background: var(--border-s); color: var(--text); }
-    .icon-btn svg { width: 18px; height: 18px; }
 
-    .login-form { display: flex; gap: 0.5rem; align-items: center; }
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      padding-bottom: 100px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: var(--bg-white);
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── LOGIN FORM ─── */
+    .login-form {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
     .input {
-      padding: 0.4rem 1rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill);
-      font-family: 'Outfit', sans-serif; font-size: 0.85rem; background: var(--bg-input); color: var(--text);
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: var(--bg-primary);
+      color: var(--text-primary);
     }
-    .input:focus { outline: none; border-color: var(--accent); }
-    
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    }
+
+    /* ─── BUTTONS ─── */
     .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.3rem;
-      border-radius: var(--radius-pill); font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      transition: all 0.2s; border: none; font-family: 'Outfit', sans-serif;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
-    .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border-s); }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
 
-    /* ─── PAGE SYSTEM ─── */
-    .page { display: none; min-height: calc(100vh - var(--nav-h)); padding: 2.5rem 1.5rem; max-width: var(--max-w); margin: 0 auto; }
-    .page.active { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .sec-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.35rem; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
 
-    /* ─── HERO SECTION (Commit 1) ─── */
-    .hero { text-align: center; padding: 4rem 1rem 3rem; max-width: 700px; margin: 0 auto; }
-    .hero-eyebrow { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.25rem; }
-    .hero h1 span { color: var(--accent); }
-    .hero p { font-size: 1.05rem; color: var(--text-soft); margin-bottom: 2.25rem; max-width: 520px; margin-left: auto; margin-right: auto; }
-    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; padding: 2rem 0 3rem; }
-    .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem 1.5rem; cursor: pointer; transition: all 0.25s; text-align: left; }
-    .feature-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm); transform: translateY(-3px); }
-    .feature-icon { width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; background: var(--accent-glow); }
-    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
-    .feature-card p { font-size: 0.84rem; color: var(--text-soft); line-height: 1.5; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
 
-    /* ─── NEW EXPERIMENT CATEGORIES (Commit 2) ─── */
-    .cat-block { margin-bottom: 3.5rem; }
+    .btn-secondary {
+      background: var(--bg-white);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+
+    /* ─── PAGE SECTIONS ─── */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── EXPERIMENT GRID ─── */
+    .cat-block { margin-bottom: 3rem; }
     .cat-header {
-      display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
-    .cat-header::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--cat-color); }
-    .cat-num { width: 44px; height: 44px; border-radius: var(--radius); background: var(--cat-color); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; }
-    .cat-info { flex: 1; }
-    .cat-info h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .cat-info p { font-size: 0.9rem; color: var(--text-soft); }
+    .cat-header::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--cat-color);
+    }
+    .cat-num {
+      width: 40px; height: 40px; border-radius: 10px; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem;
+    }
+    .cat-info flex { flex: 1; }
+    .cat-info h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .cat-info p { font-size: 0.9rem; color: var(--text-secondary); }
 
-    .experiments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-    .experiment-card { background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s; cursor: pointer; border: 1px solid var(--border); }
-    .experiment-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 12px 30px var(--accent-glow); }
-    .experiment-image { width: 100%; height: 180px; background: linear-gradient(135deg, var(--bg-card2) 0%, var(--border-s) 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
-    .experiment-content { padding: 1.5rem; display: flex; flex-direction: column; }
-    .experiment-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .experiment-description { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
-    
-    /* Search & Filters */
-    .search-box { width: 100%; padding: 1rem 1.5rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill); background: var(--bg-card); color: var(--text); transition: all 0.3s; margin-bottom: 1rem; font-family: 'Outfit', sans-serif;}
-    .search-box:focus { outline: none; border-color: var(--accent); }
-    .filter-tabs { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .filter-tab { padding: 0.5rem 1.2rem; border-radius: var(--radius-pill); border: 1.5px solid var(--border-s); background: transparent; color: var(--text-soft); font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .filter-tab:hover { border-color: var(--border-s); color: var(--text); }
-    .filter-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .experiments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
 
-    /* Difficulty Badges */
-    .difficulty-badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .difficulty-beginner    { background: rgba(34,197,94,.15); color: #22c55e; }
-    .difficulty-intermediate{ background: rgba(245,158,11,.15); color: #f59e0b; }
-    .difficulty-advanced    { background: rgba(239,68,68,.15); color: #ef4444; }
-    .difficulty-expert      { background: rgba(168,85,247,.15); color: #a855f7; }
+    /* ─── EXPERIMENT CARD ─── */
+    .experiment-card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .experiment-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-    .experiment-duration { display: flex; align-items: center; gap: 0.375rem; color: var(--text-soft); font-size: 0.875rem; }
+    .experiment-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.2);
+    }
 
-    /* ─── NEW EXPERIMENT DETAILS (Commit 2) ─── */
-    .experiment-detail { background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; border: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
-    .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-soft); font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: all 0.2s; }
-    .back-btn:hover { color: var(--accent); }
-    .experiment-detail h2 { font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
-    .experiment-detail h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--accent); border-bottom: 1px solid var(--border-s); padding-bottom: 0.5rem; }
-    .materials-list, .procedure-list { list-style-position: inside; line-height: 1.8; color: var(--text-soft); }
-    
-    .procedure-list { counter-reset: step-counter; list-style: none; }
-    .procedure-list li { counter-increment: step-counter; margin-bottom: 1rem; padding-left: 2.5rem; position: relative; }
-    .procedure-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; width: 1.8rem; height: 1.8rem; background: var(--accent-glow); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
+    .experiment-image {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
 
-    .equation-box { background: var(--bg-card2); border: 1px solid var(--border-s); border-radius: 8px; padding: 1rem 1.5rem; font-family: 'Space Mono', monospace; font-size: 1.05rem; color: var(--accent); margin: 1rem 0; text-align: center; }
+    body.dark-mode .experiment-image {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    }
 
-    .video-container { margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; box-shadow: var(--shadow-sm); }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-    .video-fallback { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card2); color: var(--text-soft); padding: 2rem; text-align: center; }
+    .experiment-content {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .caution-box { background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 1.5rem 0; }
-    .caution-box h3 { color: #f59e0b; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0; }
-    .caution-box ul { margin: 0; padding-left: 1.5rem; color: var(--text-soft); line-height: 1.8; }
+    .experiment-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
 
-    /* Simulation basics (Commit 1 unchanged) */
-    .simulation-container { background: var(--bg-card2); padding: 2rem; border-radius: var(--radius-lg); margin-top: 2rem; border: 1px solid var(--border-s); }
-    .lab-equipment { display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; align-items: flex-end; }
+    .experiment-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .experiment-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── EXPERIMENT DETAIL PAGE ─── */
+    .experiment-detail {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      background: var(--bg-primary);
+    }
+
+    .back-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    .experiment-detail h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .experiment-detail h3 {
+      font-size: 1.25rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .detail-desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .equation-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--accent-dark);
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .materials-list,
+    .procedure-list,
+    .precautions-list {
+      list-style-position: inside;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .materials-list li::marker { color: var(--accent); }
+
+    .procedure-list {
+      counter-reset: step-counter;
+      list-style: none;
+    }
+
+    .procedure-list li {
+      counter-increment: step-counter;
+      margin-bottom: 1rem;
+      padding-left: 2.5rem;
+      position: relative;
+    }
+
+    .procedure-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.8rem;
+      height: 1.8rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .apparatus-chips {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .app-chip {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      color: var(--accent-dark);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .app-chip:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    /* ─── VIDEO EMBED ─── */
+    .video-container {
+      margin: 2rem 0;
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-fallback {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg-primary); color: var(--text-secondary); padding: 2rem; text-align: center;
+    }
+
+    /* ─── TITRATION SIMULATION ─── */
+    .simulation-container {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-top: 2rem;
+    }
+
+    body.dark-mode .simulation-container { background: linear-gradient(135deg, #0c4a6e 0%, #082f49 100%); }
+
+    .lab-equipment {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      align-items: flex-end;
+    }
+
     .burette-container { position: relative; width: 80px; }
-    .burette { width: 80px; height: 400px; background: #fff; border: 3px solid var(--accent); border-radius: 8px; position: relative; overflow: hidden; }
-    .burette-liquid { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, #ef4444 0%, #f87171 100%); transition: height 0.5s; }
-    .burette-tip { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: var(--accent); clip-path: polygon(50% 100%, 0 0, 100% 0); }
-    .drip { position: absolute; width: 8px; height: 12px; background: #ef4444; border-radius: 50%; left: 50%; transform: translateX(-50%); top: -10px; opacity: 0; }
+
+    .burette {
+      width: 80px; height: 400px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(240,249,255,0.8) 100%);
+      border: 3px solid var(--accent);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .burette-liquid {
+      position: absolute; bottom: 0; width: 100%;
+      background: linear-gradient(to top, #ef4444 0%, #f87171 100%);
+      transition: height 0.5s;
+    }
+
+    .burette-tip {
+      position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 20px; background: var(--accent);
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+
+    .drip {
+      position: absolute; width: 8px; height: 12px;
+      background: #ef4444; border-radius: 50%;
+      left: 50%; transform: translateX(-50%);
+      top: -10px; opacity: 0;
+    }
+
     .drip.active { animation: drip 0.8s; }
-    @keyframes drip { 0%   { top: -10px; opacity: 1; } 100% { top: 420px; opacity: 0; } }
-    .beaker { width: 200px; height: 250px; background: #fff; border: 3px solid var(--accent); border-top: none; border-radius: 0 0 20px 20px; position: relative; overflow: hidden; }
-    .beaker-liquid { position: absolute; bottom: 0; width: 100%; transition: all 0.5s; background: #f0f9ff; }
+
+    @keyframes drip {
+      0%   { top: -10px; opacity: 1; }
+      100% { top: 420px; opacity: 0; }
+    }
+
+    .beaker {
+      width: 200px; height: 250px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%, rgba(248,250,252,0.6) 100%);
+      border: 3px solid var(--accent);
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .beaker-liquid {
+      position: absolute; bottom: 0; width: 100%;
+      transition: all 0.5s; background: rgba(56, 189, 248, 0.2);
+    }
+
     .beaker-liquid.pink { background: linear-gradient(to top, #fce7f3 0%, #fbcfe8 100%); }
+
+    /* Simulation controls */
     .controls { margin-top: 2rem; }
+
     .slider-container { margin: 1.5rem 0; }
     .slider-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 600; }
-    .slider { width: 100%; height: 8px; border-radius: 5px; background: var(--border-s); outline: none; -webkit-appearance: none; }
-    .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); cursor: pointer; }
-    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .result-card { background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border-s); text-align: center; }
-    .result-label { font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0.5rem; }
+    .slider {
+      width: 100%; height: 8px; border-radius: 5px; background: var(--border); outline: none; -webkit-appearance: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      cursor: pointer; box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Simulation result cards */
+    .results {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; margin-top: 2rem;
+    }
+
+    .result-card {
+      background: var(--bg-white); padding: 1.5rem; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); text-align: center;
+    }
+    .result-label { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
     .result-value { font-size: 1.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent); }
 
-    /* Quiz (Commit 1 unchanged) */
-    .quiz-container { max-width: 800px; }
-    .question-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
-    .question-number { font-size: 0.875rem; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
-    .question-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; }
-    .options { list-style: none; }
-    .option { padding: 1rem 1.5rem; margin-bottom: 0.75rem; border-radius: var(--radius); border: 1.5px solid var(--border-s); cursor: pointer; transition: all 0.3s; }
-    .option:hover { border-color: var(--accent); background: var(--accent-glow); }
-    .option.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .score-display { background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2rem; border-radius: var(--radius-lg); text-align: center; margin-top: 2rem; border: 1px solid #10b981; }
-    .score-value { font-size: 3rem; font-weight: 700; font-family: 'Space Mono', monospace; }
+    /* ─── APPARATUS ─── */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
 
-    /* Periodic table (Commit 1 unchanged) */
-    .periodic-table { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; max-width: 1400px; margin: 2rem auto; }
-    .element { aspect-ratio: 1; background: var(--bg-card); border: 1.5px solid var(--border-s); border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    .element:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); border-color: var(--accent); }
-    .element-number { font-size: 0.625rem; color: var(--text-soft); position: absolute; top: 4px; left: 4px; }
-    .element-symbol { font-size: 1.25rem; font-weight: 700; font-family: 'Space Mono', monospace; }
-    .element-name { font-size: 0.5rem; color: var(--text-soft); text-align: center; }
+    .app-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
 
-    .element.nonmetal    { background: linear-gradient(135deg, rgba(191,219,254,0.1), rgba(147,197,253,0.1)); border-color: #3b82f6; }
-    .element.noble-gas   { background: linear-gradient(135deg, rgba(251,207,232,0.1), rgba(249,168,212,0.1)); border-color: #ec4899; }
-    .element.alkali      { background: linear-gradient(135deg, rgba(253,230,138,0.1), rgba(252,211,77,0.1)); border-color: #f59e0b; }
-    .element.alkaline    { background: linear-gradient(135deg, rgba(253,186,116,0.1), rgba(251,146,60,0.1)); border-color: #f97316; }
-    .element.transition  { background: linear-gradient(135deg, rgba(252,165,165,0.1), rgba(248,113,113,0.1)); border-color: #ef4444; }
-    .element.metalloid        { background: linear-gradient(135deg, rgba(199,210,254,0.1), rgba(165,180,252,0.1)); border-color: #6366f1; }
-    .element.post-transition  { background: linear-gradient(135deg, rgba(209,250,229,0.1), rgba(167,243,208,0.1)); border-color: #10b981; }
-    .element.lanthanide       { background: linear-gradient(135deg, rgba(254,215,170,0.1), rgba(253,186,116,0.1)); border-color: #fb923c; }
-    .element.actinide         { background: linear-gradient(135deg, rgba(254,202,202,0.1), rgba(252,165,165,0.1)); border-color: #f87171; }
-    .element-spacer { grid-column: span 1; }
+    .app-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(56,189,248,0.15);
+    }
 
-    /* Element Detail Modal */
-    .element-detail-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-    .element-detail-modal.active { display: flex; }
-    .element-detail-card { background: var(--bg-card); border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; border: 1px solid var(--border-s); }
-    .element-detail-close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: var(--text-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; }
-    .element-detail-close:hover { background: var(--border-s); color: var(--text); }
+    .app-icon-wrap {
+      width: 80px; height: 80px; margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-primary); border-radius: 12px; border: 1px solid var(--border);
+    }
+    .app-icon-wrap img { width: 50px; height: 50px; object-fit: contain; }
+    
+    .app-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .app-card p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; }
+    .app-cat-tag {
+      display: inline-block; padding: 0.3rem 0.8rem; background: var(--accent-glow);
+      color: var(--accent-dark); border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    }
+
+    /* ─── MODALS ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); display: none;
+      align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: var(--bg-white); border-radius: 20px; max-width: 600px; width: 90%;
+      max-height: 90vh; overflow-y: auto; position: relative; padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-close {
+      position: absolute; top: 1.2rem; right: 1.2rem; width: 36px; height: 36px;
+      border-radius: 50%; background: var(--bg-primary); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-secondary); transition: all 0.3s; border: none; font-size: 1.2rem; font-weight: bold;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text-primary); }
+
+    /* ─── QUIZ HUB & ACTIVE ─── */
+    .quiz-cat-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
+    }
+    .quiz-cat-card {
+      background: var(--bg-white); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem;
+      position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .quiz-cat-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--cat-color); }
+    .quiz-cat-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; }
+    .quiz-cat-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--cat-color); }
+    .quiz-cat-header h3 { font-weight: 700; font-size: 1.2rem; }
+    
+    .quiz-exp-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .quiz-exp-item {
+      display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem;
+      background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s;
+    }
+    .quiz-exp-item:hover { border-color: var(--accent); background: var(--accent-glow); }
+    .qei-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .qei-status { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: bold; }
+    .status-pending { background: rgba(100,116,139,0.15); color: var(--text-secondary); }
+    .status-attempted { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-completed { background: rgba(16,185,129,0.15); color: #10b981; }
+
+    /* Active Quiz */
+    .quiz-active-wrap { max-width: 800px; margin: 0 auto; background: var(--bg-white); padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .quiz-progress-bar { height: 8px; background: var(--border); border-radius: 10px; margin-bottom: 2rem; overflow: hidden; }
+    .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-dark)); border-radius: 10px; transition: width 0.4s; }
+    .quiz-q-num { font-size: 0.9rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+    .quiz-question { font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 1rem; }
+    .quiz-opt {
+      background: var(--bg-primary); border: 2px solid var(--border); border-radius: 12px; padding: 1.2rem 1.5rem;
+      cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 600; text-align: left; color: var(--text-primary);
+    }
+    .quiz-opt:hover:not(.disabled) { border-color: var(--accent); background: var(--accent-glow); color: var(--accent-dark); }
+    .quiz-opt.correct { border-color: var(--success); background: rgba(16,185,129,0.1); color: var(--success); }
+    .quiz-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); color: var(--danger); }
+    .quiz-opt.disabled { cursor: default; opacity: 0.8; }
+    
+    .quiz-feedback { margin-top: 1.5rem; padding: 1.2rem 1.5rem; border-radius: 12px; font-size: 1rem; font-weight: 600; display: none; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { background: rgba(16,185,129,0.1); border: 2px solid var(--success); color: var(--success); }
+    .quiz-feedback.wrong { background: rgba(239,68,68,0.1); border: 2px solid var(--danger); color: var(--danger); }
+
+    .quiz-result-card { text-align: center; padding: 2rem; }
+    .quiz-result-score { font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0; font-family: 'Space Mono', monospace; }
+
+    /* ─── NEW PERIODIC TABLE ─── */
+    .pt-wrap { overflow-x: auto; padding-bottom: 1rem; }
+    .periodic-table-grid {
+      display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; max-width: 1400px; margin: 1.5rem auto;
+    }
+    .element-cell {
+      aspect-ratio: 1; background: var(--bg-white); border: 2px solid var(--border); border-radius: 8px;
+      padding: 4px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; position: relative;
+    }
+    .element-cell:hover {
+      transform: scale(1.15); z-index: 10; box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4); border-color: var(--accent);
+    }
+    .el-number { font-size: 0.6rem; color: var(--text-secondary); position: absolute; top: 4px; left: 4px; font-weight: bold; }
+    .el-sym { font-size: 1.2rem; font-weight: 700; color: inherit; font-family: 'Space Mono', monospace; }
+    .el-name { font-size: 0.5rem; color: inherit; opacity: 0.85; text-align: center; line-height: 1.1; margin-top: 2px; }
+    .el-spacer { grid-column: span 1; }
+
+    /* Element Colors */
+    .el-nonmetal { background: linear-gradient(135deg, #bfdbfe, #93c5fd); border-color: #3b82f6; color: #1e3a5f; }
+    .el-noble-gas { background: linear-gradient(135deg, #fbcfe8, #f9a8d4); border-color: #ec4899; color: #831843; }
+    .el-alkali { background: linear-gradient(135deg, #fde68a, #fcd34d); border-color: #f59e0b; color: #78350f; }
+    .el-alkaline { background: linear-gradient(135deg, #fdba74, #fb923c); border-color: #f97316; color: #431407; }
+    .el-transition { background: linear-gradient(135deg, #fca5a5, #f87171); border-color: #ef4444; color: #450a0a; }
+    .el-metalloid { background: linear-gradient(135deg, #c7d2fe, #a5b4fc); border-color: #6366f1; color: #1e1b4b; }
+    .el-post-transition { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-color: #10b981; color: #064e3b; }
+    .el-lanthanide { background: linear-gradient(135deg, #fed7aa, #fdba74); border-color: #fb923c; color: #431407; }
+    .el-actinide { background: linear-gradient(135deg, #fecaca, #fca5a5); border-color: #f87171; color: #450a0a; }
+    .el-unknown { background: var(--bg-primary); border-color: var(--border); color: var(--text-secondary); }
+
+    /* Lanthanide / Actinide rows */
+    .series-gap { height: 10px; }
+    .series-row {
+      display: grid; grid-template-columns: 60px repeat(15, 1fr); align-items: center; gap: 4px;
+      max-width: 1400px; margin: 0 auto 4px auto;
+    }
+    .el-series-label { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-align: right; padding-right: 8px; line-height: 1.2; }
+
+    /* PTable Legend */
+    .pt-legend {
+      display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin: 2rem auto 0; padding: 1.5rem;
+      background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; max-width: 1400px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-primary); font-weight: 600; text-transform: capitalize; }
+    .legend-swatch { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; border: 2px solid; }
+
+    /* ─── ELEMENT MODAL ─── */
     .element-detail-symbol { font-size: 4rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent); text-align: center; }
     .element-detail-name { font-size: 2rem; font-weight: 700; text-align: center; margin-top: 0.5rem; }
     .element-detail-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem; }
-    .element-info-item { padding: 1rem; background: var(--bg-card2); border-radius: 8px; border: 1px solid var(--border-s); }
-    .element-info-label { font-size: 0.75rem; color: var(--text-soft); margin-bottom: 0.25rem; }
-    .element-info-value { font-size: 1.125rem; font-weight: 600; }
+    .element-info-item { padding: 1rem; background: var(--bg-primary); border-radius: 10px; border: 1px solid var(--border); }
+    .element-info-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .element-info-value { font-size: 1.2rem; font-weight: 600; }
 
-    /* Progress (Commit 1 unchanged) */
-    .progress-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
-    .progress-bar { width: 100%; height: 12px; background: var(--border-s); border-radius: 6px; overflow: hidden; margin-top: 1rem; }
-    .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.5s; border-radius: 6px; }
-    .completed-list { list-style: none; margin-top: 1rem; }
-    .completed-item { padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; margin-bottom: 0.5rem; border-radius: 4px; }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .periodic-table { grid-template-columns: repeat(9, 1fr); }
-      .element-symbol { font-size: 1rem; }
-      .element-name { display: none; }
+    /* ─── DASHBOARD STATS ─── */
+    .stats-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card-home {
+      background: var(--bg-white); padding: 2rem; border-radius: 16px; border: 1px solid var(--border);
+      text-align: center; transition: all 0.3s; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
+    .stat-card-home:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 25px rgba(56,189,248,0.15); }
+    .stat-icon {
+      width: 64px; height: 64px; margin: 0 auto 1rem; background: var(--accent-glow); color: var(--accent-dark);
+      border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    }
+    .stat-number { font-size: 3rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--text-primary); }
+    .stat-label { margin-top: 0.5rem; color: var(--text-secondary); font-weight: 600; }
+
+    /* ─── SEARCH & FILTERS ─── */
+    .search-box {
+      width: 100%; padding: 1rem 1.5rem; border: 2px solid var(--border); border-radius: 12px;
+      font-family: 'Outfit', sans-serif; font-size: 1rem; background: var(--bg-white); color: var(--text-primary);
+      transition: all 0.3s; margin-bottom: 1.5rem;
+    }
+    .search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+    
+    .filter-tabs { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .filter-tab {
+      padding: 0.75rem 1.5rem; border-radius: 30px; border: 2px solid var(--border);
+      background: var(--bg-white); color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: all 0.3s;
+    }
+    .filter-tab:hover { border-color: var(--accent); color: var(--accent-dark); }
+    .filter-tab.active { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); color: #fff; border-color: var(--accent); }
+
+    /* ─── BADGES ─── */
+    .difficulty-badge { display: inline-block; padding: 0.375rem 0.875rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .difficulty-beginner { background: rgba(16,185,129,0.15); color: #10b981; }
+    .difficulty-intermediate { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .difficulty-advanced { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .difficulty-expert { background: rgba(168,85,247,0.15); color: #a855f7; }
+    .xp-badge { background: var(--accent-glow); color: var(--accent-dark); padding: 0.375rem 0.875rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+
+    .experiment-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .experiment-duration { display: flex; align-items: center; gap: 0.375rem; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; }
+
+    /* ─── PROGRESS SECTION ─── */
+    .overall-card {
+      background: var(--bg-white); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;
+      margin-bottom: 2.5rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .overall-stat { display: flex; flex-direction: column; gap: 0.5rem; }
+    .overall-stat .val { font-size: 2.5rem; font-weight: 800; color: var(--accent); font-family: 'Space Mono', monospace; }
+    .overall-stat .lbl { font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+
+    .prog-exp-item {
+      background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+    }
+    .prog-exp-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .prog-exp-header h4 { font-size: 1rem; font-weight: 700; }
+    .prog-pct { font-size: 1.1rem; font-weight: 700; color: var(--accent); font-family: 'Space Mono', monospace; text-align: right; }
+    .prog-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-dark)); border-radius: 10px; transition: width 0.6s; }
+    .prog-states { display: flex; gap: 1rem; margin-top: 0.4rem; }
+    .prog-state { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; }
+    .prog-state-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* ─── BOTTOM NAV ─── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-white);
+      border-top: 1px solid var(--border); padding: 0.5rem; z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .bottom-nav-items {
+      display: flex; justify-content: space-around; max-width: 1000px; margin: 0 auto;
+    }
+
+    .bottom-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0.6rem 0.5rem;
+      color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; transition: all 0.3s;
+      font-weight: 600; border-radius: 12px; flex: 1; text-align: center;
+    }
+
+    .bottom-nav-item:hover { background: var(--accent-glow); color: var(--accent-dark); }
+    .bottom-nav-item.active { color: var(--accent-dark); }
+    .bottom-nav-item span:first-child { font-size: 1.4rem; }
+
+    /* ─── DARK MODE TOGGLE ─── */
+    .dark-mode-toggle {
+      width: 60px; height: 32px; background: var(--border); border-radius: 16px; position: relative; cursor: pointer; transition: all 0.3s;
+    }
+    .dark-mode-toggle::before {
+      content: '☀️'; position: absolute; left: 4px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; transition: all 0.3s;
+    }
+    body.dark-mode .dark-mode-toggle { background: var(--accent-dark); }
+    body.dark-mode .dark-mode-toggle::before { content: '🌙'; left: 32px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .main-content { padding: 1rem; padding-bottom: 100px; }
+      .header { flex-direction: column; }
+      .overall-card { grid-template-columns: 1fr; }
+      .bottom-nav-item span:last-child { display: none; } /* Hide text on mobile for nav */
+      .element-name { display: none; }
+      .periodic-table-grid { gap: 2px; }
+      .element-cell { border-width: 1px; }
+      .el-sym { font-size: 0.9rem; }
+      .el-number { font-size: 0.5rem; }
+      .series-row { grid-template-columns: 45px repeat(15, 1fr); gap: 2px; }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="nav-logo" onclick="navigateTo('home')">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="#3b82f6"/>
-          <path d="M10 8h4v6l-5 9h14l-5-9V8h4M10 8h12" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="13" cy="20" r="1.2" fill="#60a5fa"/>
-          <circle cx="18" cy="22" r="1" fill="#93c5fd"/>
-        </svg>
-        <span>VChem<strong>Lab</strong></span>
-      </div>
-      <div class="nav-links">
-        <div class="nav-link active" data-page="home" onclick="navigateTo('home')">Home</div>
-        <div class="nav-link" data-page="experiments" onclick="navigateTo('experiments')">Experiments</div>
-        <div class="nav-link" data-page="periodic" onclick="navigateTo('periodic')">Elements</div>
-        <div class="nav-link" data-page="quiz" onclick="navigateTo('quiz')">Quiz</div>
-        <div class="nav-link" data-page="progress" onclick="navigateTo('progress')">Progress</div>
-      </div>
-      <div class="nav-actions">
-        <div class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
+  <div class="app-container">
+
+    <main class="main-content">
+
+      <header class="header">
+        <h1 class="header-title">Virtual Chemistry Lab</h1>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Theme"></div>
+
+          <div class="login-form" id="loginForm">
+            <input type="text" class="input" id="studentName" placeholder="Enter your name">
+            <button class="btn btn-primary" onclick="login()">Login</button>
+          </div>
+
+          <div id="loggedInUser" style="display: none; align-items: center; gap: 1rem;">
+            <span style="font-weight: 700; color: var(--accent-dark);" id="displayStudentName"></span>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+          </div>
         </div>
-        
-        <div class="login-form" id="loginForm">
-          <input type="text" class="input" id="studentName" placeholder="Enter your name">
-          <button class="btn btn-primary btn-sm" onclick="login()">Login</button>
-        </div>
+      </header>
 
-        <div id="loggedInUser" style="display: none; align-items: center; gap: 0.5rem;">
-          <span style="font-weight: 600;" id="displayStudentName"></span>
-          <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
-        </div>
-      </div>
-    </div>
-  </nav>
+      <section id="dashboard" class="section active">
+        <div style="max-width: 1200px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Welcome to the Lab</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+            Explore comprehensive experiments, discover elements, and test your knowledge safely.
+          </p>
 
-  <main class="main-content">
-
-    <div id="page-home" class="page active">
-      <div class="hero">
-        <div class="hero-eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-          Virtual Laboratory Experience
-        </div>
-        <h1>Explore Chemistry<br><span>Through Virtual Experiments</span></h1>
-        <p>A comprehensive virtual lab platform to safely explore experiments, discover elements, and test your knowledge.</p>
-        <div class="hero-btns">
-          <button class="btn btn-primary" onclick="navigateTo('experiments')">Start Experimenting</button>
-          <button class="btn btn-outline" onclick="navigateTo('periodic')">Periodic Table</button>
-        </div>
-      </div>
-      
-      <div class="feature-grid">
-        <div class="feature-card" onclick="navigateTo('experiments')">
-          <div class="feature-icon">🧪</div>
-          <h3>Experiments</h3>
-          <p>Explore hands-on interactive virtual chemistry labs.</p>
-        </div>
-        <div class="feature-card" onclick="navigateTo('periodic')">
-          <div class="feature-icon">⚛️</div>
-          <h3>Elements</h3>
-          <p>Full interactive periodic table with 118 elements.</p>
-        </div>
-        <div class="feature-card" onclick="navigateTo('quiz')">
-          <div class="feature-icon">📝</div>
-          <h3>Quiz</h3>
-          <p>Test your knowledge with our built-in chemistry quizzes.</p>
-        </div>
-        <div class="feature-card" onclick="navigateTo('progress')">
-          <div class="feature-icon">📊</div>
-          <h3>Progress</h3>
-          <p>Track your learning journey and quiz scores.</p>
-        </div>
-      </div>
-
-      <h3 class="sec-title" style="margin-top: 2rem;">✨ Featured Experiments</h3>
-      <div class="experiments-grid" id="experimentsGridHome"></div>
-    </div>
-
-    <div id="page-experiments" class="page">
-      <h2 class="sec-title">Experiment Library</h2>
-
-      <input
-        type="text"
-        class="search-box"
-        id="experimentSearch"
-        placeholder="Search by title or description..."
-        oninput="filterExperiments()"
-      >
-
-      <div class="filter-tabs">
-        <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All Levels</div>
-        <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
-        <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
-        <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
-        <div class="filter-tab"        data-filter="expert"       onclick="setDifficultyFilter('expert')">Expert</div>
-      </div>
-
-      <div id="experimentsGridFiltered"></div>
-    </div>
-
-    <div id="page-experimentDetail" class="page">
-      <div class="experiment-detail" id="experimentDetailContent"></div>
-    </div>
-
-    <div id="page-simulation" class="page">
-      <div class="experiment-detail">
-        <div class="back-btn" onclick="navigateTo('experimentDetail')">← Back to Experiment</div>
-        <h2 class="sec-title">Acid-Base Titration Simulation</h2>
-
-        <div class="simulation-container">
-          <div class="lab-equipment">
-            <div class="burette-container">
-              <div class="burette">
-                <div class="burette-liquid" id="buretteLiquid"></div>
-                <div class="drip" id="drip"></div>
-                <div class="burette-tip"></div>
-              </div>
+          <div class="stats-cards">
+            <div class="stat-card-home" onclick="showSection('experiments')">
+              <div class="stat-icon">🧪</div>
+              <div class="stat-number">40</div>
+              <div class="stat-label">Experiments</div>
             </div>
-            <div class="beaker">
-              <div class="beaker-liquid" id="beakerLiquid"></div>
+
+            <div class="stat-card-home" onclick="showSection('apparatus')">
+              <div class="stat-icon">🔬</div>
+              <div class="stat-number">20</div>
+              <div class="stat-label">Apparatus</div>
+            </div>
+
+            <div class="stat-card-home" onclick="showSection('periodic')">
+              <div class="stat-icon">⚛️</div>
+              <div class="stat-number">118</div>
+              <div class="stat-label">Elements</div>
+            </div>
+
+            <div class="stat-card-home" onclick="showSection('quiz')">
+              <div class="stat-icon">📝</div>
+              <div class="stat-number">40</div>
+              <div class="stat-label">Quizzes</div>
             </div>
           </div>
 
-          <div class="controls">
-            <div class="slider-container">
-              <div class="slider-label">
-                <span>Volume of NaOH added</span>
-                <span id="volumeDisplay">0 mL</span>
-              </div>
-              <input type="range" min="0" max="50" value="0" class="slider" id="volumeSlider">
-            </div>
-
-            <div class="results">
-              <div class="result-card">
-                <div class="result-label">Current pH</div>
-                <div class="result-value" id="phDisplay">2.00</div>
-              </div>
-              <div class="result-card">
-                <div class="result-label">Color</div>
-                <div class="result-value" id="colorDisplay" style="font-size: 1.25rem;">Colorless</div>
-              </div>
-              <div class="result-card">
-                <div class="result-label">Status</div>
-                <div class="result-value" id="statusDisplay" style="font-size: 1rem;">In Progress</div>
-              </div>
-            </div>
-          </div>
+          <h3 style="margin: 3rem 0 1.5rem; font-size: 1.8rem;">✨ Featured Experiments</h3>
+          <div class="experiments-grid" id="featuredExperimentsGrid"></div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div id="page-quiz" class="page">
-      <div class="quiz-container">
-        <h2 class="sec-title" style="margin-bottom: 2rem;">Chemistry Quiz</h2>
-        <div id="quizQuestions"></div>
-        <div style="text-align: center; margin-top: 2rem;">
-          <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
-        </div>
-        <div id="scoreDisplay"></div>
-      </div>
-    </div>
-
-    <div id="page-periodic" class="page">
-      <div style="max-width: 1400px;">
-        <h2 class="sec-title">Periodic Table of Elements</h2>
-        <p style="color: var(--text-soft); margin-bottom: 1.5rem;">
-          Click on any element to view detailed information
+      <section id="experiments" class="section">
+        <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Experiment Labs</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+          Select an experiment to begin. Track your progress across all 40 labs.
         </p>
-        <div class="periodic-table" id="periodicTable"></div>
+
+        <input type="text" class="search-box" id="experimentSearch" placeholder="Search by title or description..." oninput="filterExperiments()">
+
+        <div class="filter-tabs">
+          <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All Levels</div>
+          <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
+          <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
+          <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
+          <div class="filter-tab"        data-filter="expert"       onclick="setDifficultyFilter('expert')">Expert</div>
+        </div>
+
+        <div id="experimentsGridFiltered"></div>
+      </section>
+
+      <section id="experimentDetail" class="section">
+        <div class="experiment-detail" id="experimentDetailContent"></div>
+      </section>
+
+      <section id="simulation" class="section">
+        <div class="experiment-detail">
+          <div class="back-btn" onclick="showSection('experimentDetail')">← Back to Experiment</div>
+          <h2>Acid-Base Titration Simulation</h2>
+
+          <div class="simulation-container">
+            <div class="lab-equipment">
+              <div class="burette-container">
+                <div class="burette">
+                  <div class="burette-liquid" id="buretteLiquid"></div>
+                  <div class="drip" id="drip"></div>
+                  <div class="burette-tip"></div>
+                </div>
+              </div>
+              <div class="beaker">
+                <div class="beaker-liquid" id="beakerLiquid"></div>
+              </div>
+            </div>
+
+            <div class="controls">
+              <div class="slider-container">
+                <div class="slider-label">
+                  <span>Volume of NaOH added</span>
+                  <span id="volumeDisplay">0 mL</span>
+                </div>
+                <input type="range" min="0" max="50" value="0" class="slider" id="volumeSlider">
+              </div>
+
+              <div class="results">
+                <div class="result-card">
+                  <div class="result-label">Current pH</div>
+                  <div class="result-value" id="phDisplay">2.00</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-label">Color</div>
+                  <div class="result-value" id="colorDisplay" style="font-size: 1.25rem;">Colorless</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-label">Status</div>
+                  <div class="result-value" id="statusDisplay" style="font-size: 1.1rem;">In Progress</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="apparatus" class="section">
+        <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Laboratory Apparatus</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+          Click any instrument to see detailed information, usage guides, and safety notes.
+        </p>
+        <div class="app-grid" id="apparatusGrid"></div>
+      </section>
+
+      <section id="quiz" class="section">
+        <div style="max-width: 1200px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Quiz Centre</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+            Each experiment has its own quiz. Test your understanding after completing the experiment.
+          </p>
+          <div class="quiz-cat-grid" id="quizCatGrid"></div>
+        </div>
+      </section>
+
+      <section id="quiz-active" class="section">
+        <div class="quiz-active-wrap" id="quizActiveContent"></div>
+      </section>
+
+      <section id="periodic" class="section">
+        <div style="max-width: 1400px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Periodic Table of Elements</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.1rem;">
+            Click on any element to view detailed information.
+          </p>
+          <div class="pt-wrap">
+            <div class="periodic-table-grid" id="periodicTableGrid"></div>
+            <div class="series-gap"></div>
+            <div class="series-row" id="lanthanideRow"></div>
+            <div class="series-row" id="actinideRow"></div>
+          </div>
+          <div class="pt-legend" id="ptLegend"></div>
+        </div>
+      </section>
+
+      <section id="progress" class="section">
+        <div style="max-width: 1000px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">My Progress</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+            Your learning journey across all experiments and quizzes.
+          </p>
+          <div id="progressContent"></div>
+        </div>
+      </section>
+
+      <div class="modal-overlay" id="elementModal" onclick="closeModal(event, 'elementModal')">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeModalDirect('elementModal')">×</button>
+          <div class="element-detail-symbol" id="modalSymbol"></div>
+          <div class="element-detail-name" id="modalName"></div>
+          <div class="element-detail-info" id="modalInfoGrid"></div>
+        </div>
       </div>
-    </div>
 
-    <div id="page-progress" class="page">
-      <h2 class="sec-title" style="margin-bottom: 2rem;">My Progress</h2>
-      <div id="progressContent"></div>
-    </div>
-
-    <div class="element-detail-modal" id="elementModal">
-      <div class="element-detail-card">
-        <div class="element-detail-close" onclick="closeElementModal()">×</div>
-        <div class="element-detail-symbol" id="modalSymbol"></div>
-        <div class="element-detail-name"   id="modalName"></div>
-        <div class="element-detail-info"   id="modalInfo"></div>
+      <div class="modal-overlay" id="apparatusModal" onclick="closeModal(event, 'apparatusModal')">
+        <div class="modal-box" style="max-width: 650px;">
+          <button class="modal-close" onclick="closeModalDirect('apparatusModal')">×</button>
+          <div id="apparatusModalContent"></div>
+        </div>
       </div>
-    </div>
 
-  </main>
+    </main>
 
+    <nav class="bottom-nav">
+      <div class="bottom-nav-items">
+        <div class="bottom-nav-item active" data-section="dashboard"   onclick="showSection('dashboard')"><span>🏠</span><span>Lab</span></div>
+        <div class="bottom-nav-item"        data-section="experiments" onclick="showSection('experiments')"><span>🧪</span><span>Experiments</span></div>
+        <div class="bottom-nav-item"        data-section="apparatus"   onclick="showSection('apparatus')"><span>🔬</span><span>Apparatus</span></div>
+        <div class="bottom-nav-item"        data-section="periodic"    onclick="showSection('periodic')"><span>⚛️</span><span>Elements</span></div>
+        <div class="bottom-nav-item"        data-section="quiz"        onclick="showSection('quiz')"><span>📝</span><span>Quiz</span></div>
+        <div class="bottom-nav-item"        data-section="progress"    onclick="showSection('progress')"><span>📊</span><span>Progress</span></div>
+      </div>
+    </nav>
 
-  <script>
+  </div><script>
 
-    // ─── COMMIT 2 DATA: EXPERIMENT CATEGORIES ─────────────────────────────────
+    // ─── DATA: PERIODIC ELEMENTS (118 - NEW STRUCTURE) ──────────────────────
+    const periodicElements = [
+      {n:1,sym:'H',name:'Hydrogen',w:'1.008',cat:'nonmetal',g:1,p:1},{n:2,sym:'He',name:'Helium',w:'4.003',cat:'noble-gas',g:18,p:1},
+      {n:3,sym:'Li',name:'Lithium',w:'6.941',cat:'alkali',g:1,p:2},{n:4,sym:'Be',name:'Beryllium',w:'9.012',cat:'alkaline',g:2,p:2},
+      {n:5,sym:'B',name:'Boron',w:'10.81',cat:'metalloid',g:13,p:2},{n:6,sym:'C',name:'Carbon',w:'12.01',cat:'nonmetal',g:14,p:2},
+      {n:7,sym:'N',name:'Nitrogen',w:'14.01',cat:'nonmetal',g:15,p:2},{n:8,sym:'O',name:'Oxygen',w:'16.00',cat:'nonmetal',g:16,p:2},
+      {n:9,sym:'F',name:'Fluorine',w:'19.00',cat:'nonmetal',g:17,p:2},{n:10,sym:'Ne',name:'Neon',w:'20.18',cat:'noble-gas',g:18,p:2},
+      {n:11,sym:'Na',name:'Sodium',w:'22.99',cat:'alkali',g:1,p:3},{n:12,sym:'Mg',name:'Magnesium',w:'24.31',cat:'alkaline',g:2,p:3},
+      {n:13,sym:'Al',name:'Aluminium',w:'26.98',cat:'post-transition',g:13,p:3},{n:14,sym:'Si',name:'Silicon',w:'28.09',cat:'metalloid',g:14,p:3},
+      {n:15,sym:'P',name:'Phosphorus',w:'30.97',cat:'nonmetal',g:15,p:3},{n:16,sym:'S',name:'Sulfur',w:'32.06',cat:'nonmetal',g:16,p:3},
+      {n:17,sym:'Cl',name:'Chlorine',w:'35.45',cat:'nonmetal',g:17,p:3},{n:18,sym:'Ar',name:'Argon',w:'39.95',cat:'noble-gas',g:18,p:3},
+      {n:19,sym:'K',name:'Potassium',w:'39.10',cat:'alkali',g:1,p:4},{n:20,sym:'Ca',name:'Calcium',w:'40.08',cat:'alkaline',g:2,p:4},
+      {n:21,sym:'Sc',name:'Scandium',w:'44.96',cat:'transition',g:3,p:4},{n:22,sym:'Ti',name:'Titanium',w:'47.87',cat:'transition',g:4,p:4},
+      {n:23,sym:'V',name:'Vanadium',w:'50.94',cat:'transition',g:5,p:4},{n:24,sym:'Cr',name:'Chromium',w:'52.00',cat:'transition',g:6,p:4},
+      {n:25,sym:'Mn',name:'Manganese',w:'54.94',cat:'transition',g:7,p:4},{n:26,sym:'Fe',name:'Iron',w:'55.85',cat:'transition',g:8,p:4},
+      {n:27,sym:'Co',name:'Cobalt',w:'58.93',cat:'transition',g:9,p:4},{n:28,sym:'Ni',name:'Nickel',w:'58.69',cat:'transition',g:10,p:4},
+      {n:29,sym:'Cu',name:'Copper',w:'63.55',cat:'transition',g:11,p:4},{n:30,sym:'Zn',name:'Zinc',w:'65.38',cat:'transition',g:12,p:4},
+      {n:31,sym:'Ga',name:'Gallium',w:'69.72',cat:'post-transition',g:13,p:4},{n:32,sym:'Ge',name:'Germanium',w:'72.63',cat:'metalloid',g:14,p:4},
+      {n:33,sym:'As',name:'Arsenic',w:'74.92',cat:'metalloid',g:15,p:4},{n:34,sym:'Se',name:'Selenium',w:'78.97',cat:'nonmetal',g:16,p:4},
+      {n:35,sym:'Br',name:'Bromine',w:'79.90',cat:'nonmetal',g:17,p:4},{n:36,sym:'Kr',name:'Krypton',w:'83.80',cat:'noble-gas',g:18,p:4},
+      {n:37,sym:'Rb',name:'Rubidium',w:'85.47',cat:'alkali',g:1,p:5},{n:38,sym:'Sr',name:'Strontium',w:'87.62',cat:'alkaline',g:2,p:5},
+      {n:39,sym:'Y',name:'Yttrium',w:'88.91',cat:'transition',g:3,p:5},{n:40,sym:'Zr',name:'Zirconium',w:'91.22',cat:'transition',g:4,p:5},
+      {n:41,sym:'Nb',name:'Niobium',w:'92.91',cat:'transition',g:5,p:5},{n:42,sym:'Mo',name:'Molybdenum',w:'95.95',cat:'transition',g:6,p:5},
+      {n:43,sym:'Tc',name:'Technetium',w:'98',cat:'transition',g:7,p:5},{n:44,sym:'Ru',name:'Ruthenium',w:'101.07',cat:'transition',g:8,p:5},
+      {n:45,sym:'Rh',name:'Rhodium',w:'102.91',cat:'transition',g:9,p:5},{n:46,sym:'Pd',name:'Palladium',w:'106.42',cat:'transition',g:10,p:5},
+      {n:47,sym:'Ag',name:'Silver',w:'107.87',cat:'transition',g:11,p:5},{n:48,sym:'Cd',name:'Cadmium',w:'112.41',cat:'transition',g:12,p:5},
+      {n:49,sym:'In',name:'Indium',w:'114.82',cat:'post-transition',g:13,p:5},{n:50,sym:'Sn',name:'Tin',w:'118.71',cat:'post-transition',g:14,p:5},
+      {n:51,sym:'Sb',name:'Antimony',w:'121.76',cat:'metalloid',g:15,p:5},{n:52,sym:'Te',name:'Tellurium',w:'127.60',cat:'metalloid',g:16,p:5},
+      {n:53,sym:'I',name:'Iodine',w:'126.90',cat:'nonmetal',g:17,p:5},{n:54,sym:'Xe',name:'Xenon',w:'131.29',cat:'noble-gas',g:18,p:5},
+      {n:55,sym:'Cs',name:'Caesium',w:'132.91',cat:'alkali',g:1,p:6},{n:56,sym:'Ba',name:'Barium',w:'137.33',cat:'alkaline',g:2,p:6},
+      {n:57,sym:'La',name:'Lanthanum',w:'138.91',cat:'lanthanide',g:3,p:6},{n:58,sym:'Ce',name:'Cerium',w:'140.12',cat:'lanthanide',g:3,p:6},
+      {n:59,sym:'Pr',name:'Praseodymium',w:'140.91',cat:'lanthanide',g:3,p:6},{n:60,sym:'Nd',name:'Neodymium',w:'144.24',cat:'lanthanide',g:3,p:6},
+      {n:61,sym:'Pm',name:'Promethium',w:'145',cat:'lanthanide',g:3,p:6},{n:62,sym:'Sm',name:'Samarium',w:'150.36',cat:'lanthanide',g:3,p:6},
+      {n:63,sym:'Eu',name:'Europium',w:'151.96',cat:'lanthanide',g:3,p:6},{n:64,sym:'Gd',name:'Gadolinium',w:'157.25',cat:'lanthanide',g:3,p:6},
+      {n:65,sym:'Tb',name:'Terbium',w:'158.93',cat:'lanthanide',g:3,p:6},{n:66,sym:'Dy',name:'Dysprosium',w:'162.50',cat:'lanthanide',g:3,p:6},
+      {n:67,sym:'Ho',name:'Holmium',w:'164.93',cat:'lanthanide',g:3,p:6},{n:68,sym:'Er',name:'Erbium',w:'167.26',cat:'lanthanide',g:3,p:6},
+      {n:69,sym:'Tm',name:'Thulium',w:'168.93',cat:'lanthanide',g:3,p:6},{n:70,sym:'Yb',name:'Ytterbium',w:'173.04',cat:'lanthanide',g:3,p:6},
+      {n:71,sym:'Lu',name:'Lutetium',w:'174.97',cat:'lanthanide',g:3,p:6},{n:72,sym:'Hf',name:'Hafnium',w:'178.49',cat:'transition',g:4,p:6},
+      {n:73,sym:'Ta',name:'Tantalum',w:'180.95',cat:'transition',g:5,p:6},{n:74,sym:'W',name:'Tungsten',w:'183.84',cat:'transition',g:6,p:6},
+      {n:75,sym:'Re',name:'Rhenium',w:'186.21',cat:'transition',g:7,p:6},{n:76,sym:'Os',name:'Osmium',w:'190.23',cat:'transition',g:8,p:6},
+      {n:77,sym:'Ir',name:'Iridium',w:'192.22',cat:'transition',g:9,p:6},{n:78,sym:'Pt',name:'Platinum',w:'195.08',cat:'transition',g:10,p:6},
+      {n:79,sym:'Au',name:'Gold',w:'196.97',cat:'transition',g:11,p:6},{n:80,sym:'Hg',name:'Mercury',w:'200.59',cat:'transition',g:12,p:6},
+      {n:81,sym:'Tl',name:'Thallium',w:'204.38',cat:'post-transition',g:13,p:6},{n:82,sym:'Pb',name:'Lead',w:'207.2',cat:'post-transition',g:14,p:6},
+      {n:83,sym:'Bi',name:'Bismuth',w:'208.98',cat:'post-transition',g:15,p:6},{n:84,sym:'Po',name:'Polonium',w:'209',cat:'metalloid',g:16,p:6},
+      {n:85,sym:'At',name:'Astatine',w:'210',cat:'nonmetal',g:17,p:6},{n:86,sym:'Rn',name:'Radon',w:'222',cat:'noble-gas',g:18,p:6},
+      {n:87,sym:'Fr',name:'Francium',w:'223',cat:'alkali',g:1,p:7},{n:88,sym:'Ra',name:'Radium',w:'226',cat:'alkaline',g:2,p:7},
+      {n:89,sym:'Ac',name:'Actinium',w:'227',cat:'actinide',g:3,p:7},{n:90,sym:'Th',name:'Thorium',w:'232.04',cat:'actinide',g:3,p:7},
+      {n:91,sym:'Pa',name:'Protactinium',w:'231.04',cat:'actinide',g:3,p:7},{n:92,sym:'U',name:'Uranium',w:'238.03',cat:'actinide',g:3,p:7},
+      {n:93,sym:'Np',name:'Neptunium',w:'237',cat:'actinide',g:3,p:7},{n:94,sym:'Pu',name:'Plutonium',w:'244',cat:'actinide',g:3,p:7},
+      {n:95,sym:'Am',name:'Americium',w:'243',cat:'actinide',g:3,p:7},{n:96,sym:'Cm',name:'Curium',w:'247',cat:'actinide',g:3,p:7},
+      {n:97,sym:'Bk',name:'Berkelium',w:'247',cat:'actinide',g:3,p:7},{n:98,sym:'Cf',name:'Californium',w:'251',cat:'actinide',g:3,p:7},
+      {n:99,sym:'Es',name:'Einsteinium',w:'252',cat:'actinide',g:3,p:7},{n:100,sym:'Fm',name:'Fermium',w:'257',cat:'actinide',g:3,p:7},
+      {n:101,sym:'Md',name:'Mendelevium',w:'258',cat:'actinide',g:3,p:7},{n:102,sym:'No',name:'Nobelium',w:'259',cat:'actinide',g:3,p:7},
+      {n:103,sym:'Lr',name:'Lawrencium',w:'266',cat:'actinide',g:3,p:7},{n:104,sym:'Rf',name:'Rutherfordium',w:'267',cat:'transition',g:4,p:7},
+      {n:105,sym:'Db',name:'Dubnium',w:'268',cat:'transition',g:5,p:7},{n:106,sym:'Sg',name:'Seaborgium',w:'271',cat:'transition',g:6,p:7},
+      {n:107,sym:'Bh',name:'Bohrium',w:'272',cat:'transition',g:7,p:7},{n:108,sym:'Hs',name:'Hassium',w:'277',cat:'transition',g:8,p:7},
+      {n:109,sym:'Mt',name:'Meitnerium',w:'278',cat:'unknown',g:9,p:7},{n:110,sym:'Ds',name:'Darmstadtium',w:'281',cat:'unknown',g:10,p:7},
+      {n:111,sym:'Rg',name:'Roentgenium',w:'282',cat:'unknown',g:11,p:7},{n:112,sym:'Cn',name:'Copernicium',w:'285',cat:'unknown',g:12,p:7},
+      {n:113,sym:'Nh',name:'Nihonium',w:'286',cat:'unknown',g:13,p:7},{n:114,sym:'Fl',name:'Flerovium',w:'289',cat:'unknown',g:14,p:7},
+      {n:115,sym:'Mc',name:'Moscovium',w:'290',cat:'unknown',g:15,p:7},{n:116,sym:'Lv',name:'Livermorium',w:'293',cat:'unknown',g:16,p:7},
+      {n:117,sym:'Ts',name:'Tennessine',w:'294',cat:'unknown',g:17,p:7},{n:118,sym:'Og',name:'Oganesson',w:'294',cat:'unknown',g:18,p:7}
+    ];
+
+    // ─── DATA: APPARATUS ──────────────────────────────────────────────────────
+    const apparatusData = [
+      {id:'beaker',name:'Beaker',category:'Glassware',short:'General-purpose glass container for mixing and heating.',
+       desc:'A beaker is a cylindrical glass container with a flat bottom and a small spout for pouring. It is one of the most common pieces of laboratory glassware.',
+       uses:['Mixing and stirring chemicals','Heating liquids on a hot plate or water bath','Temporary storage of solutions'],
+       safety:['Do not heat empty beakers','Use tongs when handling hot beakers','Place on a wire gauze when heating'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Beaker_laboratory_ware.svg/200px-Beaker_laboratory_ware.svg.png'},
+      {id:'burette',name:'Burette',category:'Measuring',short:'Graduated glass tube for delivering precise volumes.',
+       desc:'A burette is a long, graduated glass tube with a stopcock at the bottom used to deliver precise and variable volumes of liquid. Essential for titration.',
+       uses:['Delivering precise volumes of titrant','Acid-base titrations','Complexometric titrations'],
+       safety:['Check stopcock for leaks','Remove air bubbles from tip','Clamp securely'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Burette.svg/100px-Burette.svg.png'},
+      {id:'conical-flask',name:'Conical Flask',category:'Glassware',short:'Tapered flask ideal for titrations.',
+       desc:'An Erlenmeyer flask has a wide flat bottom and a narrow neck, ideal for swirling solutions without spillage.',
+       uses:['Titration flask','Swirling reaction mixtures','Filtrate collection'],
+       safety:['Do not heat sealed flasks','Handle with tongs when hot'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Erlenmeyer_flask.svg/150px-Erlenmeyer_flask.svg.png'},
+      {id:'pipette',name:'Volumetric Pipette',category:'Measuring',short:'Delivers a single fixed, accurate volume.',
+       desc:'Calibrated to deliver one precise volume (commonly 10, 25 mL) for accurate transfer of solutions.',
+       uses:['Transferring exact volumes','Preparing standard solutions','Dilution'],
+       safety:['Never use mouth suction','Rinse with solution before use','Read from bottom of meniscus'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Volumetric_pipette.svg/100px-Volumetric_pipette.svg.png'},
+      {id:'test-tube',name:'Test Tube',category:'Glassware',short:'Cylindrical glass tube for small-scale reactions.',
+       desc:'Used to hold small amounts of substances for reactions, heating, or observation.',
+       uses:['Small-scale reactions','Heating small quantities','Qualitative analysis'],
+       safety:['Point open end away from people when heating','Do not seal when heated','Use a test tube holder'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Test_tube_ss_2013.svg/100px-Test_tube_ss_2013.svg.png'},
+      {id:'bunsen-burner',name:'Bunsen Burner',category:'Heating',short:'Gas burner providing a clean flame.',
+       desc:'Produces a single open gas flame for heating, sterilisation and combustion.',
+       uses:['Heating chemicals in test tubes','Flame tests for metal ions'],
+       safety:['Never leave lit burner unattended','Tie back hair','Use blue flame for heating'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Bunsen_burner.svg/100px-Bunsen_burner.svg.png'},
+      {id:'measuring-cylinder',name:'Measuring Cylinder',category:'Measuring',short:'Graduated cylinder for volumes.',
+       desc:'A tall, narrow container graduated in mL used for measuring approximate volumes of liquids.',
+       uses:['Measuring approximate volumes','Preparing solutions'],
+       safety:['Read at eye level','Do not use as a reaction vessel','Do not heat'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Graduated_cylinder.svg/80px-Graduated_cylinder.svg.png'},
+      {id:'funnel',name:'Funnel',category:'Glassware',short:'Conical glassware for transferring or filtering.',
+       desc:'Used for transferring liquids into narrow containers or supporting filter paper.',
+       uses:['Filtration','Transferring liquids','Loading burettes'],
+       safety:['Support in a ring clamp','Use properly sized filter paper'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Glass_laboratory_funnel.jpg/80px-Glass_laboratory_funnel.jpg'},
+      {id:'evaporating-dish',name:'Evaporating Dish',category:'Glassware',short:'Wide dish for evaporating solvents.',
+       desc:'A shallow porcelain dish used to evaporate solvents to obtain solid residues or crystals.',
+       uses:['Evaporating solutions','Drying precipitates'],
+       safety:['Use tongs when hot','Do not overheat rapidly'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Evaporating_Dish.svg/100px-Evaporating_Dish.svg.png'},
+      {id:'spatula',name:'Spatula',category:'Tools',short:'Tool for transferring solids.',
+       desc:'Flat metal tool used for transferring solid chemicals or scraping.',
+       uses:['Transferring solids','Mixing','Scraping'],
+       safety:['Clean before use to prevent contamination','Do not use wooden spatulas for corrosive chemicals'],
+       img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Spatel.jpg/100px-Spatel.jpg'}
+    ];
+
+    // ─── DATA: EXPERIMENT CATEGORIES (40 Experiments) ─────────────────────────
     const expCategories = [
       {
         id: 'class9', catColor: '#10b981', num: 1, title: 'Class 9–10: Basic Chemistry', subtitle: 'Foundation experiments',
         experiments: [
-          {id:'c9-1', emoji:'🧪', title:'Acid-Base Titration', desc:'Determine the concentration of HCl using a standard NaOH solution.', difficulty:'intermediate', duration:'45 min',
+          {id:'c9-1', emoji:'🧪', title:'Acid-Base Titration', desc:'Determine the concentration of HCl using a standard NaOH solution.', difficulty:'intermediate', duration:'45 min', xp:50,
            hasSimulation: true,
+           apparatus:['burette','pipette','conical-flask','beaker','funnel'],
            aim:'To determine the concentration of HCl by titrating it against a standard NaOH solution using phenolphthalein.',
            theory:'In acid-base titration a standard solution neutralises the analyte. The equivalence point is detected by a colour change. Phenolphthalein is colourless in acid and pink in base.',
            equation:'HCl + NaOH → NaCl + H₂O',
@@ -493,9 +1130,15 @@
            observations:'Solution changes from colourless to pale pink.',
            result:'Molarity of HCl calculated successfully.',
            precautions:['Rinse burette before use.','Remove air bubbles.','Add NaOH slowly near endpoint.'],
-           videoId:'nFniJ6MHZWY'
+           videoId:'nFniJ6MHZWY',
+           quiz: [
+             {q:'Which indicator is used for strong acid–strong base titration?', opts:['Methyl orange','Phenolphthalein','Starch','Litmus'], ans:1},
+             {q:'At equivalence point, moles of acid equal moles of:', opts:['Solvent','Base','Indicator','Water'], ans:1},
+             {q:'Colour change of phenolphthalein with NaOH is:', opts:['Yellow to orange','Colourless to pink','Pink to colourless','Blue to red'], ans:1}
+           ]
           },
-          {id:'c9-2', emoji:'🔥', title:'Preparation of Oxygen Gas', desc:'Generate oxygen by decomposition of hydrogen peroxide.', difficulty:'beginner', duration:'30 min',
+          {id:'c9-2', emoji:'🔥', title:'Preparation of Oxygen Gas', desc:'Generate oxygen by decomposition of hydrogen peroxide.', difficulty:'beginner', duration:'30 min', xp:50,
+           apparatus:['test-tube','measuring-cylinder'],
            aim:'Prepare oxygen gas by catalytic decomposition of H₂O₂.',
            theory:'MnO₂ acts as a catalyst speeding up decomposition of H₂O₂. Oxygen relights a glowing splint.',
            equation:'2H₂O₂ → 2H₂O + O₂↑ (MnO₂ catalyst)',
@@ -504,9 +1147,14 @@
            observations:'Vigorous effervescence. Splint relights.',
            result:'Oxygen gas prepared and confirmed.',
            precautions:['Handle H₂O₂ with care.','Ensure gas-tight joints.'],
-           videoId:'YSrLWgwLNMM'
+           videoId:'YSrLWgwLNMM',
+           quiz: [
+             {q:'Role of MnO₂ in this experiment?', opts:['Reactant','Product','Catalyst','Inhibitor'], ans:2},
+             {q:'How is oxygen confirmed?', opts:['Burning smell','Litmus turns red','Glowing splint relights','Turns limewater milky'], ans:2}
+           ]
           },
-          {id:'c9-3', emoji:'💥', title:'Chemical Reaction Types', desc:'Observe combination, decomposition, and displacement reactions.', difficulty:'beginner', duration:'40 min',
+          {id:'c9-3', emoji:'💥', title:'Chemical Reaction Types', desc:'Observe combination, decomposition, and displacement reactions.', difficulty:'beginner', duration:'40 min', xp:45,
+           apparatus:['test-tube','bunsen-burner','spatula','beaker'],
            aim:'Observe and classify different types of chemical reactions.',
            theory:'Reactions can be Combination, Decomposition, Single Displacement, or Double Displacement.',
            equation:'Combination: Mg + O₂ → MgO | Decomposition: CaCO₃ → CaO + CO₂',
@@ -514,9 +1162,15 @@
            procedure:['Burn Mg in air (Combination).','Heat CaCO₃ and test gas (Decomposition).','Add Zn to CuSO₄ (Single Displacement).','Mix Lead nitrate and KI (Double Displacement).'],
            observations:'Mg burns bright white. Limewater turns milky. Cu deposits on Zn. Yellow ppt forms.',
            result:'Four types of reactions demonstrated.',
-           precautions:['Do not look directly at burning Mg.','Wear goggles.']
+           precautions:['Do not look directly at burning Mg.','Wear goggles.'],
+           videoId:'',
+           quiz: [
+             {q:'Burning Mg in oxygen is an example of:', opts:['Decomposition','Combination','Displacement','Double displacement'], ans:1},
+             {q:'Gas that turns limewater milky?', opts:['Oxygen','Hydrogen','Carbon dioxide','Nitrogen'], ans:2}
+           ]
           },
-          {id:'c9-4', emoji:'💧', title:'Properties of Acids & Bases', desc:'Test substances with litmus, phenolphthalein and methyl orange.', difficulty:'beginner', duration:'35 min',
+          {id:'c9-4', emoji:'💧', title:'Properties of Acids & Bases', desc:'Test substances with litmus, phenolphthalein and methyl orange.', difficulty:'beginner', duration:'35 min', xp:40,
+           apparatus:['test-tube','dropper','beaker'],
            aim:'Identify acidic, basic and neutral substances using indicators.',
            theory:'Acids release H⁺, bases release OH⁻. Indicators change colour based on pH.',
            equation:'HCl → H⁺ + Cl⁻ | NaOH → Na⁺ + OH⁻',
@@ -524,9 +1178,15 @@
            procedure:['Take samples in test tubes.','Add blue litmus, record change.','Repeat with red litmus, phenolphthalein, methyl orange.','Classify substances.'],
            observations:'Acids turn blue litmus red. Bases turn red litmus blue and phenolphthalein pink.',
            result:'Substances classified correctly.',
-           precautions:['Do not taste chemicals.']
+           precautions:['Do not taste chemicals.'],
+           videoId:'',
+           quiz: [
+             {q:'Colour of red litmus in a base?', opts:['Remains red','Blue','Yellow','Colourless'], ans:1},
+             {q:'Phenolphthalein turns pink in:', opts:['Acids','Neutral solutions','Bases','All solutions'], ans:2}
+           ]
           },
-          {id:'c9-5', emoji:'⚡', title:'Reactivity Series', desc:'Determine relative reactivity of metals through displacement.', difficulty:'intermediate', duration:'40 min',
+          {id:'c9-5', emoji:'⚡', title:'Reactivity Series', desc:'Determine relative reactivity of metals through displacement.', difficulty:'intermediate', duration:'40 min', xp:50,
+           apparatus:['test-tube','spatula','beaker'],
            aim:'Establish reactivity of Mg, Zn, Fe, Cu.',
            theory:'A more reactive metal displaces a less reactive metal from its salt solution.',
            equation:'Zn + CuSO₄ → ZnSO₄ + Cu',
@@ -534,9 +1194,15 @@
            procedure:['Clean metals with sandpaper.','Place Zn in CuSO₄. Observe.','Place Fe in CuSO₄. Observe.','Place Cu in ZnSO₄. Observe.'],
            observations:'Zn and Mg displace Cu. Fe displaces Cu slowly. Cu does not displace Zn.',
            result:'Reactivity order: Mg > Zn > Fe > Cu.',
-           precautions:['Clean metals before use.']
+           precautions:['Clean metals before use.'],
+           videoId:'',
+           quiz: [
+             {q:'Most reactive among Mg, Zn, Fe, Cu?', opts:['Copper','Iron','Zinc','Magnesium'], ans:3},
+             {q:'Zn in CuSO₄ forms a deposit of:', opts:['Zinc','Silver','Copper','Iron'], ans:2}
+           ]
           },
-          {id:'c9-6', emoji:'💎', title:'Crystallisation of CuSO₄', desc:'Grow pure blue crystals from a supersaturated solution.', difficulty:'intermediate', duration:'2 days',
+          {id:'c9-6', emoji:'💎', title:'Crystallisation of CuSO₄', desc:'Grow pure blue crystals from a supersaturated solution.', difficulty:'intermediate', duration:'2 days', xp:55,
+           apparatus:['beaker','evaporating-dish','funnel'],
            aim:'Obtain pure crystals of copper sulphate by crystallisation.',
            theory:'Crystallisation separates soluble impurities by forming pure crystals as a hot saturated solution cools.',
            equation:'CuSO₄ (aq) → CuSO₄·5H₂O (s)',
@@ -544,9 +1210,15 @@
            procedure:['Dissolve impure CuSO₄ in minimum hot water.','Filter out insoluble impurities.','Evaporate filtrate until crystallization point.','Cool slowly undisturbed.','Filter and dry crystals.'],
            observations:'Pure blue rhombic crystals form.',
            result:'Pure CuSO₄ crystals obtained.',
-           precautions:['Cool slowly for larger crystals.']
+           precautions:['Cool slowly for larger crystals.'],
+           videoId:'',
+           quiz: [
+             {q:'CuSO₄ crystals colour is:', opts:['White','Green','Blue','Red'], ans:2},
+             {q:'How many water molecules in the crystal?', opts:['3','4','5','7'], ans:2}
+           ]
           },
-          {id:'c9-7', emoji:'⚖️', title:'Conservation of Mass', desc:'Verify mass conservation using precipitation reaction.', difficulty:'beginner', duration:'30 min',
+          {id:'c9-7', emoji:'⚖️', title:'Conservation of Mass', desc:'Verify mass conservation using precipitation reaction.', difficulty:'beginner', duration:'30 min', xp:45,
+           apparatus:['beaker','measuring-cylinder'],
            aim:'Verify the law of conservation of mass.',
            theory:'Total mass of reactants equals total mass of products in a closed system.',
            equation:'NaCl + AgNO₃ → AgCl↓ + NaNO₃',
@@ -554,9 +1226,15 @@
            procedure:['Weigh flask with NaCl and tube with AgNO₃.','Mix solutions inside closed flask.','Weigh again. Compare masses.'],
            observations:'White ppt forms. Mass remains constant.',
            result:'Law of Conservation of Mass verified.',
-           precautions:['Keep system closed.']
+           precautions:['Keep system closed.'],
+           videoId:'',
+           quiz: [
+             {q:'Who proposed Conservation of Mass?', opts:['Dalton','Lavoisier','Avogadro','Newton'], ans:1},
+             {q:'Mixing NaCl and AgNO₃ forms a ppt of:', opts:['NaNO₃','AgCl','NaCl','AgNO₃'], ans:1}
+           ]
           },
-          {id:'c9-8', emoji:'🌈', title:'Flame Test for Metals', desc:'Identify metal ions by characteristic emission colours.', difficulty:'intermediate', duration:'35 min',
+          {id:'c9-8', emoji:'🌈', title:'Flame Test for Metals', desc:'Identify metal ions by characteristic emission colours.', difficulty:'intermediate', duration:'35 min', xp:40,
+           apparatus:['bunsen-burner','spatula','watch-glass'],
            aim:'Identify Na⁺, K⁺, Ca²⁺, Cu²⁺, Ba²⁺ by flame colours.',
            theory:'Heated metal ions emit light of specific wavelengths returning to ground state.',
            equation:'Excited electrons → Photon emission',
@@ -565,9 +1243,14 @@
            observations:'Distinct colours: Na (yellow), K (lilac), Ca (red), Cu (green).',
            result:'Metals identified by flame colour.',
            precautions:['Use tongs.'],
-           videoId:'IJkLuwt8GWU'
+           videoId:'IJkLuwt8GWU',
+           quiz: [
+             {q:'Flame colour of sodium?', opts:['Lilac','Green','Golden yellow','Brick red'], ans:2},
+             {q:'Copper ions produce a ___ flame.', opts:['Red','Blue','Green','Yellow'], ans:2}
+           ]
           },
-          {id:'c9-9', emoji:'📏', title:'Acids and Indicators', desc:'Identify strong vs weak acids using universal indicator.', difficulty:'beginner', duration:'30 min',
+          {id:'c9-9', emoji:'📏', title:'Acids and Indicators', desc:'Identify strong vs weak acids using universal indicator.', difficulty:'beginner', duration:'30 min', xp:40,
+           apparatus:['test-tube','dropper','beaker'],
            aim:'Classify unknown solutions as strong or weak acids.',
            theory:'Strong acids fully dissociate (pH 1-2). Weak acids partially dissociate (pH 3-5).',
            equation:'HCl → H⁺ + Cl⁻ (Complete)',
@@ -575,9 +1258,15 @@
            procedure:['Take 2 mL samples.','Add universal indicator to each.','Compare with colour chart.','Record pH values.'],
            observations:'Strong acids show pH 1-2. Weak show pH 3-5.',
            result:'Acids classified correctly.',
-           precautions:['Handle acids carefully.']
+           precautions:['Handle acids carefully.'],
+           videoId:'',
+           quiz: [
+             {q:'Acetic acid is a:', opts:['Strong acid','Strong base','Weak acid','Neutral'], ans:2},
+             {q:'pH of neutral solution?', opts:['0','5','7','14'], ans:2}
+           ]
           },
-          {id:'c9-10', emoji:'🧂', title:'Simple Salt Formation', desc:'Prepare common salt by neutralising HCl with NaOH.', difficulty:'beginner', duration:'30 min',
+          {id:'c9-10', emoji:'🧂', title:'Simple Salt Formation', desc:'Prepare common salt by neutralising HCl with NaOH.', difficulty:'beginner', duration:'30 min', xp:50,
+           apparatus:['beaker','evaporating-dish','bunsen-burner'],
            aim:'Prepare pure NaCl by neutralisation and evaporation.',
            theory:'Acid + Base → Salt + Water.',
            equation:'HCl + NaOH → NaCl + H₂O',
@@ -585,360 +1274,342 @@
            procedure:['Measure 25 mL HCl. Add indicator.','Add NaOH until pink.','Add 1 drop HCl to neutralize.','Evaporate to dryness.'],
            observations:'White crystals of NaCl form.',
            result:'NaCl prepared successfully.',
-           precautions:['Do not overheat dry salt.']
+           precautions:['Do not overheat dry salt.'],
+           videoId:'',
+           quiz: [
+             {q:'Neutralisation produces:', opts:['Only salt','Only water','Salt and water','Acid and base'], ans:2},
+             {q:'NaCl crystals are obtained after:', opts:['Filtration','Distillation','Evaporation','Crystallisation'], ans:2}
+           ]
           }
         ]
       },
       {
         id: 'class11', catColor: '#0ea5e9', num: 2, title: 'Class 11–12: Intermediate Chemistry', subtitle: 'Advanced school-level',
         experiments: [
-          {id:'c11-1', emoji:'🧪', title:'Preparation of Ferrous Sulphate', desc:'Synthesise green crystals from iron and sulphuric acid.', difficulty:'intermediate', duration:'45 min',
-           aim:'Prepare FeSO₄·7H₂O crystals.',
+          {id:'c11-1', emoji:'🧪', title:'Preparation of Ferrous Sulphate', desc:'Synthesise green crystals from iron and sulphuric acid.', difficulty:'intermediate', duration:'45 min', xp:60,
+           apparatus:['beaker','evaporating-dish','funnel'], aim:'Prepare FeSO₄·7H₂O crystals.',
            theory:'Iron reacts with dilute H₂SO₄ to form FeSO₄. Iron in excess prevents oxidation to Fe³⁺.',
            equation:'Fe + H₂SO₄ → FeSO₄ + H₂↑', materials:['Iron filings','Dilute H₂SO₄','Evaporating dish'],
            procedure:['Add excess iron to H₂SO₄. Warm gently.','Filter to remove excess iron.','Evaporate to crystallising point. Cool to form crystals.'],
-           observations:'Pale green crystals form.', result:'Ferrous sulphate prepared.', precautions:['Keep iron in excess.']
+           observations:'Pale green crystals form.', result:'Ferrous sulphate prepared.', precautions:['Keep iron in excess.'], videoId:'',
+           quiz: [
+             {q:'Colour of ferrous sulphate crystals?', opts:['Blue','White','Pale green','Yellow'], ans:2},
+             {q:'Gas evolved when Fe reacts with H₂SO₄?', opts:['O₂','CO₂','SO₂','H₂'], ans:3}
+           ]
           },
-          {id:'c11-3', emoji:'🍎', title:'Esterification Reaction', desc:'Prepare ethyl acetate from ethanol and acetic acid.', difficulty:'advanced', duration:'60 min',
-           aim:'Prepare ethyl acetate using H₂SO₄ catalyst.',
+          {id:'c11-3', emoji:'🍎', title:'Esterification Reaction', desc:'Prepare ethyl acetate from ethanol and acetic acid.', difficulty:'advanced', duration:'60 min', xp:65,
+           apparatus:['round-bottom-flask','condenser','separating-funnel'], aim:'Prepare ethyl acetate using H₂SO₄ catalyst.',
            theory:'Esterification is a reversible reaction between an acid and alcohol. H₂SO₄ acts as catalyst and dehydrating agent.',
            equation:'CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O', materials:['Glacial acetic acid','Ethanol','Conc. H₂SO₄','Reflux apparatus'],
            procedure:['Mix acid and ethanol. Add H₂SO₄ dropwise.','Reflux at 70°C for 30 mins.','Wash product with Na₂CO₃ solution in separating funnel to remove acid.'],
-           observations:'Liquid with fruity odour obtained.', result:'Ethyl acetate synthesised.', precautions:['Add H₂SO₄ slowly.']
+           observations:'Liquid with fruity odour obtained.', result:'Ethyl acetate synthesised.', precautions:['Add H₂SO₄ slowly.'], videoId:'',
+           quiz: [
+             {q:'Esterification of acetic acid & ethanol yields:', opts:['Methyl acetate','Ethyl acetate','Propyl acetate','Butyl acetate'], ans:1},
+             {q:'Catalyst used is:', opts:['NaOH','KMnO₄','Conc. H₂SO₄','AlCl₃'], ans:2}
+           ]
           },
-          {id:'c11-7', emoji:'💧', title:'Electrolysis of Water', desc:'Decompose water into hydrogen and oxygen.', difficulty:'intermediate', duration:'45 min',
-           aim:'Decompose water and verify 2:1 volume ratio.',
+          {id:'c11-7', emoji:'💧', title:'Electrolysis of Water', desc:'Decompose water into hydrogen and oxygen.', difficulty:'intermediate', duration:'45 min', xp:60,
+           apparatus:['beaker','measuring-cylinder'], aim:'Decompose water and verify 2:1 volume ratio.',
            theory:'H₂SO₄ makes water conductive. H₂ collects at cathode, O₂ at anode.',
            equation:'2H₂O → 2H₂↑ + O₂↑', materials:['Hoffmann voltameter','Dilute H₂SO₄','DC power supply'],
            procedure:['Fill voltameter with acidified water.','Connect to DC power.','Collect gases and test with splint.'],
-           observations:'H₂:O₂ volume ratio ≈ 2:1.', result:'Water decomposed by electrolysis.', precautions:['Keep H₂ away from flames.'], videoId:'VJTNyW36VCw'
+           observations:'H₂:O₂ volume ratio ≈ 2:1.', result:'Water decomposed by electrolysis.', precautions:['Keep H₂ away from flames.'], videoId:'VJTNyW36VCw',
+           quiz: [
+             {q:'Hydrogen gas collects at:', opts:['Anode','Cathode','Both','Neither'], ans:1},
+             {q:'Volume ratio H₂:O₂ is:', opts:['1:1','1:2','2:1','1:3'], ans:2}
+           ]
           }
         ]
       },
       {
         id: 'undergrad', catColor: '#8b5cf6', num: 3, title: 'Undergraduate Chemistry', subtitle: 'BSc level analytical experiments',
         experiments: [
-          {id:'ug-2', emoji:'🌡️', title:'Heat of Neutralisation', desc:'Determine enthalpy change using a calorimeter.', difficulty:'advanced', duration:'60 min',
-           aim:'Determine heat of neutralisation of HCl with NaOH.',
+          {id:'ug-2', emoji:'🌡️', title:'Heat of Neutralisation', desc:'Determine enthalpy change using a calorimeter.', difficulty:'advanced', duration:'60 min', xp:70,
+           apparatus:['beaker','thermometer'], aim:'Determine heat of neutralisation of HCl with NaOH.',
            theory:'Heat of neutralisation is enthalpy change when 1 mol of water forms. ΔH ≈ -57.3 kJ/mol.',
            equation:'H⁺ + OH⁻ → H₂O, ΔH = -57.3 kJ/mol', materials:['1M HCl','1M NaOH','Calorimeter','Thermometer'],
            procedure:['Measure 50 mL HCl in calorimeter, record temp.','Add 50 mL NaOH, stir, record max temp.','Calculate ΔT and q = mcΔT.'],
-           observations:'ΔT ≈ 5-7°C rise.', result:'ΔH calculated.', precautions:['Use polystyrene cup to minimize heat loss.']
+           observations:'ΔT ≈ 5-7°C rise.', result:'ΔH calculated.', precautions:['Use polystyrene cup to minimize heat loss.'], videoId:'',
+           quiz: [
+             {q:'Heat of neutralisation (strong acid/base) is ~:', opts:['-40 kJ/mol','-57 kJ/mol','-100 kJ/mol','-25 kJ/mol'], ans:1},
+             {q:'Why use a polystyrene cup?', opts:['Transparent','Poor heat conductor','Cheaper','Holds more'], ans:1}
+           ]
           },
-          {id:'ug-5', emoji:'💊', title:'Preparation of Aspirin', desc:'Synthesise aspirin from salicylic acid.', difficulty:'advanced', duration:'75 min',
-           aim:'Synthesise aspirin via acetylation.',
+          {id:'ug-5', emoji:'💊', title:'Preparation of Aspirin', desc:'Synthesise aspirin from salicylic acid.', difficulty:'advanced', duration:'75 min', xp:80,
+           apparatus:['round-bottom-flask','conical-flask'], aim:'Synthesise aspirin via acetylation.',
            theory:'Salicylic acid reacts with acetic anhydride (H₃PO₄ catalyst) to form acetylsalicylic acid.',
            equation:'C₆H₄(OH)COOH + (CH₃CO)₂O → C₆H₄(OCOCH₃)COOH + CH₃COOH', materials:['Salicylic acid','Acetic anhydride','H₃PO₄','Ice bath'],
            procedure:['Mix salicylic acid, acetic anhydride, H₃PO₄.','Heat at 85°C for 15 mins. Add water carefully.','Cool in ice bath to crystallise. Filter.'],
-           observations:'White needle-like crystals form.', result:'Aspirin synthesised.', precautions:['Acetic anhydride is corrosive.']
+           observations:'White needle-like crystals form.', result:'Aspirin synthesised.', precautions:['Acetic anhydride is corrosive.'], videoId:'',
+           quiz: [
+             {q:'Aspirin is chemically known as:', opts:['Acetaminophen','Acetylsalicylic acid','Salicylic acid','Asparagine'], ans:1},
+             {q:'Purity is tested using:', opts:['AgNO₃','FeCl₃','NaOH','KMnO₄'], ans:1}
+           ]
           }
         ]
       },
       {
         id: 'postgrad', catColor: '#f59e0b', num: 4, title: 'Postgraduate: Analytical', subtitle: 'MSc level instrumental analysis',
         experiments: [
-          {id:'pg-1', emoji:'🌈', title:'UV-Vis Spectroscopy', desc:'Study KMnO₄ absorption and verify Beer-Lambert law.', difficulty:'expert', duration:'60 min',
-           aim:'Verify Beer-Lambert law with KMnO₄.',
+          {id:'pg-1', emoji:'🌈', title:'UV-Vis Spectroscopy', desc:'Study KMnO₄ absorption and verify Beer-Lambert law.', difficulty:'expert', duration:'60 min', xp:85,
+           apparatus:['beaker','measuring-cylinder'], aim:'Verify Beer-Lambert law with KMnO₄.',
            theory:'A = εcl. Absorbance is proportional to concentration.',
            equation:'A = εcl', materials:['KMnO₄ solutions','UV-Vis spectrophotometer','Cuvettes'],
            procedure:['Prepare standards 2-10 ppm.','Scan for λmax (525 nm).','Measure absorbance and plot calibration curve.'],
-           observations:'Linear curve obtained.', result:'Beer-Lambert law verified.', precautions:['Blank with distilled water.']
+           observations:'Linear curve obtained.', result:'Beer-Lambert law verified.', precautions:['Blank with distilled water.'], videoId:'',
+           quiz: [
+             {q:'Beer-Lambert relates absorbance to:', opts:['Temperature','Concentration & path length','Pressure','Wavelength'], ans:1},
+             {q:'λmax of KMnO₄ is approx:', opts:['400 nm','525 nm','650 nm','780 nm'], ans:1}
+           ]
           }
         ]
       }
     ];
 
-    // ─── OLD DATA: PERIODIC ELEMENTS (118) ───────────────────────────────────
-    const periodicElements = [
-      { number: 1,   symbol: 'H',  name: 'Hydrogen',      weight: '1.008',  category: 'nonmetal',        group: 1,  period: 1 },
-      { number: 2,   symbol: 'He', name: 'Helium',        weight: '4.003',  category: 'noble-gas',       group: 18, period: 1 },
-      { number: 3,   symbol: 'Li', name: 'Lithium',       weight: '6.941',  category: 'alkali',          group: 1,  period: 2 },
-      { number: 4,   symbol: 'Be', name: 'Beryllium',     weight: '9.012',  category: 'alkaline',        group: 2,  period: 2 },
-      { number: 5,   symbol: 'B',  name: 'Boron',         weight: '10.81',  category: 'metalloid',       group: 13, period: 2 },
-      { number: 6,   symbol: 'C',  name: 'Carbon',        weight: '12.01',  category: 'nonmetal',        group: 14, period: 2 },
-      { number: 7,   symbol: 'N',  name: 'Nitrogen',      weight: '14.01',  category: 'nonmetal',        group: 15, period: 2 },
-      { number: 8,   symbol: 'O',  name: 'Oxygen',        weight: '16.00',  category: 'nonmetal',        group: 16, period: 2 },
-      { number: 9,   symbol: 'F',  name: 'Fluorine',      weight: '19.00',  category: 'nonmetal',        group: 17, period: 2 },
-      { number: 10,  symbol: 'Ne', name: 'Neon',          weight: '20.18',  category: 'noble-gas',       group: 18, period: 2 },
-      { number: 11,  symbol: 'Na', name: 'Sodium',        weight: '22.99',  category: 'alkali',          group: 1,  period: 3 },
-      { number: 12,  symbol: 'Mg', name: 'Magnesium',     weight: '24.31',  category: 'alkaline',        group: 2,  period: 3 },
-      { number: 13,  symbol: 'Al', name: 'Aluminum',      weight: '26.98',  category: 'post-transition', group: 13, period: 3 },
-      { number: 14,  symbol: 'Si', name: 'Silicon',       weight: '28.09',  category: 'metalloid',       group: 14, period: 3 },
-      { number: 15,  symbol: 'P',  name: 'Phosphorus',    weight: '30.97',  category: 'nonmetal',        group: 15, period: 3 },
-      { number: 16,  symbol: 'S',  name: 'Sulfur',        weight: '32.07',  category: 'nonmetal',        group: 16, period: 3 },
-      { number: 17,  symbol: 'Cl', name: 'Chlorine',      weight: '35.45',  category: 'nonmetal',        group: 17, period: 3 },
-      { number: 18,  symbol: 'Ar', name: 'Argon',         weight: '39.95',  category: 'noble-gas',       group: 18, period: 3 },
-      { number: 19,  symbol: 'K',  name: 'Potassium',     weight: '39.10',  category: 'alkali',          group: 1,  period: 4 },
-      { number: 20,  symbol: 'Ca', name: 'Calcium',       weight: '40.08',  category: 'alkaline',        group: 2,  period: 4 },
-      { number: 21,  symbol: 'Sc', name: 'Scandium',      weight: '44.96',  category: 'transition',      group: 3,  period: 4 },
-      { number: 22,  symbol: 'Ti', name: 'Titanium',      weight: '47.87',  category: 'transition',      group: 4,  period: 4 },
-      { number: 23,  symbol: 'V',  name: 'Vanadium',      weight: '50.94',  category: 'transition',      group: 5,  period: 4 },
-      { number: 24,  symbol: 'Cr', name: 'Chromium',      weight: '52.00',  category: 'transition',      group: 6,  period: 4 },
-      { number: 25,  symbol: 'Mn', name: 'Manganese',     weight: '54.94',  category: 'transition',      group: 7,  period: 4 },
-      { number: 26,  symbol: 'Fe', name: 'Iron',          weight: '55.85',  category: 'transition',      group: 8,  period: 4 },
-      { number: 27,  symbol: 'Co', name: 'Cobalt',        weight: '58.93',  category: 'transition',      group: 9,  period: 4 },
-      { number: 28,  symbol: 'Ni', name: 'Nickel',        weight: '58.69',  category: 'transition',      group: 10, period: 4 },
-      { number: 29,  symbol: 'Cu', name: 'Copper',        weight: '63.55',  category: 'transition',      group: 11, period: 4 },
-      { number: 30,  symbol: 'Zn', name: 'Zinc',          weight: '65.38',  category: 'transition',      group: 12, period: 4 },
-      { number: 31,  symbol: 'Ga', name: 'Gallium',       weight: '69.72',  category: 'post-transition', group: 13, period: 4 },
-      { number: 32,  symbol: 'Ge', name: 'Germanium',     weight: '72.63',  category: 'metalloid',       group: 14, period: 4 },
-      { number: 33,  symbol: 'As', name: 'Arsenic',       weight: '74.92',  category: 'metalloid',       group: 15, period: 4 },
-      { number: 34,  symbol: 'Se', name: 'Selenium',      weight: '78.97',  category: 'nonmetal',        group: 16, period: 4 },
-      { number: 35,  symbol: 'Br', name: 'Bromine',       weight: '79.90',  category: 'nonmetal',        group: 17, period: 4 },
-      { number: 36,  symbol: 'Kr', name: 'Krypton',       weight: '83.80',  category: 'noble-gas',       group: 18, period: 4 },
-      { number: 37,  symbol: 'Rb', name: 'Rubidium',      weight: '85.47',  category: 'alkali',          group: 1,  period: 5 },
-      { number: 38,  symbol: 'Sr', name: 'Strontium',     weight: '87.62',  category: 'alkaline',        group: 2,  period: 5 },
-      { number: 39,  symbol: 'Y',  name: 'Yttrium',       weight: '88.91',  category: 'transition',      group: 3,  period: 5 },
-      { number: 40,  symbol: 'Zr', name: 'Zirconium',     weight: '91.22',  category: 'transition',      group: 4,  period: 5 },
-      { number: 41,  symbol: 'Nb', name: 'Niobium',       weight: '92.91',  category: 'transition',      group: 5,  period: 5 },
-      { number: 42,  symbol: 'Mo', name: 'Molybdenum',    weight: '95.95',  category: 'transition',      group: 6,  period: 5 },
-      { number: 43,  symbol: 'Tc', name: 'Technetium',    weight: '98',     category: 'transition',      group: 7,  period: 5 },
-      { number: 44,  symbol: 'Ru', name: 'Ruthenium',     weight: '101.1',  category: 'transition',      group: 8,  period: 5 },
-      { number: 45,  symbol: 'Rh', name: 'Rhodium',       weight: '102.9',  category: 'transition',      group: 9,  period: 5 },
-      { number: 46,  symbol: 'Pd', name: 'Palladium',     weight: '106.4',  category: 'transition',      group: 10, period: 5 },
-      { number: 47,  symbol: 'Ag', name: 'Silver',        weight: '107.9',  category: 'transition',      group: 11, period: 5 },
-      { number: 48,  symbol: 'Cd', name: 'Cadmium',       weight: '112.4',  category: 'transition',      group: 12, period: 5 },
-      { number: 49,  symbol: 'In', name: 'Indium',        weight: '114.8',  category: 'post-transition', group: 13, period: 5 },
-      { number: 50,  symbol: 'Sn', name: 'Tin',           weight: '118.7',  category: 'post-transition', group: 14, period: 5 },
-      { number: 51,  symbol: 'Sb', name: 'Antimony',      weight: '121.8',  category: 'metalloid',       group: 15, period: 5 },
-      { number: 52,  symbol: 'Te', name: 'Tellurium',     weight: '127.6',  category: 'metalloid',       group: 16, period: 5 },
-      { number: 53,  symbol: 'I',  name: 'Iodine',        weight: '126.9',  category: 'nonmetal',        group: 17, period: 5 },
-      { number: 54,  symbol: 'Xe', name: 'Xenon',         weight: '131.3',  category: 'noble-gas',       group: 18, period: 5 },
-      { number: 55,  symbol: 'Cs', name: 'Cesium',        weight: '132.9',  category: 'alkali',          group: 1,  period: 6 },
-      { number: 56,  symbol: 'Ba', name: 'Barium',        weight: '137.3',  category: 'alkaline',        group: 2,  period: 6 },
-      { number: 57,  symbol: 'La', name: 'Lanthanum',     weight: '138.9',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 58,  symbol: 'Ce', name: 'Cerium',        weight: '140.1',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 59,  symbol: 'Pr', name: 'Praseodymium',  weight: '140.9',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 60,  symbol: 'Nd', name: 'Neodymium',     weight: '144.2',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 61,  symbol: 'Pm', name: 'Promethium',    weight: '145',    category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 62,  symbol: 'Sm', name: 'Samarium',      weight: '150.4',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 63,  symbol: 'Eu', name: 'Europium',      weight: '152.0',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 64,  symbol: 'Gd', name: 'Gadolinium',    weight: '157.3',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 65,  symbol: 'Tb', name: 'Terbium',       weight: '158.9',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 66,  symbol: 'Dy', name: 'Dysprosium',    weight: '162.5',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 67,  symbol: 'Ho', name: 'Holmium',       weight: '164.9',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 68,  symbol: 'Er', name: 'Erbium',        weight: '167.3',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 69,  symbol: 'Tm', name: 'Thulium',       weight: '168.9',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 70,  symbol: 'Yb', name: 'Ytterbium',     weight: '173.0',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 71,  symbol: 'Lu', name: 'Lutetium',      weight: '175.0',  category: 'lanthanide',      group: 3,  period: 6 },
-      { number: 72,  symbol: 'Hf', name: 'Hafnium',       weight: '178.5',  category: 'transition',      group: 4,  period: 6 },
-      { number: 73,  symbol: 'Ta', name: 'Tantalum',      weight: '180.9',  category: 'transition',      group: 5,  period: 6 },
-      { number: 74,  symbol: 'W',  name: 'Tungsten',      weight: '183.8',  category: 'transition',      group: 6,  period: 6 },
-      { number: 75,  symbol: 'Re', name: 'Rhenium',       weight: '186.2',  category: 'transition',      group: 7,  period: 6 },
-      { number: 76,  symbol: 'Os', name: 'Osmium',        weight: '190.2',  category: 'transition',      group: 8,  period: 6 },
-      { number: 77,  symbol: 'Ir', name: 'Iridium',       weight: '192.2',  category: 'transition',      group: 9,  period: 6 },
-      { number: 78,  symbol: 'Pt', name: 'Platinum',      weight: '195.1',  category: 'transition',      group: 10, period: 6 },
-      { number: 79,  symbol: 'Au', name: 'Gold',          weight: '197.0',  category: 'transition',      group: 11, period: 6 },
-      { number: 80,  symbol: 'Hg', name: 'Mercury',       weight: '200.6',  category: 'transition',      group: 12, period: 6 },
-      { number: 81,  symbol: 'Tl', name: 'Thallium',      weight: '204.4',  category: 'post-transition', group: 13, period: 6 },
-      { number: 82,  symbol: 'Pb', name: 'Lead',          weight: '207.2',  category: 'post-transition', group: 14, period: 6 },
-      { number: 83,  symbol: 'Bi', name: 'Bismuth',       weight: '209.0',  category: 'post-transition', group: 15, period: 6 },
-      { number: 84,  symbol: 'Po', name: 'Polonium',      weight: '209',    category: 'metalloid',       group: 16, period: 6 },
-      { number: 85,  symbol: 'At', name: 'Astatine',      weight: '210',    category: 'metalloid',       group: 17, period: 6 },
-      { number: 86,  symbol: 'Rn', name: 'Radon',         weight: '222',    category: 'noble-gas',       group: 18, period: 6 },
-      { number: 87,  symbol: 'Fr', name: 'Francium',      weight: '223',    category: 'alkali',          group: 1,  period: 7 },
-      { number: 88,  symbol: 'Ra', name: 'Radium',        weight: '226',    category: 'alkaline',        group: 2,  period: 7 },
-      { number: 89,  symbol: 'Ac', name: 'Actinium',      weight: '227',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 90,  symbol: 'Th', name: 'Thorium',       weight: '232.0',  category: 'actinide',        group: 3,  period: 7 },
-      { number: 91,  symbol: 'Pa', name: 'Protactinium',  weight: '231.0',  category: 'actinide',        group: 3,  period: 7 },
-      { number: 92,  symbol: 'U',  name: 'Uranium',       weight: '238.0',  category: 'actinide',        group: 3,  period: 7 },
-      { number: 93,  symbol: 'Np', name: 'Neptunium',     weight: '237',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 94,  symbol: 'Pu', name: 'Plutonium',     weight: '244',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 95,  symbol: 'Am', name: 'Americium',     weight: '243',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 96,  symbol: 'Cm', name: 'Curium',        weight: '247',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 97,  symbol: 'Bk', name: 'Berkelium',     weight: '247',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 98,  symbol: 'Cf', name: 'Californium',   weight: '251',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 99,  symbol: 'Es', name: 'Einsteinium',   weight: '252',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 100, symbol: 'Fm', name: 'Fermium',       weight: '257',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 101, symbol: 'Md', name: 'Mendelevium',   weight: '258',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 102, symbol: 'No', name: 'Nobelium',      weight: '259',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 103, symbol: 'Lr', name: 'Lawrencium',    weight: '262',    category: 'actinide',        group: 3,  period: 7 },
-      { number: 104, symbol: 'Rf', name: 'Rutherfordium', weight: '267',    category: 'transition',      group: 4,  period: 7 },
-      { number: 105, symbol: 'Db', name: 'Dubnium',       weight: '268',    category: 'transition',      group: 5,  period: 7 },
-      { number: 106, symbol: 'Sg', name: 'Seaborgium',    weight: '271',    category: 'transition',      group: 6,  period: 7 },
-      { number: 107, symbol: 'Bh', name: 'Bohrium',       weight: '272',    category: 'transition',      group: 7,  period: 7 },
-      { number: 108, symbol: 'Hs', name: 'Hassium',       weight: '270',    category: 'transition',      group: 8,  period: 7 },
-      { number: 109, symbol: 'Mt', name: 'Meitnerium',    weight: '276',    category: 'transition',      group: 9,  period: 7 },
-      { number: 110, symbol: 'Ds', name: 'Darmstadtium',  weight: '281',    category: 'transition',      group: 10, period: 7 },
-      { number: 111, symbol: 'Rg', name: 'Roentgenium',   weight: '280',    category: 'transition',      group: 11, period: 7 },
-      { number: 112, symbol: 'Cn', name: 'Copernicium',   weight: '285',    category: 'transition',      group: 12, period: 7 },
-      { number: 113, symbol: 'Nh', name: 'Nihonium',      weight: '284',    category: 'post-transition', group: 13, period: 7 },
-      { number: 114, symbol: 'Fl', name: 'Flerovium',     weight: '289',    category: 'post-transition', group: 14, period: 7 },
-      { number: 115, symbol: 'Mc', name: 'Moscovium',     weight: '288',    category: 'post-transition', group: 15, period: 7 },
-      { number: 116, symbol: 'Lv', name: 'Livermorium',   weight: '293',    category: 'post-transition', group: 16, period: 7 },
-      { number: 117, symbol: 'Ts', name: 'Tennessine',    weight: '294',    category: 'metalloid',       group: 17, period: 7 },
-      { number: 118, symbol: 'Og', name: 'Oganesson',     weight: '294',    category: 'noble-gas',       group: 18, period: 7 },
-    ];
-
-    // ─── OLD DATA: QUIZ QUESTIONS ─────────────────────────────────────────────
-    const quizQuestions = [
-      { question: 'What is the pH of a neutral solution at 25°C?', options: ['6', '7', '8', '14'], correct: 1 },
-      { question: 'Which indicator turns pink in basic solutions?', options: ['Methyl orange', 'Litmus', 'Phenolphthalein', 'Bromothymol blue'], correct: 2 },
-      { question: 'In titration, equivalence point is when:', options: ['Acid is completely neutralized', 'Solution turns pink', 'pH equals 7', 'Indicator has reacted'], correct: 0 },
-      { question: 'What is the formula for hydrochloric acid?', options: ['H2SO4', 'HNO3', 'HCl', 'CH3COOH'], correct: 2 },
-      { question: 'pH 3 is how many times more acidic than pH 5?', options: ['2 times', '10 times', '100 times', '1000 times'], correct: 2 },
-      { question: 'Which of the following is a noble gas?', options: ['Nitrogen', 'Oxygen', 'Helium', 'Hydrogen'], correct: 2 },
-      { question: 'What is the atomic number of Carbon?', options: ['4', '6', '8', '12'], correct: 1 },
-      { question: 'Which element is represented by the symbol Fe?', options: ['Fluorine', 'Iron', 'Fermium', 'Francium'], correct: 1 },
-    ];
-
-    // ─── STATE ────────────────────────────────────────────────────────────────
-    let currentUser           = null;
-    let userAnswers           = [];
-    let quizSubmitted         = false;
+    // ─── STATE & UTILS ─────────────────────────────────────────────────────────
+    let currentUser = null;
+    let quizState = { expId: null, questions: [], qIndex: 0, score: 0, answered: false, expTitle: '' };
     let currentDifficultyFilter = 'all';
 
-    // ─── INIT ─────────────────────────────────────────────────────────────────
+    function getProgress() { try { return JSON.parse(localStorage.getItem(`user_${currentUser}_progress`) || '{}'); } catch { return {}; } }
+    function setProgress(p) { localStorage.setItem(`user_${currentUser}_progress`, JSON.stringify(p)); }
+    function getExpProgress(expId) { return getProgress()[expId] || 0; }
+    function setExpProgress(expId, level) {
+      if (!currentUser) return;
+      const p = getProgress();
+      if ((p[expId] || 0) < level) { p[expId] = level; setProgress(p); renderProgress(); }
+    }
+    function getExpPct(level) { return [0, 25, 50, 100][level] || 0; }
+
     function initApp() {
       currentUser = localStorage.getItem('currentUser');
+      const savedTheme = localStorage.getItem('vcl_theme') || 'light';
+      if (savedTheme === 'dark') document.body.classList.add('dark-mode');
 
-      const darkMode = localStorage.getItem('darkMode') === 'true';
-      if (darkMode) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.getElementById('themeIcon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      if (currentUser) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('loggedInUser').style.display = 'flex';
+        document.getElementById('displayStudentName').textContent = currentUser;
       }
 
-      if (currentUser) showLoggedIn(currentUser);
-
-      renderExperiments();
-      renderQuiz();
       renderPeriodicTable();
+      renderApparatus();
+      renderExperiments();
+      renderQuizHub();
+      renderProgress();
     }
 
-    // ─── NAVIGATION (Navbar) ──────────────────────────────────────────────────
-    function navigateTo(pageId) {
-      document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById('page-' + pageId);
-      if (target) target.classList.add('active');
+    // ─── NAVIGATION ────────────────────────────────────────────────────────────
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
 
-      document.querySelectorAll('.nav-link').forEach(l => {
-        l.classList.toggle('active', l.dataset.page === pageId);
+      document.querySelectorAll('.bottom-nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === sectionId);
       });
 
-      if (pageId === 'progress')     renderProgressSection();
-      else if (pageId === 'experiments') filterExperiments();
-      
+      if (sectionId === 'progress') renderProgress();
+      if (sectionId === 'experiments') renderExperiments();
+      if (sectionId === 'quiz') renderQuizHub();
       window.scrollTo(0,0);
     }
 
-    // ─── THEME TOGGLE ─────────────────────────────────────────────────────────
-    function toggleTheme() {
-      const html = document.documentElement;
-      const isDark = html.getAttribute('data-theme') === 'dark';
-      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      localStorage.setItem('darkMode', !isDark);
-      
-      const icon = document.getElementById('themeIcon');
-      if (!isDark) {
-        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-      } else {
-        icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
-      }
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('vcl_theme', isDark ? 'dark' : 'light');
     }
 
-    // ─── AUTH ─────────────────────────────────────────────────────────────────
+    // ─── AUTH ──────────────────────────────────────────────────────────────────
     function login() {
       const name = document.getElementById('studentName').value.trim();
       if (!name) return;
-
       currentUser = name;
       localStorage.setItem('currentUser', name);
-
-      if (!localStorage.getItem(`user_${name}_data`)) {
-        const userData = { name: name, completedExperiments: [], quizScore: null, quizCompleted: false };
-        localStorage.setItem(`user_${name}_data`, JSON.stringify(userData));
-      }
-      showLoggedIn(name);
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('loggedInUser').style.display = 'flex';
+      document.getElementById('displayStudentName').textContent = name;
+      renderProgress();
+      renderExperiments();
+      renderQuizHub();
     }
 
     function logout() {
       currentUser = null;
       localStorage.removeItem('currentUser');
-      document.getElementById('loginForm').style.display    = 'flex';
+      document.getElementById('loginForm').style.display = 'flex';
       document.getElementById('loggedInUser').style.display = 'none';
       document.getElementById('studentName').value = '';
+      renderProgress();
+      renderExperiments();
+      renderQuizHub();
     }
 
-    function showLoggedIn(name) {
-      document.getElementById('loginForm').style.display    = 'none';
-      document.getElementById('loggedInUser').style.display = 'flex';
-      document.getElementById('displayStudentName').textContent = name;
-    }
-
-    // ─── USER DATA HELPERS ────────────────────────────────────────────────────
-    function getUserData() {
-      if (!currentUser) return null;
-      const data = localStorage.getItem(`user_${currentUser}_data`);
-      return data ? JSON.parse(data) : null;
-    }
-
-    function saveUserData(data) {
-      if (!currentUser) return;
-      localStorage.setItem(`user_${currentUser}_data`, JSON.stringify(data));
-    }
-
-
-    // ─── EXPERIMENTS (Commit 2 Logic) ─────────────────────────────────────────
-    function renderExperiments() {
-      const gridHome = document.getElementById('experimentsGridHome');
-      
-      if (gridHome) {
-        // Show first 3 experiments of the first category on home page
-        const firstFew = expCategories.flatMap(c => c.experiments).slice(0, 3);
-        gridHome.innerHTML = firstFew.map(exp => experimentCardHTML(exp)).join('');
+    // ─── MODALS ────────────────────────────────────────────────────────────────
+    function closeModal(e, modalId) {
+      if (e.target.classList.contains('modal-overlay')) {
+        document.getElementById(modalId).classList.remove('active');
       }
-
-      filterExperiments(); // Renders the full structured library
     }
+    function closeModalDirect(modalId) { document.getElementById(modalId).classList.remove('active'); }
 
-    function filterExperiments() {
-      const searchTerm   = document.getElementById('experimentSearch')?.value.toLowerCase() || '';
-      const filteredGrid = document.getElementById('experimentsGridFiltered');
-      if (!filteredGrid) return;
+    // ─── PERIODIC TABLE ────────────────────────────────────────────────────────
+    function renderPeriodicTable() {
+      const grid = document.getElementById('periodicTableGrid');
+      const mainTable = {}; const lanthanides = []; const actinides = [];
 
-      let html = '';
-
-      expCategories.forEach(cat => {
-        const filtered = cat.experiments.filter(exp => {
-          const matchesSearch = exp.title.toLowerCase().includes(searchTerm) || exp.desc.toLowerCase().includes(searchTerm);
-          const matchesDiff   = currentDifficultyFilter === 'all' || exp.difficulty === currentDifficultyFilter;
-          return matchesSearch && matchesDiff;
-        });
-
-        if (filtered.length > 0) {
-          html += `
-            <div class="cat-block">
-              <div class="cat-header" style="--cat-color: ${cat.catColor}">
-                <div class="cat-num">${cat.num}</div>
-                <div class="cat-info">
-                  <h3>${cat.title}</h3>
-                  <p>${cat.subtitle}</p>
-                </div>
-              </div>
-              <div class="experiments-grid">
-                ${filtered.map(exp => experimentCardHTML(exp)).join('')}
-              </div>
-            </div>
-          `;
+      periodicElements.forEach(el => {
+        if (el.cat === 'lanthanide') lanthanides.push(el);
+        else if (el.cat === 'actinide') actinides.push(el);
+        else {
+          if (!mainTable[el.p]) mainTable[el.p] = {};
+          mainTable[el.p][el.g] = el;
         }
       });
+      lanthanides.sort((a,b) => a.n - b.n); actinides.sort((a,b) => a.n - b.n);
 
-      if (!html) {
-        filteredGrid.innerHTML = '<p style="color: var(--text-soft); text-align: center; padding: 3rem; font-size: 1.1rem;">No experiments found matching your criteria.</p>';
-        return;
+      let cells = [];
+      for (let p = 1; p <= 7; p++) {
+        for (let g = 1; g <= 18; g++) {
+          const el = mainTable[p] && mainTable[p][g];
+          if ((p===6||p===7) && g===3) {
+            cells.push(`<div class="element-cell el-${p===6?'lanthanide':'actinide'}" style="cursor:default;font-weight:800;opacity:0.8">${p===6?'*':'**'}</div>`);
+          } else if (el) {
+            cells.push(`<div class="element-cell el-${el.cat}" onclick="showElementModal(${el.n})">
+              <span class="el-number">${el.n}</span><span class="el-sym">${el.sym}</span><span class="el-name">${el.name}</span>
+            </div>`);
+          } else cells.push('<div class="el-spacer"></div>');
+        }
       }
-      filteredGrid.innerHTML = html;
+      grid.innerHTML = cells.join('');
+
+      document.getElementById('lanthanideRow').innerHTML = `<div class="el-series-label">* Lanthanides</div>` +
+        lanthanides.map(el => `<div class="element-cell el-${el.cat}" onclick="showElementModal(${el.n})">
+          <span class="el-number">${el.n}</span><span class="el-sym">${el.sym}</span><span class="el-name">${el.name}</span></div>`).join('');
+      
+      document.getElementById('actinideRow').innerHTML = `<div class="el-series-label">** Actinides</div>` +
+        actinides.map(el => `<div class="element-cell el-${el.cat}" onclick="showElementModal(${el.n})">
+          <span class="el-number">${el.n}</span><span class="el-sym">${el.sym}</span><span class="el-name">${el.name}</span></div>`).join('');
+
+      const legendItems = [
+        {lbl:'alkali', bg:'linear-gradient(135deg,#fde68a,#fcd34d)', br:'#f59e0b'},
+        {lbl:'alkaline', bg:'linear-gradient(135deg,#fdba74,#fb923c)', br:'#f97316'},
+        {lbl:'transition', bg:'linear-gradient(135deg,#fca5a5,#f87171)', br:'#ef4444'},
+        {lbl:'post transition', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', br:'#10b981'},
+        {lbl:'metalloid', bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)', br:'#6366f1'},
+        {lbl:'nonmetal', bg:'linear-gradient(135deg,#bfdbfe,#93c5fd)', br:'#3b82f6'},
+        {lbl:'noble gas', bg:'linear-gradient(135deg,#fbcfe8,#f9a8d4)', br:'#ec4899'},
+        {lbl:'lanthanide', bg:'linear-gradient(135deg,#fed7aa,#fdba74)', br:'#fb923c'},
+        {lbl:'actinide', bg:'linear-gradient(135deg,#fecaca,#fca5a5)', br:'#f87171'}
+      ];
+      document.getElementById('ptLegend').innerHTML = legendItems.map(item => 
+        `<div class="legend-item"><div class="legend-swatch" style="background:${item.bg};border-color:${item.br}"></div>${item.lbl}</div>`
+      ).join('');
     }
 
-    function setDifficultyFilter(difficulty) {
-      currentDifficultyFilter = difficulty;
-      document.querySelectorAll('.filter-tab[data-filter]').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.filter === difficulty);
+    function showElementModal(n) {
+      const el = periodicElements.find(e => e.n === n);
+      if (!el) return;
+      const cats = {'nonmetal':'Nonmetal','noble-gas':'Noble Gas','alkali':'Alkali Metal','alkaline':'Alkaline Earth Metal',
+                    'transition':'Transition Metal','metalloid':'Metalloid','post-transition':'Post-Transition Metal',
+                    'lanthanide':'Lanthanide','actinide':'Actinide','unknown':'Unknown'};
+      document.getElementById('modalSymbol').textContent = el.sym;
+      document.getElementById('modalName').textContent = el.name;
+      document.getElementById('modalInfoGrid').innerHTML = `
+        <div class="element-info-item"><div class="element-info-label">Atomic No.</div><div class="element-info-value">${el.n}</div></div>
+        <div class="element-info-item"><div class="element-info-label">Weight</div><div class="element-info-value">${el.w} u</div></div>
+        <div class="element-info-item"><div class="element-info-label">Group</div><div class="element-info-value">${el.g}</div></div>
+        <div class="element-info-item"><div class="element-info-label">Period</div><div class="element-info-value">${el.p}</div></div>
+        <div class="element-info-item" style="grid-column: 1 / -1;"><div class="element-info-label">Category</div><div class="element-info-value">${cats[el.cat] || 'Other'}</div></div>
+      `;
+      document.getElementById('elementModal').classList.add('active');
+    }
+
+    // ─── APPARATUS ─────────────────────────────────────────────────────────────
+    function renderApparatus() {
+      document.getElementById('apparatusGrid').innerHTML = apparatusData.map(app => `
+        <div class="app-card" onclick="openApparatusModal('${app.id}')">
+          <div class="app-icon-wrap"><img src="${app.img}" alt="${app.name}" onerror="this.style.display='none'"></div>
+          <h3>${app.name}</h3>
+          <p>${app.short}</p>
+          <div class="app-cat-tag">${app.category}</div>
+        </div>
+      `).join('');
+    }
+
+    function openApparatusModal(appId) {
+      const app = apparatusData.find(a => a.id === appId);
+      if(!app) return;
+      document.getElementById('apparatusModalContent').innerHTML = `
+        <div style="display:flex; gap: 1.5rem; margin-bottom: 2rem; align-items:center;">
+          <div class="app-icon-wrap" style="width:100px; height:100px; flex-shrink:0; margin:0;"><img src="${app.img}" style="width:70px; height:70px;"></div>
+          <div>
+            <div style="font-size:0.8rem; font-weight:700; color:var(--accent); text-transform:uppercase;">${app.category}</div>
+            <h2 style="font-size: 1.8rem; margin: 0.2rem 0;">${app.name}</h2>
+            <p style="color:var(--text-secondary); font-size: 0.95rem;">${app.desc}</p>
+          </div>
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <h3 style="font-size:1.1rem; color:var(--text-primary); margin-bottom:0.5rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem;">Common Uses</h3>
+          <ul class="procedure-list" style="list-style-type: disc; padding-left: 1.5rem;">
+            ${app.uses.map(u => `<li style="margin-bottom:0.3rem; padding:0;">::marker { color: var(--accent); } ${u}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:1.1rem; color:var(--danger); margin-bottom:0.5rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem;">Safety Guidelines</h3>
+          <ul class="precautions-list" style="list-style-type: square; padding-left: 1.5rem;">
+            ${app.safety.map(s => `<li style="margin-bottom:0.3rem; padding:0;">${s}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      document.getElementById('apparatusModal').classList.add('active');
+    }
+
+    // ─── EXPERIMENTS ───────────────────────────────────────────────────────────
+    function filterExperiments() { renderExperiments(); }
+    function setDifficultyFilter(diff) {
+      currentDifficultyFilter = diff;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === diff));
+      renderExperiments();
+    }
+
+    function renderExperiments() {
+      const search = (document.getElementById('experimentSearch')?.value || '').toLowerCase();
+      const container = document.getElementById('experimentsGridFiltered');
+      const featGrid = document.getElementById('featuredExperimentsGrid');
+      let html = ''; let featHtml = ''; let featCount = 0;
+
+      expCategories.forEach(cat => {
+        const filtered = cat.experiments.filter(e => {
+          const matchDiff = currentDifficultyFilter === 'all' || e.difficulty === currentDifficultyFilter;
+          const matchSearch = !search || e.title.toLowerCase().includes(search) || e.desc.toLowerCase().includes(search);
+          return matchDiff && matchSearch;
+        });
+
+        if(filtered.length) {
+          html += `<div class="cat-block">
+            <div class="cat-header" style="--cat-color: ${cat.catColor}">
+              <div class="cat-num" style="background: ${cat.catColor}">${cat.num}</div>
+              <div class="cat-info"><h3>${cat.title}</h3><p>${cat.subtitle}</p></div>
+            </div>
+            <div class="experiments-grid">`;
+          
+          filtered.forEach(exp => {
+            const card = buildExpCard(exp);
+            html += card;
+            if(featCount < 3) { featHtml += card; featCount++; }
+          });
+          html += `</div></div>`;
+        }
       });
-      filterExperiments();
+      if(!html) html = '<p style="color:var(--text-secondary); text-align:center; padding:3rem;">No experiments found.</p>';
+      
+      if(container) container.innerHTML = html;
+      if(featGrid && !search && currentDifficultyFilter==='all') featGrid.innerHTML = featHtml;
     }
 
-    function experimentCardHTML(exp) {
+    function buildExpCard(exp) {
+      const p = getExpProgress(exp.id);
       return `
         <div class="experiment-card" onclick="openExperiment('${exp.id}')">
           <div class="experiment-image">${exp.emoji}</div>
@@ -946,311 +1617,269 @@
             <div class="experiment-meta">
               <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
               <span class="experiment-duration">⏱️ ${exp.duration}</span>
+              <span class="xp-badge">+${exp.xp} XP</span>
             </div>
             <h3 class="experiment-title">${exp.title}</h3>
             <p class="experiment-description">${exp.desc}</p>
-            <div style="margin-top: auto;">
-              <button class="btn btn-primary btn-sm">Open Experiment</button>
+            <div class="experiment-footer">
+              <span style="font-size:0.8rem; color:var(--text-secondary); font-weight:600;">${p===3?'✅ Completed':p>=1?'🔄 In Progress':'▶️ Not Started'}</span>
+              <button class="btn btn-primary btn-sm">Open</button>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     }
 
-    function openExperiment(id) {
-      const exp = expCategories.flatMap(c => c.experiments).find(e => e.id === id);
-      if (!exp) return;
+    function openExperiment(expId) {
+      const exp = expCategories.flatMap(c => c.experiments).find(e => e.id === expId);
+      if(!exp) return;
+      setExpProgress(expId, 1);
+
+      const appChips = exp.apparatus.map(id => {
+        const app = apparatusData.find(a => a.id === id);
+        return app ? `<span class="app-chip" onclick="openApparatusModal('${id}')">${app.name}</span>` : '';
+      }).join('');
 
       let vidHtml = exp.videoId 
         ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${exp.videoId}" frameborder="0" allowfullscreen></iframe></div>`
-        : `<div class="video-container" style="background:var(--bg-card2);"><div class="video-fallback"><p>Video demonstration unavailable.</p></div></div>`;
+        : `<div class="video-container" style="background:var(--bg-primary);"><div class="video-fallback"><p>Video demonstration unavailable.</p></div></div>`;
 
       document.getElementById('experimentDetailContent').innerHTML = `
-        <div class="back-btn" onclick="navigateTo('experiments')">← Back to Experiments</div>
-        <div class="experiment-meta" style="margin-bottom: 1rem;">
+        <div class="back-btn" onclick="showSection('experiments')">← Back to Experiments</div>
+        <div class="experiment-meta" style="margin-bottom:1rem;">
           <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
           <span class="experiment-duration">⏱️ ${exp.duration}</span>
+          <span class="xp-badge">+${exp.xp} XP</span>
         </div>
-        
         <h2>${exp.title}</h2>
-        <p style="color: var(--text-soft); line-height: 1.8; margin-bottom: 2rem; font-size: 1.05rem;">${exp.desc}</p>
-
-        <h3>Aim</h3>
-        <p style="color: var(--text-soft); line-height: 1.8;">${exp.aim}</p>
+        <div class="detail-desc">${exp.desc}</div>
         
-        ${exp.theory ? `<h3>Theory</h3><p style="color: var(--text-soft); line-height: 1.8;">${exp.theory}</p>` : ''}
-        ${exp.equation ? `<div class="equation-box">${exp.equation}</div>` : ''}
+        <div style="background:var(--bg-primary); padding:1rem 1.5rem; border-radius:12px; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center;">
+          <div><h4 style="margin-bottom:0.2rem;">Test Your Understanding</h4><p style="font-size:0.9rem; color:var(--text-secondary);">Take the quiz after reading.</p></div>
+          <button class="btn btn-secondary" onclick="startQuizForExp('${exp.id}')">Take Quiz</button>
+        </div>
 
+        <h3>Aim</h3><p class="detail-desc">${exp.aim}</p>
+        <h3>Theory</h3><p class="detail-desc">${exp.theory}</p>
+        ${exp.equation ? `<div class="equation-box">${exp.equation}</div>` : ''}
+        
+        <h3>Required Apparatus</h3>
+        <div class="apparatus-chips" style="margin-bottom:1.5rem;">${appChips}</div>
+        
         <h3>Materials</h3>
-        <ul class="materials-list">${(exp.materials || []).map(m => `<li>${m}</li>`).join('')}</ul>
+        <ul class="materials-list">${exp.materials.map(m => `<li>${m}</li>`).join('')}</ul>
         
         <h3>Procedure</h3>
-        <ol class="procedure-list">${(exp.procedure || []).map(p => `<li>${p}</li>`).join('')}</ol>
+        <ol class="procedure-list">${exp.procedure.map(p => `<li>${p}</li>`).join('')}</ol>
         
-        ${exp.observations || exp.result ? `
-          <h3>Observations & Result</h3>
-          <p style="color: var(--text-soft); line-height: 1.8;">
-            ${exp.observations ? `<strong>Obs:</strong> ${exp.observations}<br>` : ''}
-            ${exp.result ? `<strong>Result:</strong> ${exp.result}` : ''}
-          </p>
-        ` : ''}
+        <h3>Observations & Result</h3>
+        <p class="detail-desc"><strong>Obs:</strong> ${exp.observations}<br><strong>Result:</strong> ${exp.result}</p>
         
-        ${exp.precautions && exp.precautions.length > 0 ? `
-          <div class="caution-box">
-            <h3>⚠️ Safety Cautions</h3>
-            <ul>${exp.precautions.map(c => `<li>${c}</li>`).join('')}</ul>
-          </div>
-        ` : ''}
+        <h3>Precautions</h3>
+        <ul class="precautions-list" style="list-style-type:square; margin-left:1.5rem;">${exp.precautions.map(p => `<li>${p}</li>`).join('')}</ul>
         
         <h3>Video Demonstration</h3>
         ${vidHtml}
 
-        ${exp.hasSimulation ? `<div style="text-align:center; margin-top:2rem;"><button class="btn btn-primary" style="font-size:1.1rem; padding:0.8rem 1.5rem;" onclick="startSimulation()">Start Interactive Simulation</button></div>` : ''}
+        ${exp.hasSimulation ? `<div style="text-align:center; margin-top:2rem;"><button class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2rem;" onclick="startSimulation('${exp.id}')">Start Interactive Simulation</button></div>` : ''}
       `;
-      navigateTo('experimentDetail');
+      showSection('experimentDetail');
     }
 
-
-    // ─── TITRATION SIMULATION (Old Logic) ─────────────────────────────────────
-    function startSimulation() {
-      navigateTo('simulation');
-      setupTitration();
-    }
-
-    function setupTitration() {
+    // ─── TITRATION SIMULATION (Legacy) ─────────────────────────────────────────
+    function startSimulation(expId) {
+      showSection('simulation');
       const slider = document.getElementById('volumeSlider');
-      slider.value = 0;
-      updateTitration(0);
-
-      slider.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        updateTitration(volume);
-
+      slider.value = 0; updateTitration(0);
+      
+      slider.oninput = (e) => {
+        const vol = parseFloat(e.target.value);
+        updateTitration(vol);
         const drip = document.getElementById('drip');
-        drip.classList.remove('active');
-        void drip.offsetWidth; 
-        drip.classList.add('active');
+        drip.classList.remove('active'); void drip.offsetWidth; drip.classList.add('active');
 
-        if (volume >= 45) {
-          document.getElementById('statusDisplay').textContent  = 'Complete!';
-          document.getElementById('statusDisplay').style.color  = '#10b981';
-
-          if (currentUser) {
-            const userData = getUserData();
-            // Storing 'c9-1' (the only simulated exp currently) to progress array
-            if (userData && !userData.completedExperiments.includes('c9-1')) {
-              userData.completedExperiments.push('c9-1');
-              saveUserData(userData);
-            }
-          }
+        if(vol >= 45) {
+          document.getElementById('statusDisplay').textContent = 'Complete!';
+          document.getElementById('statusDisplay').style.color = 'var(--success)';
+          setExpProgress(expId, 3);
         } else {
           document.getElementById('statusDisplay').textContent = 'In Progress';
-          document.getElementById('statusDisplay').style.color = 'var(--accent)';
+          document.getElementById('statusDisplay').style.color = 'var(--accent-dark)';
         }
-      });
+      };
     }
 
     function updateTitration(volume) {
       document.getElementById('volumeDisplay').textContent = `${volume} mL`;
       const ph = 2 + (volume * 0.14);
       document.getElementById('phDisplay').textContent = ph.toFixed(2);
+      
+      document.getElementById('buretteLiquid').style.height = `${((50 - volume) / 50) * 400}px`;
+      const beakerLiq = document.getElementById('beakerLiquid');
+      beakerLiq.style.height = `${50 + (volume * 2)}px`;
 
-      const buretteHeight = (50 - volume) / 50 * 400;
-      document.getElementById('buretteLiquid').style.height = `${buretteHeight}px`;
-
-      const beakerHeight  = 50 + (volume * 2);
-      const beakerLiquid  = document.getElementById('beakerLiquid');
-      beakerLiquid.style.height = `${beakerHeight}px`;
-
-      if (ph >= 8.2) {
-        beakerLiquid.classList.add('pink');
-        document.getElementById('colorDisplay').textContent  = 'Pink';
-        document.getElementById('colorDisplay').style.color  = '#ec4899';
+      if(ph >= 8.2) {
+        beakerLiq.classList.add('pink');
+        document.getElementById('colorDisplay').textContent = 'Pink';
+        document.getElementById('colorDisplay').style.color = '#ec4899';
       } else {
-        beakerLiquid.classList.remove('pink');
-        document.getElementById('colorDisplay').textContent  = 'Colorless';
-        document.getElementById('colorDisplay').style.color  = 'var(--accent)';
+        beakerLiq.classList.remove('pink');
+        document.getElementById('colorDisplay').textContent = 'Colorless';
+        document.getElementById('colorDisplay').style.color = 'var(--accent-dark)';
       }
     }
 
-
-    // ─── PERIODIC TABLE (Old Logic, New Theme integration) ────────────────────
-    function renderPeriodicTable() {
-      const table = document.getElementById('periodicTable');
-      const grid  = [];
-
-      for (let period = 1; period <= 7; period++) {
-        for (let group = 1; group <= 18; group++) {
-          const element = periodicElements.find(e => e.period === period && e.group === group);
-
-          if (element) {
-            grid.push(`
-              <div class="element ${element.category}" onclick="showElementDetail(${element.number})">
-                <div class="element-number">${element.number}</div>
-                <div class="element-symbol">${element.symbol}</div>
-                <div class="element-name">${element.name}</div>
-              </div>
-            `);
-          } else {
-            grid.push('<div class="element-spacer"></div>');
-          }
-        }
-      }
-      table.innerHTML = grid.join('');
-    }
-
-    function showElementDetail(number) {
-      const element = periodicElements.find(e => e.number === number);
-      if (!element) return;
-
-      const categoryNames = {
-        'nonmetal':        'Nonmetal',
-        'noble-gas':       'Noble Gas',
-        'alkali':          'Alkali Metal',
-        'alkaline':        'Alkaline Earth Metal',
-        'transition':      'Transition Metal',
-        'metalloid':       'Metalloid',
-        'post-transition': 'Post-Transition Metal',
-        'lanthanide':      'Lanthanide',
-        'actinide':        'Actinide',
-      };
-
-      document.getElementById('modalSymbol').textContent = element.symbol;
-      document.getElementById('modalName').textContent   = element.name;
-      document.getElementById('modalInfo').innerHTML = `
-        <div class="element-info-item"><div class="element-info-label">Atomic Number</div><div class="element-info-value">${element.number}</div></div>
-        <div class="element-info-item"><div class="element-info-label">Atomic Weight</div><div class="element-info-value">${element.weight}</div></div>
-        <div class="element-info-item"><div class="element-info-label">Group</div><div class="element-info-value">${element.group}</div></div>
-        <div class="element-info-item"><div class="element-info-label">Period</div><div class="element-info-value">${element.period}</div></div>
-        <div class="element-info-item" style="grid-column: 1 / -1;"><div class="element-info-label">Category</div><div class="element-info-value" style="font-size: 1rem;">${categoryNames[element.category] || 'Other'}</div></div>
-      `;
-      document.getElementById('elementModal').classList.add('active');
-    }
-
-    function closeElementModal() {
-      document.getElementById('elementModal').classList.remove('active');
-    }
-
-    // ─── QUIZ (Old Logic) ─────────────────────────────────────────────────────
-    function renderQuiz() {
-      const container = document.getElementById('quizQuestions');
-      userAnswers = new Array(quizQuestions.length).fill(-1);
-
-      container.innerHTML = quizQuestions.map((q, qIndex) => `
-        <div class="question-card">
-          <div class="question-number">Question ${qIndex + 1}</div>
-          <div class="question-text">${q.question}</div>
-          <ul class="options">
-            ${q.options.map((opt, oIndex) => `
-              <li class="option"
-                  onclick="selectAnswer(${qIndex}, ${oIndex})"
-                  data-question="${qIndex}"
-                  data-option="${oIndex}">
-                ${opt}
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      `).join('');
-    }
-
-    function selectAnswer(questionIndex, optionIndex) {
-      userAnswers[questionIndex] = optionIndex;
-      const options = document.querySelectorAll('.question-card')[questionIndex].querySelectorAll('.option');
-      options.forEach(opt => opt.classList.remove('selected'));
-      options[optionIndex].classList.add('selected');
-    }
-
-    function submitQuiz() {
-      if (quizSubmitted) { alert('You have already submitted this quiz!'); return; }
-      if (userAnswers.includes(-1)) { alert('Please answer all questions before submitting!'); return; }
-
-      let correct = 0;
-      quizQuestions.forEach((q, index) => {
-        if (userAnswers[index] === q.correct) correct++;
+    // ─── QUIZ SYSTEM ───────────────────────────────────────────────────────────
+    function renderQuizHub() {
+      const p = getProgress();
+      let html = '';
+      expCategories.forEach(cat => {
+        html += `<div class="quiz-cat-card" style="--cat-color:${cat.catColor}">
+          <div class="quiz-cat-header"><div class="quiz-cat-dot"></div><h3>${cat.title}</h3></div>
+          <div class="quiz-exp-list">`;
+        cat.experiments.forEach(exp => {
+          const level = p[exp.id] || 0;
+          let sCls = 'status-pending', sLbl = 'Pending';
+          if(level >= 3) { sCls = 'status-completed'; sLbl = 'Completed'; }
+          else if (level >= 2) { sCls = 'status-attempted'; sLbl = 'Attempted'; }
+          
+          html += `<div class="quiz-exp-item" onclick="startQuizForExp('${exp.id}')">
+            <div>
+              <div class="qei-name">${exp.title}</div>
+              <span class="difficulty-badge difficulty-${exp.difficulty}" style="font-size:0.6rem; padding:0.2rem 0.5rem;">${exp.difficulty}</span>
+              <span class="qei-status ${sCls}">${sLbl}</span>
+            </div>
+            <div style="color:var(--text-secondary); font-size:1.2rem;">→</div>
+          </div>`;
+        });
+        html += `</div></div>`;
       });
-      const percentage = (correct / quizQuestions.length * 100).toFixed(1);
-
-      document.getElementById('scoreDisplay').innerHTML = `
-        <div class="score-display">
-          <h3 style="margin-bottom: 1rem;">Quiz Results</h3>
-          <div class="score-value">${percentage}%</div>
-          <p style="margin-top: 1rem; font-size: 1.125rem;">
-            You got ${correct} out of ${quizQuestions.length} questions correct!
-          </p>
-        </div>
-      `;
-
-      quizSubmitted = true;
-      document.querySelectorAll('.option').forEach(opt => { opt.style.pointerEvents = 'none'; });
-
-      if (currentUser) {
-        const userData = getUserData();
-        if (userData) {
-          userData.quizScore     = percentage;
-          userData.quizCompleted = true;
-          saveUserData(userData);
-        }
-      }
+      document.getElementById('quizCatGrid').innerHTML = html;
     }
 
-    // ─── PROGRESS (Old Logic) ─────────────────────────────────────────────────
-    function renderProgressSection() {
+    function startQuizForExp(expId) {
+      const exp = expCategories.flatMap(c=>c.experiments).find(e=>e.id===expId);
+      if(!exp || !exp.quiz || !exp.quiz.length) { alert('No quiz available yet.'); return; }
+      quizState = { expId, questions: [...exp.quiz], qIndex: 0, score: 0, answered: false, expTitle: exp.title };
+      setExpProgress(expId, 2);
+      renderActiveQuiz();
+      showSection('quiz-active');
+    }
+
+    function renderActiveQuiz() {
+      const { questions, qIndex, expTitle } = quizState;
+      if (qIndex >= questions.length) { renderQuizResult(); return; }
+      const q = questions[qIndex];
+      const pct = Math.round((qIndex / questions.length) * 100);
+      
+      document.getElementById('quizActiveContent').innerHTML = `
+        <div class="back-btn" onclick="showSection('quiz')">← Back to Quiz Hub</div>
+        <div style="font-size:1rem; font-weight:700; margin-bottom:1rem;">${expTitle} — Quiz</div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+        <div class="quiz-q-num">Question ${qIndex + 1} of ${questions.length}</div>
+        <div class="quiz-question">${q.q}</div>
+        <div class="quiz-options">
+          ${q.opts.map((opt, i) => `<button class="quiz-opt" onclick="answerQuiz(${i})">${opt}</button>`).join('')}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div style="margin-top:1.5rem; text-align:right; display:none;" id="quizNextWrap">
+          <button class="btn btn-primary" onclick="nextQuizQuestion()">${qIndex < questions.length - 1 ? 'Next Question' : 'See Results'}</button>
+        </div>
+      `;
+      quizState.answered = false;
+    }
+
+    function answerQuiz(chosen) {
+      if(quizState.answered) return;
+      quizState.answered = true;
+      const q = quizState.questions[quizState.qIndex];
+      const fb = document.getElementById('quizFeedback');
+      document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+        btn.classList.add('disabled');
+        if(i === q.ans) btn.classList.add('correct');
+        else if(i === chosen) btn.classList.add('wrong');
+      });
+      if(chosen === q.ans) {
+        quizState.score++; fb.textContent = 'Correct!'; fb.className = 'quiz-feedback show correct';
+      } else {
+        fb.textContent = `Incorrect. Correct answer: ${q.opts[q.ans]}`; fb.className = 'quiz-feedback show wrong';
+      }
+      document.getElementById('quizNextWrap').style.display = 'block';
+    }
+
+    function nextQuizQuestion() { quizState.qIndex++; renderActiveQuiz(); }
+
+    function renderQuizResult() {
+      const { score, questions, expId, expTitle } = quizState;
+      const pct = Math.round((score / questions.length) * 100);
+      if(pct >= 60) setExpProgress(expId, 3);
+      
+      document.getElementById('quizActiveContent').innerHTML = `
+        <div class="quiz-result-card">
+          <div style="font-size:4rem; margin-bottom:1rem;">${pct === 100 ? '🏆' : pct >= 60 ? '🎉' : '📚'}</div>
+          <div class="quiz-result-score">${pct}%</div>
+          <h2 style="margin-bottom:1rem;">${pct >= 60 ? 'Great Job!' : 'Keep Practicing!'}</h2>
+          <p style="color:var(--text-secondary); font-size:1.1rem; margin-bottom:2rem;">You scored ${score} out of ${questions.length} in <strong>${expTitle}</strong>.</p>
+          <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="startQuizForExp('${expId}')">Retry Quiz</button>
+            <button class="btn btn-secondary" onclick="openExperiment('${expId}')">Review Experiment</button>
+            <button class="btn btn-secondary" onclick="showSection('quiz')">All Quizzes</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // ─── PROGRESS PAGE ─────────────────────────────────────────────────────────
+    function renderProgress() {
       const content = document.getElementById('progressContent');
-
       if (!currentUser) {
-        content.innerHTML = '<p style="color: var(--text-soft);">Please log in to view your progress.</p>';
+        content.innerHTML = '<div style="background:var(--bg-white); padding:3rem; border-radius:16px; text-align:center;"><p style="color:var(--text-secondary); font-size:1.2rem; margin-bottom:1.5rem;">Please log in to view your progress.</p><button class="btn btn-primary" onclick="window.scrollTo(0,0)">Log In</button></div>';
         return;
       }
 
-      const userData = getUserData();
-      if (!userData) {
-        content.innerHTML = '<p style="color: var(--text-soft);">No progress data available.</p>';
-        return;
-      }
+      const p = getProgress();
+      const allExp = expCategories.flatMap(c => c.experiments);
+      const opened = allExp.filter(e => (p[e.id]||0) >= 1).length;
+      const completed = allExp.filter(e => (p[e.id]||0) >= 3).length;
+      const totalPct = Math.round(allExp.reduce((s, e) => s + getExpPct(p[e.id]||0), 0) / (allExp.length * 100) * 100);
 
-      const flatExpArr = expCategories.flatMap(c => c.experiments);
-      const experimentProgress = (userData.completedExperiments.length / flatExpArr.length) * 100;
-      const quizProgress       = userData.quizCompleted ? 100 : 0;
-
-      const completedTitles = userData.completedExperiments.map(id => {
-        const exp = flatExpArr.find(e => e.id === id);
-        return exp ? exp.title : `Experiment ${id}`;
-      });
-
-      content.innerHTML = `
-        <div class="progress-card">
-          <h3>Experiments</h3>
-          <div style="color: var(--accent); font-size: 2rem;">
-            ${userData.completedExperiments.length}/${flatExpArr.length}
-          </div>
-          <div class="progress-bar">
-            <div class="progress-bar-fill" style="width: ${experimentProgress}%;"></div>
-          </div>
+      let html = `
+        <div class="overall-card">
+          <div class="overall-stat"><div class="val">${totalPct}%</div><div class="lbl">Overall Progress</div></div>
+          <div class="overall-stat"><div class="val">${opened}</div><div class="lbl">Experiments Opened</div></div>
+          <div class="overall-stat"><div class="val">${completed}</div><div class="lbl">Fully Completed</div></div>
         </div>
-
-        <div class="progress-card">
-          <h3>General Quiz</h3>
-          <div style="color: var(--accent); font-size: 2rem;">
-            ${userData.quizScore !== null ? userData.quizScore + '%' : 'Not Taken'}
-          </div>
-          <div class="progress-bar">
-            <div class="progress-bar-fill" style="width: ${quizProgress}%;"></div>
-          </div>
-        </div>
-
-        ${completedTitles.length > 0 ? `
-          <div class="progress-card">
-            <h3>Completed Experiments</h3>
-            <ul class="completed-list">
-              ${completedTitles.map(title => `<li class="completed-item">✓ ${title}</li>`).join('')}
-            </ul>
-          </div>
-        ` : ''}
       `;
+
+      expCategories.forEach(cat => {
+        html += `<div style="margin-bottom:2rem;"><h3 style="color:${cat.catColor}; margin-bottom:1rem; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">${cat.title}</h3>`;
+        cat.experiments.forEach(exp => {
+          const level = p[exp.id] || 0; const pct = getExpPct(level);
+          const lbls = ['Not started', 'Opened', 'Quiz attempted', 'Completed'];
+          html += `
+            <div class="prog-exp-item">
+              <div class="prog-exp-header">
+                <div>
+                  <h4>${exp.title}</h4>
+                  <div class="prog-states">
+                    <span class="prog-state"><span class="prog-state-dot" style="background:${level>=1?'var(--accent-dark)':'var(--border)'}"></span>Opened</span>
+                    <span class="prog-state"><span class="prog-state-dot" style="background:${level>=2?'var(--warning)':'var(--border)'}"></span>Quiz</span>
+                    <span class="prog-state"><span class="prog-state-dot" style="background:${level>=3?'var(--success)':'var(--border)'}"></span>Completed</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="prog-pct">${pct}%</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary); text-align:right;">${lbls[level]}</div>
+                </div>
+              </div>
+              <div class="prog-bar"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+            </div>`;
+        });
+        html += `</div>`;
+      });
+      content.innerHTML = html;
     }
 
-    // ─── START ────────────────────────────────────────────────────────────────
+    // Initialize
     initApp();
 
   </script>
