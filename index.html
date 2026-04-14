@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ─── RESET & NEW THEMING VARIABLES ─── */
+    /* ─── RESET & THEMING VARIABLES (from Commit 1) ─── */
     * {
       margin: 0;
       padding: 0;
@@ -67,7 +67,7 @@
       line-height: 1.6;
     }
 
-    /* ─── NEW NAVBAR ─── */
+    /* ─── NAVBAR (Commit 1) ─── */
     .navbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
       background: var(--bg-card); border-bottom: 1px solid var(--border-s);
@@ -98,7 +98,6 @@
     .icon-btn:hover { background: var(--border-s); color: var(--text); }
     .icon-btn svg { width: 18px; height: 18px; }
 
-    /* Login Form aligned for top nav */
     .login-form { display: flex; gap: 0.5rem; align-items: center; }
     .input {
       padding: 0.4rem 1rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill);
@@ -121,44 +120,43 @@
     .page { display: none; min-height: calc(100vh - var(--nav-h)); padding: 2.5rem 1.5rem; max-width: var(--max-w); margin: 0 auto; }
     .page.active { display: block; animation: fadeIn 0.4s; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .sec-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.35rem; }
 
-    /* ─── NEW HERO UI (HOME PAGE) ─── */
+    /* ─── HERO SECTION (Commit 1) ─── */
     .hero { text-align: center; padding: 4rem 1rem 3rem; max-width: 700px; margin: 0 auto; }
-    .hero-eyebrow {
-      font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;
-      color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    }
+    .hero-eyebrow { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.25rem; }
     .hero h1 span { color: var(--accent); }
     .hero p { font-size: 1.05rem; color: var(--text-soft); margin-bottom: 2.25rem; max-width: 520px; margin-left: auto; margin-right: auto; }
     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; padding: 2rem 0 3rem; }
-    .feature-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 1.75rem 1.5rem; cursor: pointer; transition: all 0.25s; text-align: left;
-    }
+    .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem 1.5rem; cursor: pointer; transition: all 0.25s; text-align: left; }
     .feature-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm); transform: translateY(-3px); }
-    .feature-icon {
-      width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center;
-      justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; background: var(--accent-glow);
-    }
+    .feature-icon { width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; background: var(--accent-glow); }
     .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
     .feature-card p { font-size: 0.84rem; color: var(--text-soft); line-height: 1.5; }
 
-    /* ─── LEGACY VIEWS ADAPTED TO NEW STYLE ─── */
-    .sec-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.35rem; }
-    
-    .experiments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-    .experiment-card {
-      background: var(--bg-card); border-radius: var(--radius); overflow: hidden;
-      box-shadow: var(--shadow-sm); transition: all 0.3s; cursor: pointer; border: 1px solid var(--border);
+    /* ─── NEW EXPERIMENT CATEGORIES (Commit 2) ─── */
+    .cat-block { margin-bottom: 3.5rem; }
+    .cat-header {
+      display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
     }
-    .experiment-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 12px 30px var(--accent-glow); }
-    .experiment-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--bg-card2) 0%, var(--border-s) 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
-    .experiment-content { padding: 1.5rem; }
+    .cat-header::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--cat-color); }
+    .cat-num { width: 44px; height: 44px; border-radius: var(--radius); background: var(--cat-color); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; }
+    .cat-info { flex: 1; }
+    .cat-info h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .cat-info p { font-size: 0.9rem; color: var(--text-soft); }
+
+    .experiments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .experiment-card { background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s; cursor: pointer; border: 1px solid var(--border); }
+    .experiment-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 12px 30px var(--accent-glow); }
+    .experiment-image { width: 100%; height: 180px; background: linear-gradient(135deg, var(--bg-card2) 0%, var(--border-s) 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+    .experiment-content { padding: 1.5rem; display: flex; flex-direction: column; }
     .experiment-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .experiment-description { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+    .experiment-description { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
     
     /* Search & Filters */
     .search-box { width: 100%; padding: 1rem 1.5rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill); background: var(--bg-card); color: var(--text); transition: all 0.3s; margin-bottom: 1rem; font-family: 'Outfit', sans-serif;}
@@ -173,30 +171,34 @@
     .difficulty-beginner    { background: rgba(34,197,94,.15); color: #22c55e; }
     .difficulty-intermediate{ background: rgba(245,158,11,.15); color: #f59e0b; }
     .difficulty-advanced    { background: rgba(239,68,68,.15); color: #ef4444; }
+    .difficulty-expert      { background: rgba(168,85,247,.15); color: #a855f7; }
 
     .experiment-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
     .experiment-duration { display: flex; align-items: center; gap: 0.375rem; color: var(--text-soft); font-size: 0.875rem; }
 
-    /* Details */
-    .experiment-detail { background: var(--bg-card); border-radius: var(--radius-lg); padding: 2rem; border: 1px solid var(--border); }
+    /* ─── NEW EXPERIMENT DETAILS (Commit 2) ─── */
+    .experiment-detail { background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; border: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
     .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-soft); font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: all 0.2s; }
     .back-btn:hover { color: var(--accent); }
-    .experiment-detail h2 { font-size: 2rem; margin-bottom: 1rem; }
-    .experiment-detail h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--accent); }
+    .experiment-detail h2 { font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
+    .experiment-detail h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--accent); border-bottom: 1px solid var(--border-s); padding-bottom: 0.5rem; }
     .materials-list, .procedure-list { list-style-position: inside; line-height: 1.8; color: var(--text-soft); }
     
     .procedure-list { counter-reset: step-counter; list-style: none; }
     .procedure-list li { counter-increment: step-counter; margin-bottom: 1rem; padding-left: 2.5rem; position: relative; }
-    .procedure-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; width: 2rem; height: 2rem; background: var(--accent-glow); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
+    .procedure-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; width: 1.8rem; height: 1.8rem; background: var(--accent-glow); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
 
-    .video-container { margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; }
+    .equation-box { background: var(--bg-card2); border: 1px solid var(--border-s); border-radius: 8px; padding: 1rem 1.5rem; font-family: 'Space Mono', monospace; font-size: 1.05rem; color: var(--accent); margin: 1rem 0; text-align: center; }
+
+    .video-container { margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; box-shadow: var(--shadow-sm); }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+    .video-fallback { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card2); color: var(--text-soft); padding: 2rem; text-align: center; }
 
     .caution-box { background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 1.5rem 0; }
-    .caution-box h3 { color: #f59e0b; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+    .caution-box h3 { color: #f59e0b; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0; }
     .caution-box ul { margin: 0; padding-left: 1.5rem; color: var(--text-soft); line-height: 1.8; }
 
-    /* Simulation basics */
+    /* Simulation basics (Commit 1 unchanged) */
     .simulation-container { background: var(--bg-card2); padding: 2rem; border-radius: var(--radius-lg); margin-top: 2rem; border: 1px solid var(--border-s); }
     .lab-equipment { display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; align-items: flex-end; }
     .burette-container { position: relative; width: 80px; }
@@ -219,7 +221,7 @@
     .result-label { font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0.5rem; }
     .result-value { font-size: 1.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent); }
 
-    /* Quiz */
+    /* Quiz (Commit 1 unchanged) */
     .quiz-container { max-width: 800px; }
     .question-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
     .question-number { font-size: 0.875rem; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
@@ -231,7 +233,7 @@
     .score-display { background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2rem; border-radius: var(--radius-lg); text-align: center; margin-top: 2rem; border: 1px solid #10b981; }
     .score-value { font-size: 3rem; font-weight: 700; font-family: 'Space Mono', monospace; }
 
-    /* Periodic table */
+    /* Periodic table (Commit 1 unchanged) */
     .periodic-table { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; max-width: 1400px; margin: 2rem auto; }
     .element { aspect-ratio: 1; background: var(--bg-card); border: 1.5px solid var(--border-s); border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
     .element:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); border-color: var(--accent); }
@@ -263,7 +265,7 @@
     .element-info-label { font-size: 0.75rem; color: var(--text-soft); margin-bottom: 0.25rem; }
     .element-info-value { font-size: 1.125rem; font-weight: 600; }
 
-    /* Progress */
+    /* Progress (Commit 1 unchanged) */
     .progress-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
     .progress-bar { width: 100%; height: 12px; background: var(--border-s); border-radius: 6px; overflow: hidden; margin-top: 1rem; }
     .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.5s; border-radius: 6px; }
@@ -360,28 +362,29 @@
       </div>
 
       <h3 class="sec-title" style="margin-top: 2rem;">✨ Featured Experiments</h3>
-      <div class="experiments-grid" id="experimentsGrid"></div>
+      <div class="experiments-grid" id="experimentsGridHome"></div>
     </div>
 
     <div id="page-experiments" class="page">
-      <h2 class="sec-title">Experiments</h2>
+      <h2 class="sec-title">Experiment Library</h2>
 
       <input
         type="text"
         class="search-box"
         id="experimentSearch"
-        placeholder="Search experiments..."
+        placeholder="Search by title or description..."
         oninput="filterExperiments()"
       >
 
       <div class="filter-tabs">
-        <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All</div>
+        <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All Levels</div>
         <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
         <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
         <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
+        <div class="filter-tab"        data-filter="expert"       onclick="setDifficultyFilter('expert')">Expert</div>
       </div>
 
-      <div class="experiments-grid" id="experimentsGridFiltered"></div>
+      <div id="experimentsGridFiltered"></div>
     </div>
 
     <div id="page-experimentDetail" class="page">
@@ -402,7 +405,6 @@
                 <div class="burette-tip"></div>
               </div>
             </div>
-
             <div class="beaker">
               <div class="beaker-liquid" id="beakerLiquid"></div>
             </div>
@@ -476,7 +478,177 @@
 
   <script>
 
-    // ─── DATA: PERIODIC ELEMENTS (all 118 - From OLD File) ───────────────────
+    // ─── COMMIT 2 DATA: EXPERIMENT CATEGORIES ─────────────────────────────────
+    const expCategories = [
+      {
+        id: 'class9', catColor: '#10b981', num: 1, title: 'Class 9–10: Basic Chemistry', subtitle: 'Foundation experiments',
+        experiments: [
+          {id:'c9-1', emoji:'🧪', title:'Acid-Base Titration', desc:'Determine the concentration of HCl using a standard NaOH solution.', difficulty:'intermediate', duration:'45 min',
+           hasSimulation: true,
+           aim:'To determine the concentration of HCl by titrating it against a standard NaOH solution using phenolphthalein.',
+           theory:'In acid-base titration a standard solution neutralises the analyte. The equivalence point is detected by a colour change. Phenolphthalein is colourless in acid and pink in base.',
+           equation:'HCl + NaOH → NaCl + H₂O',
+           materials:['Burette (50 mL)','Pipette (10 mL)','Conical flask','Standard NaOH (0.1 M)','HCl solution (unknown)','Phenolphthalein indicator'],
+           procedure:['Rinse the burette with NaOH solution and fill it.','Pipette 10 mL of HCl into a flask. Add phenolphthalein.','Add NaOH dropwise while swirling.','Stop when a pale pink colour persists. Record volume.','Repeat for concordant readings.'],
+           observations:'Solution changes from colourless to pale pink.',
+           result:'Molarity of HCl calculated successfully.',
+           precautions:['Rinse burette before use.','Remove air bubbles.','Add NaOH slowly near endpoint.'],
+           videoId:'nFniJ6MHZWY'
+          },
+          {id:'c9-2', emoji:'🔥', title:'Preparation of Oxygen Gas', desc:'Generate oxygen by decomposition of hydrogen peroxide.', difficulty:'beginner', duration:'30 min',
+           aim:'Prepare oxygen gas by catalytic decomposition of H₂O₂.',
+           theory:'MnO₂ acts as a catalyst speeding up decomposition of H₂O₂. Oxygen relights a glowing splint.',
+           equation:'2H₂O₂ → 2H₂O + O₂↑ (MnO₂ catalyst)',
+           materials:['Conical flask','Delivery tube','Test tubes','30% H₂O₂','MnO₂ powder','Glowing splint'],
+           procedure:['Set up gas collection apparatus.','Add 20 mL H₂O₂ to flask.','Add MnO₂ powder and fit stopper.','Collect gas in inverted test tube over water.','Insert glowing splint.'],
+           observations:'Vigorous effervescence. Splint relights.',
+           result:'Oxygen gas prepared and confirmed.',
+           precautions:['Handle H₂O₂ with care.','Ensure gas-tight joints.'],
+           videoId:'YSrLWgwLNMM'
+          },
+          {id:'c9-3', emoji:'💥', title:'Chemical Reaction Types', desc:'Observe combination, decomposition, and displacement reactions.', difficulty:'beginner', duration:'40 min',
+           aim:'Observe and classify different types of chemical reactions.',
+           theory:'Reactions can be Combination, Decomposition, Single Displacement, or Double Displacement.',
+           equation:'Combination: Mg + O₂ → MgO | Decomposition: CaCO₃ → CaO + CO₂',
+           materials:['Magnesium ribbon','Calcium carbonate','Zinc granules','Copper sulphate','Test tubes'],
+           procedure:['Burn Mg in air (Combination).','Heat CaCO₃ and test gas (Decomposition).','Add Zn to CuSO₄ (Single Displacement).','Mix Lead nitrate and KI (Double Displacement).'],
+           observations:'Mg burns bright white. Limewater turns milky. Cu deposits on Zn. Yellow ppt forms.',
+           result:'Four types of reactions demonstrated.',
+           precautions:['Do not look directly at burning Mg.','Wear goggles.']
+          },
+          {id:'c9-4', emoji:'💧', title:'Properties of Acids & Bases', desc:'Test substances with litmus, phenolphthalein and methyl orange.', difficulty:'beginner', duration:'35 min',
+           aim:'Identify acidic, basic and neutral substances using indicators.',
+           theory:'Acids release H⁺, bases release OH⁻. Indicators change colour based on pH.',
+           equation:'HCl → H⁺ + Cl⁻ | NaOH → Na⁺ + OH⁻',
+           materials:['Litmus solution','Phenolphthalein','Methyl orange','Dilute HCl','Dilute NaOH','Lemon juice'],
+           procedure:['Take samples in test tubes.','Add blue litmus, record change.','Repeat with red litmus, phenolphthalein, methyl orange.','Classify substances.'],
+           observations:'Acids turn blue litmus red. Bases turn red litmus blue and phenolphthalein pink.',
+           result:'Substances classified correctly.',
+           precautions:['Do not taste chemicals.']
+          },
+          {id:'c9-5', emoji:'⚡', title:'Reactivity Series', desc:'Determine relative reactivity of metals through displacement.', difficulty:'intermediate', duration:'40 min',
+           aim:'Establish reactivity of Mg, Zn, Fe, Cu.',
+           theory:'A more reactive metal displaces a less reactive metal from its salt solution.',
+           equation:'Zn + CuSO₄ → ZnSO₄ + Cu',
+           materials:['Zinc pieces','Iron filings','Copper turnings','Magnesium ribbon','CuSO₄ solution','ZnSO₄ solution'],
+           procedure:['Clean metals with sandpaper.','Place Zn in CuSO₄. Observe.','Place Fe in CuSO₄. Observe.','Place Cu in ZnSO₄. Observe.'],
+           observations:'Zn and Mg displace Cu. Fe displaces Cu slowly. Cu does not displace Zn.',
+           result:'Reactivity order: Mg > Zn > Fe > Cu.',
+           precautions:['Clean metals before use.']
+          },
+          {id:'c9-6', emoji:'💎', title:'Crystallisation of CuSO₄', desc:'Grow pure blue crystals from a supersaturated solution.', difficulty:'intermediate', duration:'2 days',
+           aim:'Obtain pure crystals of copper sulphate by crystallisation.',
+           theory:'Crystallisation separates soluble impurities by forming pure crystals as a hot saturated solution cools.',
+           equation:'CuSO₄ (aq) → CuSO₄·5H₂O (s)',
+           materials:['Impure copper sulphate','Distilled water','Beaker','Filter paper','Evaporating dish','Bunsen burner'],
+           procedure:['Dissolve impure CuSO₄ in minimum hot water.','Filter out insoluble impurities.','Evaporate filtrate until crystallization point.','Cool slowly undisturbed.','Filter and dry crystals.'],
+           observations:'Pure blue rhombic crystals form.',
+           result:'Pure CuSO₄ crystals obtained.',
+           precautions:['Cool slowly for larger crystals.']
+          },
+          {id:'c9-7', emoji:'⚖️', title:'Conservation of Mass', desc:'Verify mass conservation using precipitation reaction.', difficulty:'beginner', duration:'30 min',
+           aim:'Verify the law of conservation of mass.',
+           theory:'Total mass of reactants equals total mass of products in a closed system.',
+           equation:'NaCl + AgNO₃ → AgCl↓ + NaNO₃',
+           materials:['NaCl solution','AgNO₃ solution','Conical flask','Test tube','Balance'],
+           procedure:['Weigh flask with NaCl and tube with AgNO₃.','Mix solutions inside closed flask.','Weigh again. Compare masses.'],
+           observations:'White ppt forms. Mass remains constant.',
+           result:'Law of Conservation of Mass verified.',
+           precautions:['Keep system closed.']
+          },
+          {id:'c9-8', emoji:'🌈', title:'Flame Test for Metals', desc:'Identify metal ions by characteristic emission colours.', difficulty:'intermediate', duration:'35 min',
+           aim:'Identify Na⁺, K⁺, Ca²⁺, Cu²⁺, Ba²⁺ by flame colours.',
+           theory:'Heated metal ions emit light of specific wavelengths returning to ground state.',
+           equation:'Excited electrons → Photon emission',
+           materials:['Nichrome wire','Dilute HCl','Salt solutions (NaCl, KCl, CaCl₂, CuCl₂, BaCl₂)','Bunsen burner'],
+           procedure:['Clean wire with HCl in flame.','Dip wire in salt solution.','Hold in hottest flame part. Observe colour.','Match to known colours.'],
+           observations:'Distinct colours: Na (yellow), K (lilac), Ca (red), Cu (green).',
+           result:'Metals identified by flame colour.',
+           precautions:['Use tongs.'],
+           videoId:'IJkLuwt8GWU'
+          },
+          {id:'c9-9', emoji:'📏', title:'Acids and Indicators', desc:'Identify strong vs weak acids using universal indicator.', difficulty:'beginner', duration:'30 min',
+           aim:'Classify unknown solutions as strong or weak acids.',
+           theory:'Strong acids fully dissociate (pH 1-2). Weak acids partially dissociate (pH 3-5).',
+           equation:'HCl → H⁺ + Cl⁻ (Complete)',
+           materials:['Dilute HCl','Acetic acid','Universal indicator','pH strips','Test tubes'],
+           procedure:['Take 2 mL samples.','Add universal indicator to each.','Compare with colour chart.','Record pH values.'],
+           observations:'Strong acids show pH 1-2. Weak show pH 3-5.',
+           result:'Acids classified correctly.',
+           precautions:['Handle acids carefully.']
+          },
+          {id:'c9-10', emoji:'🧂', title:'Simple Salt Formation', desc:'Prepare common salt by neutralising HCl with NaOH.', difficulty:'beginner', duration:'30 min',
+           aim:'Prepare pure NaCl by neutralisation and evaporation.',
+           theory:'Acid + Base → Salt + Water.',
+           equation:'HCl + NaOH → NaCl + H₂O',
+           materials:['Dilute HCl','Dilute NaOH','Phenolphthalein','Evaporating dish','Bunsen burner'],
+           procedure:['Measure 25 mL HCl. Add indicator.','Add NaOH until pink.','Add 1 drop HCl to neutralize.','Evaporate to dryness.'],
+           observations:'White crystals of NaCl form.',
+           result:'NaCl prepared successfully.',
+           precautions:['Do not overheat dry salt.']
+          }
+        ]
+      },
+      {
+        id: 'class11', catColor: '#0ea5e9', num: 2, title: 'Class 11–12: Intermediate Chemistry', subtitle: 'Advanced school-level',
+        experiments: [
+          {id:'c11-1', emoji:'🧪', title:'Preparation of Ferrous Sulphate', desc:'Synthesise green crystals from iron and sulphuric acid.', difficulty:'intermediate', duration:'45 min',
+           aim:'Prepare FeSO₄·7H₂O crystals.',
+           theory:'Iron reacts with dilute H₂SO₄ to form FeSO₄. Iron in excess prevents oxidation to Fe³⁺.',
+           equation:'Fe + H₂SO₄ → FeSO₄ + H₂↑', materials:['Iron filings','Dilute H₂SO₄','Evaporating dish'],
+           procedure:['Add excess iron to H₂SO₄. Warm gently.','Filter to remove excess iron.','Evaporate to crystallising point. Cool to form crystals.'],
+           observations:'Pale green crystals form.', result:'Ferrous sulphate prepared.', precautions:['Keep iron in excess.']
+          },
+          {id:'c11-3', emoji:'🍎', title:'Esterification Reaction', desc:'Prepare ethyl acetate from ethanol and acetic acid.', difficulty:'advanced', duration:'60 min',
+           aim:'Prepare ethyl acetate using H₂SO₄ catalyst.',
+           theory:'Esterification is a reversible reaction between an acid and alcohol. H₂SO₄ acts as catalyst and dehydrating agent.',
+           equation:'CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O', materials:['Glacial acetic acid','Ethanol','Conc. H₂SO₄','Reflux apparatus'],
+           procedure:['Mix acid and ethanol. Add H₂SO₄ dropwise.','Reflux at 70°C for 30 mins.','Wash product with Na₂CO₃ solution in separating funnel to remove acid.'],
+           observations:'Liquid with fruity odour obtained.', result:'Ethyl acetate synthesised.', precautions:['Add H₂SO₄ slowly.']
+          },
+          {id:'c11-7', emoji:'💧', title:'Electrolysis of Water', desc:'Decompose water into hydrogen and oxygen.', difficulty:'intermediate', duration:'45 min',
+           aim:'Decompose water and verify 2:1 volume ratio.',
+           theory:'H₂SO₄ makes water conductive. H₂ collects at cathode, O₂ at anode.',
+           equation:'2H₂O → 2H₂↑ + O₂↑', materials:['Hoffmann voltameter','Dilute H₂SO₄','DC power supply'],
+           procedure:['Fill voltameter with acidified water.','Connect to DC power.','Collect gases and test with splint.'],
+           observations:'H₂:O₂ volume ratio ≈ 2:1.', result:'Water decomposed by electrolysis.', precautions:['Keep H₂ away from flames.'], videoId:'VJTNyW36VCw'
+          }
+        ]
+      },
+      {
+        id: 'undergrad', catColor: '#8b5cf6', num: 3, title: 'Undergraduate Chemistry', subtitle: 'BSc level analytical experiments',
+        experiments: [
+          {id:'ug-2', emoji:'🌡️', title:'Heat of Neutralisation', desc:'Determine enthalpy change using a calorimeter.', difficulty:'advanced', duration:'60 min',
+           aim:'Determine heat of neutralisation of HCl with NaOH.',
+           theory:'Heat of neutralisation is enthalpy change when 1 mol of water forms. ΔH ≈ -57.3 kJ/mol.',
+           equation:'H⁺ + OH⁻ → H₂O, ΔH = -57.3 kJ/mol', materials:['1M HCl','1M NaOH','Calorimeter','Thermometer'],
+           procedure:['Measure 50 mL HCl in calorimeter, record temp.','Add 50 mL NaOH, stir, record max temp.','Calculate ΔT and q = mcΔT.'],
+           observations:'ΔT ≈ 5-7°C rise.', result:'ΔH calculated.', precautions:['Use polystyrene cup to minimize heat loss.']
+          },
+          {id:'ug-5', emoji:'💊', title:'Preparation of Aspirin', desc:'Synthesise aspirin from salicylic acid.', difficulty:'advanced', duration:'75 min',
+           aim:'Synthesise aspirin via acetylation.',
+           theory:'Salicylic acid reacts with acetic anhydride (H₃PO₄ catalyst) to form acetylsalicylic acid.',
+           equation:'C₆H₄(OH)COOH + (CH₃CO)₂O → C₆H₄(OCOCH₃)COOH + CH₃COOH', materials:['Salicylic acid','Acetic anhydride','H₃PO₄','Ice bath'],
+           procedure:['Mix salicylic acid, acetic anhydride, H₃PO₄.','Heat at 85°C for 15 mins. Add water carefully.','Cool in ice bath to crystallise. Filter.'],
+           observations:'White needle-like crystals form.', result:'Aspirin synthesised.', precautions:['Acetic anhydride is corrosive.']
+          }
+        ]
+      },
+      {
+        id: 'postgrad', catColor: '#f59e0b', num: 4, title: 'Postgraduate: Analytical', subtitle: 'MSc level instrumental analysis',
+        experiments: [
+          {id:'pg-1', emoji:'🌈', title:'UV-Vis Spectroscopy', desc:'Study KMnO₄ absorption and verify Beer-Lambert law.', difficulty:'expert', duration:'60 min',
+           aim:'Verify Beer-Lambert law with KMnO₄.',
+           theory:'A = εcl. Absorbance is proportional to concentration.',
+           equation:'A = εcl', materials:['KMnO₄ solutions','UV-Vis spectrophotometer','Cuvettes'],
+           procedure:['Prepare standards 2-10 ppm.','Scan for λmax (525 nm).','Measure absorbance and plot calibration curve.'],
+           observations:'Linear curve obtained.', result:'Beer-Lambert law verified.', precautions:['Blank with distilled water.']
+          }
+        ]
+      }
+    ];
+
+    // ─── OLD DATA: PERIODIC ELEMENTS (118) ───────────────────────────────────
     const periodicElements = [
       { number: 1,   symbol: 'H',  name: 'Hydrogen',      weight: '1.008',  category: 'nonmetal',        group: 1,  period: 1 },
       { number: 2,   symbol: 'He', name: 'Helium',        weight: '4.003',  category: 'noble-gas',       group: 18, period: 1 },
@@ -598,243 +770,7 @@
       { number: 118, symbol: 'Og', name: 'Oganesson',     weight: '294',    category: 'noble-gas',       group: 18, period: 7 },
     ];
 
-
-    // ─── DATA: EXPERIMENTS (10 from OLD file) ─────────────────────────────────
-    const experiments = [
-      {
-        id: 1,
-        title: 'Acid-Base Titration',
-        description: 'Determine the concentration of an unknown acid solution using a standardized base.',
-        emoji: '🧪',
-        difficulty: 'intermediate',
-        duration: '25 min',
-        aim: 'To determine the concentration of HCl using NaOH solution.',
-        materials: ['Burette', 'Pipette', 'Conical flask', 'HCl solution', 'NaOH solution', 'Phenolphthalein indicator'],
-        procedure: [
-          'Rinse burette with NaOH and fill with 0.1 M NaOH',
-          'Pipette 25 mL HCl into flask',
-          'Add 2-3 drops phenolphthalein',
-          'Note initial burette reading',
-          'Add NaOH slowly while swirling',
-          'Stop when solution turns light pink',
-          'Calculate volume used',
-        ],
-        cautions: [
-          'Wear safety goggles and lab coat',
-          'Never pipette by mouth',
-          'Add acid to water, never reverse',
-          'Wash immediately if skin contact',
-        ],
-        videoId: 'tJDaKYmax08',
-        hasSimulation: true,
-      },
-      {
-        id: 2,
-        title: 'Crystal Growing',
-        description: 'Grow beautiful crystals using supersaturated solutions.',
-        emoji: '💎',
-        difficulty: 'beginner',
-        duration: '3-7 days',
-        aim: 'To grow crystals from supersaturated solution.',
-        materials: ['Sugar or salt', 'Water', 'Glass jar', 'String', 'Pencil'],
-        procedure: [
-          'Heat water until warm',
-          'Add sugar/salt until saturated',
-          'Pour into jar',
-          'Suspend string in solution',
-          'Observe daily for 3-7 days',
-        ],
-        cautions: ['Handle hot water carefully', 'Do not disturb jar', 'Keep away from children'],
-        videoId: 'gPLNkTpe8hI',
-        hasSimulation: false,
-      },
-      {
-        id: 3,
-        title: 'Baking Soda Volcano',
-        description: 'Create a dramatic chemical reaction simulating volcanic eruption.',
-        emoji: '🌋',
-        difficulty: 'beginner',
-        duration: '15 min',
-        aim: 'To demonstrate acid-base reaction producing CO2.',
-        materials: ['Baking soda', 'Vinegar', 'Dish soap', 'Food coloring', 'Container'],
-        procedure: [
-          'Place container in tray',
-          'Add 2 tbsp baking soda',
-          'Add soap and coloring',
-          'Pour vinegar',
-          'Observe reaction',
-        ],
-        cautions: ['Use well-ventilated area', 'Avoid eye contact', 'Clean spills promptly'],
-        videoId: 'BLxiAHurb0M',
-        hasSimulation: false,
-      },
-      {
-        id: 4,
-        title: 'Paper Chromatography',
-        description: 'Separate ink components using chromatography.',
-        emoji: '🎨',
-        difficulty: 'beginner',
-        duration: '20 min',
-        aim: 'To separate pigments in colored inks.',
-        materials: ['Filter paper', 'Markers', 'Water', 'Glass', 'Pencil'],
-        procedure: [
-          'Cut paper strips',
-          'Draw pencil line 2cm from bottom',
-          'Make marker dots on line',
-          'Add 1cm water to glass',
-          'Place strip without submerging dots',
-          'Watch colors separate',
-        ],
-        cautions: ['Use washable markers', 'Handle wet paper carefully', 'Protect work surface'],
-        videoId: 'aZY8ohQ4M6Y',
-        hasSimulation: false,
-      },
-      {
-        id: 5,
-        title: 'Flame Test',
-        description: 'Identify metal ions by characteristic flame colors.',
-        emoji: '🔥',
-        difficulty: 'intermediate',
-        duration: '30 min',
-        aim: 'To identify metal ions by flame color.',
-        materials: ['Bunsen burner', 'Metal salt solutions', 'Nichrome wire', 'HCl'],
-        procedure: [
-          'Clean wire with HCl',
-          'Dip in metal salt solution',
-          'Hold in flame',
-          'Record color',
-          'Repeat for all samples',
-        ],
-        cautions: [
-          'Never leave flame unattended',
-          'Use tongs for hot wire',
-          'Well-ventilated area',
-          'Keep flammables away',
-        ],
-        videoId: 'h4dPbS9s0AE',
-        hasSimulation: false,
-      },
-      {
-        id: 6,
-        title: 'Making Slime',
-        description: 'Create a non-Newtonian fluid by polymerizing PVA glue.',
-        emoji: '🧬',
-        difficulty: 'beginner',
-        duration: '15 min',
-        aim: 'To create a polymer and observe non-Newtonian properties.',
-        materials: ['PVA glue', 'Borax powder', 'Water', 'Bowl', 'Food coloring'],
-        procedure: [
-          'Pour 4 oz glue into bowl',
-          'Add food coloring',
-          'Mix 1 tsp borax with 1 cup water',
-          'Add borax solution slowly',
-          'Mix until slime forms',
-          'Knead with hands',
-        ],
-        cautions: ['Wash hands before and after', 'Do not eat', 'Store in airtight container'],
-        videoId: 'ZDLn0jYvCMc',
-        hasSimulation: false,
-      },
-      {
-        id: 7,
-        title: 'Copper Electroplating',
-        description: 'Coat an object with copper metal using electrochemical deposition.',
-        emoji: '🔩',
-        difficulty: 'advanced',
-        duration: '40 min',
-        aim: 'To plate copper onto metal object using electrolysis.',
-        materials: ['Copper sulfate solution', '9V battery', 'Copper strip', 'Metal object', 'Wires', 'Beaker'],
-        procedure: [
-          'Sand metal object until shiny',
-          'Prepare copper sulfate solution',
-          'Connect copper strip to positive',
-          'Connect object to negative',
-          'Immerse electrodes',
-          'Observe copper depositing',
-          'Remove and rinse after 30 min',
-        ],
-        cautions: [
-          'Copper sulfate is toxic - avoid contact',
-          'Well-ventilated area',
-          'Dispose properly',
-          'Wear gloves and goggles',
-        ],
-        videoId: 'dQw4w9WgXcQ',
-        hasSimulation: false,
-      },
-      {
-        id: 8,
-        title: 'Red Cabbage pH Indicator',
-        description: 'Extract natural pH indicator from red cabbage.',
-        emoji: '🥬',
-        difficulty: 'beginner',
-        duration: '30 min',
-        aim: 'To create natural pH indicator and test household substances.',
-        materials: ['Red cabbage', 'Water', 'Pot', 'Strainer', 'Test tubes', 'Household liquids'],
-        procedure: [
-          'Chop red cabbage',
-          'Boil in water 10 minutes',
-          'Strain liquid',
-          'Pour into test tubes',
-          'Add different substances',
-          'Observe color changes',
-          'Record observations',
-        ],
-        cautions: ['Handle hot liquids carefully', 'Do not taste solutions', 'Label all containers'],
-        videoId: 'RaE1ezaq3TY',
-        hasSimulation: false,
-      },
-      {
-        id: 9,
-        title: 'Enzyme Activity',
-        description: 'Observe enzyme catalase activity in decomposing hydrogen peroxide.',
-        emoji: '🥔',
-        difficulty: 'intermediate',
-        duration: '25 min',
-        aim: 'To demonstrate enzyme catalase activity.',
-        materials: ['Potato', 'Hydrogen peroxide 3%', 'Test tubes', 'Knife', 'Grater', 'Thermometer'],
-        procedure: [
-          'Grate raw potato',
-          'Add potato to test tube with H2O2',
-          'Observe rapid bubbling',
-          'Test with boiled potato',
-          'Try different temperatures',
-          'Compare with liver or yeast',
-          'Record reaction speeds',
-        ],
-        cautions: ['Handle H2O2 carefully', 'Use care with sharp knives', 'Well-ventilated area'],
-        videoId: 'V-Q_OZZu6X0',
-        hasSimulation: false,
-      },
-      {
-        id: 10,
-        title: 'Electrolysis of Water',
-        description: 'Split water into hydrogen and oxygen gases using electrical energy.',
-        emoji: '⚡',
-        difficulty: 'intermediate',
-        duration: '30 min',
-        aim: 'To decompose water into hydrogen and oxygen through electrolysis.',
-        materials: ['9V battery', 'Two pencils', 'Water', 'Salt', 'Test tubes', 'Container', 'Wires'],
-        procedure: [
-          'Fill container with salt water',
-          'Fill test tubes with salt water',
-          'Sharpen both ends of pencils',
-          'Connect pencils to battery',
-          'Place under test tubes',
-          'Observe gas collection',
-          'Note 2:1 hydrogen:oxygen ratio',
-        ],
-        cautions: [
-          'Do not touch battery terminals',
-          'Keep electrical parts from water',
-          'Well-ventilated area - hydrogen flammable',
-        ],
-        videoId: 'VJTNyW36VCw',
-        hasSimulation: false,
-      },
-    ];
-
-    // ─── DATA: QUIZ QUESTIONS (OLD file) ──────────────────────────────────────
+    // ─── OLD DATA: QUIZ QUESTIONS ─────────────────────────────────────────────
     const quizQuestions = [
       { question: 'What is the pH of a neutral solution at 25°C?', options: ['6', '7', '8', '14'], correct: 1 },
       { question: 'Which indicator turns pink in basic solutions?', options: ['Methyl orange', 'Litmus', 'Phenolphthalein', 'Bromothymol blue'], correct: 2 },
@@ -845,7 +781,6 @@
       { question: 'What is the atomic number of Carbon?', options: ['4', '6', '8', '12'], correct: 1 },
       { question: 'Which element is represented by the symbol Fe?', options: ['Fluorine', 'Iron', 'Fermium', 'Francium'], correct: 1 },
     ];
-
 
     // ─── STATE ────────────────────────────────────────────────────────────────
     let currentUser           = null;
@@ -870,7 +805,7 @@
       renderPeriodicTable();
     }
 
-    // ─── NAVIGATION (Adapted for Navbar) ──────────────────────────────────────
+    // ─── NAVIGATION (Navbar) ──────────────────────────────────────────────────
     function navigateTo(pageId) {
       document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('page-' + pageId);
@@ -943,6 +878,202 @@
     }
 
 
+    // ─── EXPERIMENTS (Commit 2 Logic) ─────────────────────────────────────────
+    function renderExperiments() {
+      const gridHome = document.getElementById('experimentsGridHome');
+      
+      if (gridHome) {
+        // Show first 3 experiments of the first category on home page
+        const firstFew = expCategories.flatMap(c => c.experiments).slice(0, 3);
+        gridHome.innerHTML = firstFew.map(exp => experimentCardHTML(exp)).join('');
+      }
+
+      filterExperiments(); // Renders the full structured library
+    }
+
+    function filterExperiments() {
+      const searchTerm   = document.getElementById('experimentSearch')?.value.toLowerCase() || '';
+      const filteredGrid = document.getElementById('experimentsGridFiltered');
+      if (!filteredGrid) return;
+
+      let html = '';
+
+      expCategories.forEach(cat => {
+        const filtered = cat.experiments.filter(exp => {
+          const matchesSearch = exp.title.toLowerCase().includes(searchTerm) || exp.desc.toLowerCase().includes(searchTerm);
+          const matchesDiff   = currentDifficultyFilter === 'all' || exp.difficulty === currentDifficultyFilter;
+          return matchesSearch && matchesDiff;
+        });
+
+        if (filtered.length > 0) {
+          html += `
+            <div class="cat-block">
+              <div class="cat-header" style="--cat-color: ${cat.catColor}">
+                <div class="cat-num">${cat.num}</div>
+                <div class="cat-info">
+                  <h3>${cat.title}</h3>
+                  <p>${cat.subtitle}</p>
+                </div>
+              </div>
+              <div class="experiments-grid">
+                ${filtered.map(exp => experimentCardHTML(exp)).join('')}
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      if (!html) {
+        filteredGrid.innerHTML = '<p style="color: var(--text-soft); text-align: center; padding: 3rem; font-size: 1.1rem;">No experiments found matching your criteria.</p>';
+        return;
+      }
+      filteredGrid.innerHTML = html;
+    }
+
+    function setDifficultyFilter(difficulty) {
+      currentDifficultyFilter = difficulty;
+      document.querySelectorAll('.filter-tab[data-filter]').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === difficulty);
+      });
+      filterExperiments();
+    }
+
+    function experimentCardHTML(exp) {
+      return `
+        <div class="experiment-card" onclick="openExperiment('${exp.id}')">
+          <div class="experiment-image">${exp.emoji}</div>
+          <div class="experiment-content">
+            <div class="experiment-meta">
+              <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
+              <span class="experiment-duration">⏱️ ${exp.duration}</span>
+            </div>
+            <h3 class="experiment-title">${exp.title}</h3>
+            <p class="experiment-description">${exp.desc}</p>
+            <div style="margin-top: auto;">
+              <button class="btn btn-primary btn-sm">Open Experiment</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openExperiment(id) {
+      const exp = expCategories.flatMap(c => c.experiments).find(e => e.id === id);
+      if (!exp) return;
+
+      let vidHtml = exp.videoId 
+        ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${exp.videoId}" frameborder="0" allowfullscreen></iframe></div>`
+        : `<div class="video-container" style="background:var(--bg-card2);"><div class="video-fallback"><p>Video demonstration unavailable.</p></div></div>`;
+
+      document.getElementById('experimentDetailContent').innerHTML = `
+        <div class="back-btn" onclick="navigateTo('experiments')">← Back to Experiments</div>
+        <div class="experiment-meta" style="margin-bottom: 1rem;">
+          <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
+          <span class="experiment-duration">⏱️ ${exp.duration}</span>
+        </div>
+        
+        <h2>${exp.title}</h2>
+        <p style="color: var(--text-soft); line-height: 1.8; margin-bottom: 2rem; font-size: 1.05rem;">${exp.desc}</p>
+
+        <h3>Aim</h3>
+        <p style="color: var(--text-soft); line-height: 1.8;">${exp.aim}</p>
+        
+        ${exp.theory ? `<h3>Theory</h3><p style="color: var(--text-soft); line-height: 1.8;">${exp.theory}</p>` : ''}
+        ${exp.equation ? `<div class="equation-box">${exp.equation}</div>` : ''}
+
+        <h3>Materials</h3>
+        <ul class="materials-list">${(exp.materials || []).map(m => `<li>${m}</li>`).join('')}</ul>
+        
+        <h3>Procedure</h3>
+        <ol class="procedure-list">${(exp.procedure || []).map(p => `<li>${p}</li>`).join('')}</ol>
+        
+        ${exp.observations || exp.result ? `
+          <h3>Observations & Result</h3>
+          <p style="color: var(--text-soft); line-height: 1.8;">
+            ${exp.observations ? `<strong>Obs:</strong> ${exp.observations}<br>` : ''}
+            ${exp.result ? `<strong>Result:</strong> ${exp.result}` : ''}
+          </p>
+        ` : ''}
+        
+        ${exp.precautions && exp.precautions.length > 0 ? `
+          <div class="caution-box">
+            <h3>⚠️ Safety Cautions</h3>
+            <ul>${exp.precautions.map(c => `<li>${c}</li>`).join('')}</ul>
+          </div>
+        ` : ''}
+        
+        <h3>Video Demonstration</h3>
+        ${vidHtml}
+
+        ${exp.hasSimulation ? `<div style="text-align:center; margin-top:2rem;"><button class="btn btn-primary" style="font-size:1.1rem; padding:0.8rem 1.5rem;" onclick="startSimulation()">Start Interactive Simulation</button></div>` : ''}
+      `;
+      navigateTo('experimentDetail');
+    }
+
+
+    // ─── TITRATION SIMULATION (Old Logic) ─────────────────────────────────────
+    function startSimulation() {
+      navigateTo('simulation');
+      setupTitration();
+    }
+
+    function setupTitration() {
+      const slider = document.getElementById('volumeSlider');
+      slider.value = 0;
+      updateTitration(0);
+
+      slider.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value);
+        updateTitration(volume);
+
+        const drip = document.getElementById('drip');
+        drip.classList.remove('active');
+        void drip.offsetWidth; 
+        drip.classList.add('active');
+
+        if (volume >= 45) {
+          document.getElementById('statusDisplay').textContent  = 'Complete!';
+          document.getElementById('statusDisplay').style.color  = '#10b981';
+
+          if (currentUser) {
+            const userData = getUserData();
+            // Storing 'c9-1' (the only simulated exp currently) to progress array
+            if (userData && !userData.completedExperiments.includes('c9-1')) {
+              userData.completedExperiments.push('c9-1');
+              saveUserData(userData);
+            }
+          }
+        } else {
+          document.getElementById('statusDisplay').textContent = 'In Progress';
+          document.getElementById('statusDisplay').style.color = 'var(--accent)';
+        }
+      });
+    }
+
+    function updateTitration(volume) {
+      document.getElementById('volumeDisplay').textContent = `${volume} mL`;
+      const ph = 2 + (volume * 0.14);
+      document.getElementById('phDisplay').textContent = ph.toFixed(2);
+
+      const buretteHeight = (50 - volume) / 50 * 400;
+      document.getElementById('buretteLiquid').style.height = `${buretteHeight}px`;
+
+      const beakerHeight  = 50 + (volume * 2);
+      const beakerLiquid  = document.getElementById('beakerLiquid');
+      beakerLiquid.style.height = `${beakerHeight}px`;
+
+      if (ph >= 8.2) {
+        beakerLiquid.classList.add('pink');
+        document.getElementById('colorDisplay').textContent  = 'Pink';
+        document.getElementById('colorDisplay').style.color  = '#ec4899';
+      } else {
+        beakerLiquid.classList.remove('pink');
+        document.getElementById('colorDisplay').textContent  = 'Colorless';
+        document.getElementById('colorDisplay').style.color  = 'var(--accent)';
+      }
+    }
+
+
     // ─── PERIODIC TABLE (Old Logic, New Theme integration) ────────────────────
     function renderPeriodicTable() {
       const table = document.getElementById('periodicTable');
@@ -998,147 +1129,6 @@
 
     function closeElementModal() {
       document.getElementById('elementModal').classList.remove('active');
-    }
-
-    // ─── EXPERIMENTS (Old Logic) ──────────────────────────────────────────────
-    function renderExperiments() {
-      const grid = document.getElementById('experimentsGrid');
-      grid.innerHTML = experiments.slice(0, 3).map(exp => experimentCardHTML(exp)).join('');
-      filterExperiments();
-    }
-
-    function experimentCardHTML(exp) {
-      return `
-        <div class="experiment-card" onclick="openExperiment(${exp.id})">
-          <div class="experiment-image">${exp.emoji}</div>
-          <div class="experiment-content">
-            <div class="experiment-meta">
-              <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
-              <span class="experiment-duration">⏱️ ${exp.duration}</span>
-            </div>
-            <h3 class="experiment-title">${exp.title}</h3>
-            <p class="experiment-description">${exp.description}</p>
-            <button class="btn btn-primary btn-sm">Open Experiment</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function filterExperiments() {
-      const searchTerm  = document.getElementById('experimentSearch')?.value.toLowerCase() || '';
-      const filteredGrid = document.getElementById('experimentsGridFiltered');
-      if (!filteredGrid) return;
-
-      const filtered = experiments.filter(exp => {
-        const matchesSearch = exp.title.toLowerCase().includes(searchTerm) || exp.description.toLowerCase().includes(searchTerm);
-        const matchesDiff   = currentDifficultyFilter === 'all' || exp.difficulty === currentDifficultyFilter;
-        return matchesSearch && matchesDiff;
-      });
-
-      if (filtered.length === 0) {
-        filteredGrid.innerHTML = '<p style="color: var(--text-soft); text-align: center; padding: 3rem;">No experiments found.</p>';
-        return;
-      }
-      filteredGrid.innerHTML = filtered.map(exp => experimentCardHTML(exp)).join('');
-    }
-
-    function setDifficultyFilter(difficulty) {
-      currentDifficultyFilter = difficulty;
-      document.querySelectorAll('.filter-tab[data-filter]').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.filter === difficulty);
-      });
-      filterExperiments();
-    }
-
-    function openExperiment(id) {
-      const exp = experiments.find(e => e.id === id);
-      if (!exp) return;
-
-      document.getElementById('experimentDetailContent').innerHTML = `
-        <div class="back-btn" onclick="navigateTo('experiments')">← Back to Experiments</div>
-        <div class="experiment-meta" style="margin-bottom: 1rem;">
-          <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
-          <span class="experiment-duration">⏱️ ${exp.duration}</span>
-        </div>
-        <h2>${exp.title}</h2>
-        <h3>Aim</h3>
-        <p style="color: var(--text-soft); line-height: 1.8;">${exp.aim}</p>
-        <div class="caution-box">
-          <h3>⚠️ Safety Cautions</h3>
-          <ul>${exp.cautions.map(c => `<li>${c}</li>`).join('')}</ul>
-        </div>
-        <h3>Materials</h3>
-        <ul class="materials-list">${exp.materials.map(m => `<li>${m}</li>`).join('')}</ul>
-        <h3>Procedure</h3>
-        <ol class="procedure-list">${exp.procedure.map(p => `<li>${p}</li>`).join('')}</ol>
-        <h3>Video Demonstration</h3>
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/${exp.videoId}" frameborder="0" allowfullscreen></iframe>
-        </div>
-        ${exp.hasSimulation ? '<button class="btn btn-primary" onclick="startSimulation()">Start Simulation</button>' : ''}
-      `;
-      navigateTo('experimentDetail');
-    }
-
-    // ─── TITRATION SIMULATION (Old Logic) ─────────────────────────────────────
-    function startSimulation() {
-      navigateTo('simulation');
-      setupTitration();
-    }
-
-    function setupTitration() {
-      const slider = document.getElementById('volumeSlider');
-      slider.value = 0;
-      updateTitration(0);
-
-      slider.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        updateTitration(volume);
-
-        const drip = document.getElementById('drip');
-        drip.classList.remove('active');
-        void drip.offsetWidth; 
-        drip.classList.add('active');
-
-        if (volume >= 45) {
-          document.getElementById('statusDisplay').textContent  = 'Complete!';
-          document.getElementById('statusDisplay').style.color  = '#10b981';
-
-          if (currentUser) {
-            const userData = getUserData();
-            if (userData && !userData.completedExperiments.includes(1)) {
-              userData.completedExperiments.push(1);
-              saveUserData(userData);
-            }
-          }
-        } else {
-          document.getElementById('statusDisplay').textContent = 'In Progress';
-          document.getElementById('statusDisplay').style.color = 'var(--accent)';
-        }
-      });
-    }
-
-    function updateTitration(volume) {
-      document.getElementById('volumeDisplay').textContent = `${volume} mL`;
-      const ph = 2 + (volume * 0.14);
-      document.getElementById('phDisplay').textContent = ph.toFixed(2);
-
-      const buretteHeight = (50 - volume) / 50 * 400;
-      document.getElementById('buretteLiquid').style.height = `${buretteHeight}px`;
-
-      const beakerHeight  = 50 + (volume * 2);
-      const beakerLiquid  = document.getElementById('beakerLiquid');
-      beakerLiquid.style.height = `${beakerHeight}px`;
-
-      if (ph >= 8.2) {
-        beakerLiquid.classList.add('pink');
-        document.getElementById('colorDisplay').textContent  = 'Pink';
-        document.getElementById('colorDisplay').style.color  = '#ec4899';
-      } else {
-        beakerLiquid.classList.remove('pink');
-        document.getElementById('colorDisplay').textContent  = 'Colorless';
-        document.getElementById('colorDisplay').style.color  = 'var(--accent)';
-      }
     }
 
     // ─── QUIZ (Old Logic) ─────────────────────────────────────────────────────
@@ -1219,11 +1209,12 @@
         return;
       }
 
-      const experimentProgress = (userData.completedExperiments.length / experiments.length) * 100;
+      const flatExpArr = expCategories.flatMap(c => c.experiments);
+      const experimentProgress = (userData.completedExperiments.length / flatExpArr.length) * 100;
       const quizProgress       = userData.quizCompleted ? 100 : 0;
 
       const completedTitles = userData.completedExperiments.map(id => {
-        const exp = experiments.find(e => e.id === id);
+        const exp = flatExpArr.find(e => e.id === id);
         return exp ? exp.title : `Experiment ${id}`;
       });
 
@@ -1231,7 +1222,7 @@
         <div class="progress-card">
           <h3>Experiments</h3>
           <div style="color: var(--accent); font-size: 2rem;">
-            ${userData.completedExperiments.length}/${experiments.length}
+            ${userData.completedExperiments.length}/${flatExpArr.length}
           </div>
           <div class="progress-bar">
             <div class="progress-bar-fill" style="width: ${experimentProgress}%;"></div>
@@ -1239,7 +1230,7 @@
         </div>
 
         <div class="progress-card">
-          <h3>Quiz</h3>
+          <h3>General Quiz</h3>
           <div style="color: var(--accent); font-size: 2rem;">
             ${userData.quizScore !== null ? userData.quizScore + '%' : 'Not Taken'}
           </div>
