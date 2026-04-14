@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Chemistry Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    /* ─── RESET & VARIABLES ─── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary:    #f3f6fb;
+      --bg-white:      #fff;
+      --accent:        #38bdf8;
+      --accent-dark:   #0ea5e9;
+      --text-primary:  #1e293b;
+      --text-secondary:#64748b;
+      --border:        #e2e8f0;
+      --success:       #10b981;
+      --danger:        #ef4444;
+      --warning:       #f59e0b;
+      --gradient-bg:   linear-gradient(135deg, #f3f6fb 0%, #e0e7ff 100%);
+    }
+
+    /* ─── DARK MODE ─── */
+    body.dark-mode {
+      --bg-primary:    #0f172a;
+      --bg-white:      #1e293b;
+      --text-primary:  #f1f5f9;
+      --text-secondary:#94a3b8;
+      --border:        #334155;
+      --gradient-bg:   linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    /* ─── BASE ─── */
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--gradient-bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: all 0.3s;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      padding-bottom: 100px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: var(--bg-white);
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── LOGIN FORM ─── */
+    .login-form {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .input {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-white);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ─── PAGE SECTIONS ─── */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── EXPERIMENT GRID ─── */
+    .experiments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ─── EXPERIMENT CARD ─── */
+    .experiment-card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .experiment-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.2);
+    }
+
+    .experiment-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .experiment-content {
+      padding: 1.5rem;
+    }
+
+    .experiment-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .experiment-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── EXPERIMENT DETAIL PAGE ─── */
+    .experiment-detail {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .experiment-detail h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .experiment-detail h3 {
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .materials-list,
+    .procedure-list {
+      list-style-position: inside;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .procedure-list {
+      counter-reset: step-counter;
+      list-style: none;
+    }
+
+    .procedure-list li {
+      counter-increment: step-counter;
+      margin-bottom: 1rem;
+      padding-left: 2.5rem;
+      position: relative;
+    }
+
+    .procedure-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2rem;
+      height: 2rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    /* ─── VIDEO EMBED ─── */
+    .video-container {
+      margin: 2rem 0;
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ─── TITRATION SIMULATION ─── */
+    .simulation-container {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-top: 2rem;
+    }
+
+    .lab-equipment {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      align-items: flex-end;
+    }
+
+    .burette-container {
+      position: relative;
+      width: 80px;
+    }
+
+    .burette {
+      width: 80px;
+      height: 400px;
+      background: linear-gradient(to bottom, #fff 0%, #f0f9ff 100%);
+      border: 3px solid var(--accent);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .burette-liquid {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(to top, #ef4444 0%, #f87171 100%);
+      transition: height 0.5s;
+    }
+
+    .burette-tip {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+
+    .drip {
+      position: absolute;
+      width: 8px;
+      height: 12px;
+      background: #ef4444;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -10px;
+      opacity: 0;
+    }
+
+    .drip.active {
+      animation: drip 0.8s;
+    }
+
+    @keyframes drip {
+      0%   { top: -10px; opacity: 1; }
+      100% { top: 420px; opacity: 0; }
+    }
+
+    .beaker {
+      width: 200px;
+      height: 250px;
+      background: linear-gradient(to bottom, #fff 0%, #f8fafc 100%);
+      border: 3px solid var(--accent);
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .beaker-liquid {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      transition: all 0.5s;
+      background: #f0f9ff;
+    }
+
+    .beaker-liquid.pink {
+      background: linear-gradient(to top, #fce7f3 0%, #fbcfe8 100%);
+    }
+
+    /* Simulation controls */
+    .controls {
+      margin-top: 2rem;
+    }
+
+    .slider-container {
+      margin: 1.5rem 0;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: var(--border);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+
+    .slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Simulation result cards */
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .result-card {
+      background: var(--bg-white);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      color: var(--accent);
+    }
+
+    /* ─── QUIZ ─── */
+    .quiz-container {
+      max-width: 800px;
+    }
+
+    .question-card {
+      background: var(--bg-white);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .question-number {
+      font-size: 0.875rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .options {
+      list-style: none;
+    }
+
+    .option {
+      padding: 1rem 1.5rem;
+      margin-bottom: 0.75rem;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .option.selected {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .score-display {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .score-value {
+      font-size: 3rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ─── PERIODIC TABLE ─── */
+    .periodic-table {
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      gap: 4px;
+      max-width: 1400px;
+      margin: 2rem auto;
+    }
+
+    .element {
+      aspect-ratio: 1;
+      background: var(--bg-white);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .element:hover {
+      transform: scale(1.1);
+      z-index: 10;
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
+      border-color: var(--accent);
+    }
+
+    .element-number {
+      font-size: 0.625rem;
+      color: var(--text-secondary);
+      position: absolute;
+      top: 4px;
+      left: 4px;
+    }
+
+    .element-symbol {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .element-name {
+      font-size: 0.5rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* Element category colours */
+    .element.nonmetal    { background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%); border-color: #3b82f6; }
+    .element.noble-gas   { background: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 100%); border-color: #ec4899; }
+    .element.alkali      { background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%); border-color: #f59e0b; }
+    .element.alkaline    { background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%); border-color: #f97316; }
+    .element.transition  { background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%); border-color: #ef4444; }
+    .element.metalloid   { background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%); border-color: #6366f1; }
+
+    .element-spacer { grid-column: span 1; }
+
+    /* ─── ELEMENT DETAIL MODAL ─── */
+    .element-detail-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .element-detail-modal.active {
+      display: flex;
+    }
+
+    .element-detail-card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .element-detail-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .element-detail-close:hover {
+      background: var(--border);
+    }
+
+    .element-detail-symbol {
+      font-size: 4rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .element-detail-name {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .element-detail-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .element-info-item {
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+    }
+
+    .element-info-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .element-info-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    /* ─── CAUTION BOX ─── */
+    .caution-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid #f59e0b;
+      margin: 1.5rem 0;
+    }
+
+    .caution-box h3 {
+      color: #92400e;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .caution-box ul {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: #78350f;
+      line-height: 1.8;
+    }
+
+    /* ─── DASHBOARD STATS ─── */
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card-home {
+      background: var(--bg-white);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .stat-card-home:hover {
+      transform: translateY(-4px);
+    }
+
+    .stat-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      margin-top: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    /* ─── SEARCH & FILTERS ─── */
+    .search-box {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      background: var(--bg-white);
+      color: var(--text-primary);
+      transition: all 0.3s;
+      margin-bottom: 1rem;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .filter-tab {
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* ─── DIFFICULTY BADGES ─── */
+    .difficulty-badge {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .difficulty-beginner    { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; }
+    .difficulty-intermediate{ background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; }
+    .difficulty-advanced    { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; }
+
+    .experiment-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .experiment-duration {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* ─── PROGRESS SECTION ─── */
+    .progress-card {
+      background: var(--bg-white);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      transition: width 0.5s;
+      border-radius: 6px;
+    }
+
+    .completed-list { list-style: none; margin-top: 1rem; }
+
+    .completed-item {
+      padding: 0.75rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid var(--success);
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* ─── BOTTOM NAV ─── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-white);
+      border-top: 1px solid var(--border);
+      padding: 0.5rem;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .bottom-nav-items {
+      display: flex;
+      justify-content: space-around;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .bottom-nav-item:hover { background: rgba(56, 189, 248, 0.1); }
+    .bottom-nav-item.active { color: var(--accent); }
+    .bottom-nav-item span:first-child { font-size: 1.25rem; }
+
+    /* ─── DARK MODE TOGGLE ─── */
+    .dark-mode-toggle {
+      width: 60px;
+      height: 30px;
+      background: var(--border);
+      border-radius: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dark-mode-toggle::before {
+      content: '☀️';
+      position: absolute;
+      left: 3px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+    }
+
+    body.dark-mode .dark-mode-toggle { background: var(--accent); }
+    body.dark-mode .dark-mode-toggle::before { content: '🌙'; left: 32px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .main-content { padding: 1rem; padding-bottom: 100px; }
+      .header { flex-direction: column; }
+      .periodic-table { grid-template-columns: repeat(9, 1fr); }
+      .element-symbol { font-size: 1rem; }
+      .element-name { display: none; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="header">
+        <h1 class="header-title">Virtual Chemistry Lab</h1>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="dark-mode-toggle" onclick="toggleDarkMode()"></div>
+
+          <!-- Login form (shown when logged out) -->
+          <div class="login-form" id="loginForm">
+            <input type="text" class="input" id="studentName" placeholder="Enter your name">
+            <button class="btn btn-primary" onclick="login()">Login</button>
+          </div>
+
+          <!-- Logout button (shown when logged in) -->
+          <div id="loggedInUser" style="display: none;">
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── DASHBOARD ── -->
+      <section id="dashboard" class="section active">
+        <div style="max-width: 1200px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Welcome to the Virtual Chemistry Lab</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">
+            Explore experiments, discover elements, and learn lab techniques safely
+          </p>
+
+          <!-- Stats cards -->
+          <div class="stats-cards">
+            <div class="stat-card-home" onclick="showSection('experiments'); setActiveBottomNav(document.querySelector('[data-section=experiments]'))">
+              <div class="stat-icon">🧪</div>
+              <div class="stat-number">10</div>
+              <div class="stat-label">Experiments</div>
+            </div>
+
+            <div class="stat-card-home" onclick="showSection('periodic'); setActiveBottomNav(document.querySelector('[data-section=periodic]'))">
+              <div class="stat-icon">⚛️</div>
+              <div class="stat-number">118</div>
+              <div class="stat-label">Elements</div>
+            </div>
+
+            <div class="stat-card-home" onclick="showSection('quiz'); setActiveBottomNav(document.querySelector('[data-section=quiz]'))">
+              <div class="stat-icon">📝</div>
+              <div class="stat-number">8</div>
+              <div class="stat-label">Quiz Questions</div>
+            </div>
+          </div>
+
+          <h3 style="margin: 2rem 0 1.5rem;">✨ Featured Experiments</h3>
+          <div class="experiments-grid" id="experimentsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ── EXPERIMENTS LIST ── -->
+      <section id="experiments" class="section">
+        <h2 style="margin-bottom: 1.5rem;">Experiments</h2>
+
+        <input
+          type="text"
+          class="search-box"
+          id="experimentSearch"
+          placeholder="Search experiments..."
+          oninput="filterExperiments()"
+        >
+
+        <div class="filter-tabs">
+          <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All</div>
+          <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
+          <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
+          <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
+        </div>
+
+        <div class="experiments-grid" id="experimentsGridFiltered"></div>
+      </section>
+
+      <!-- ── EXPERIMENT DETAIL ── -->
+      <section id="experimentDetail" class="section">
+        <div class="experiment-detail" id="experimentDetailContent"></div>
+      </section>
+
+      <!-- ── TITRATION SIMULATION ── -->
+      <section id="simulation" class="section">
+        <div class="experiment-detail">
+          <div class="back-btn" onclick="showSection('experimentDetail')">← Back to Experiment</div>
+          <h2>Acid-Base Titration Simulation</h2>
+
+          <div class="simulation-container">
+            <div class="lab-equipment">
+
+              <!-- Burette -->
+              <div class="burette-container">
+                <div class="burette">
+                  <div class="burette-liquid" id="buretteLiquid"></div>
+                  <div class="drip" id="drip"></div>
+                  <div class="burette-tip"></div>
+                </div>
+              </div>
+
+              <!-- Beaker -->
+              <div class="beaker">
+                <div class="beaker-liquid" id="beakerLiquid"></div>
+              </div>
+
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+              <div class="slider-container">
+                <div class="slider-label">
+                  <span>Volume of NaOH added</span>
+                  <span id="volumeDisplay">0 mL</span>
+                </div>
+                <input type="range" min="0" max="50" value="0" class="slider" id="volumeSlider">
+              </div>
+
+              <div class="results">
+                <div class="result-card">
+                  <div class="result-label">Current pH</div>
+                  <div class="result-value" id="phDisplay">2.00</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-label">Color</div>
+                  <div class="result-value" id="colorDisplay" style="font-size: 1.25rem;">Colorless</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-label">Status</div>
+                  <div class="result-value" id="statusDisplay" style="font-size: 1rem;">In Progress</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── QUIZ ── -->
+      <section id="quiz" class="section">
+        <div class="quiz-container">
+          <h2 style="margin-bottom: 2rem;">Chemistry Quiz</h2>
+          <div id="quizQuestions"></div>
+          <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+          </div>
+          <div id="scoreDisplay"></div>
+        </div>
+      </section>
+
+      <!-- ── PERIODIC TABLE ── -->
+      <section id="periodic" class="section">
+        <div style="max-width: 1400px;">
+          <h2 style="margin-bottom: 1rem;">Periodic Table of Elements</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Click on any element to view detailed information
+          </p>
+          <div class="periodic-table" id="periodicTable"></div>
+        </div>
+      </section>
+
+      <!-- ── PROGRESS ── -->
+      <section id="progress" class="section">
+        <h2 style="margin-bottom: 2rem;">My Progress</h2>
+        <div id="progressContent"></div>
+      </section>
+
+      <!-- Element detail modal -->
+      <div class="element-detail-modal" id="elementModal">
+        <div class="element-detail-card">
+          <div class="element-detail-close" onclick="closeElementModal()">×</div>
+          <div class="element-detail-symbol" id="modalSymbol"></div>
+          <div class="element-detail-name"   id="modalName"></div>
+          <div class="element-detail-info"   id="modalInfo"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ========== BOTTOM NAV ========== -->
+    <nav class="bottom-nav">
+      <div class="bottom-nav-items">
+        <div class="bottom-nav-item active" data-section="dashboard"    onclick="showSection('dashboard');    setActiveBottomNav(this)"><span>🏠</span><span>Lab</span></div>
+        <div class="bottom-nav-item"        data-section="experiments"  onclick="showSection('experiments');  setActiveBottomNav(this)"><span>🧪</span><span>Experiments</span></div>
+        <div class="bottom-nav-item"        data-section="periodic"     onclick="showSection('periodic');     setActiveBottomNav(this)"><span>⚛️</span><span>Elements</span></div>
+        <div class="bottom-nav-item"        data-section="quiz"         onclick="showSection('quiz');         setActiveBottomNav(this)"><span>📝</span><span>Quiz</span></div>
+        <div class="bottom-nav-item"        data-section="progress"     onclick="showSection('progress');     setActiveBottomNav(this); renderProgressSection()"><span>📊</span><span>Progress</span></div>
+      </div>
+    </nav>
+
+  </div><!-- end .app-container -->
+
+
+  <!-- ========== JAVASCRIPT ========== -->
+  <script>
+
+    // ─── DATA: PERIODIC ELEMENTS (first 36) ───────────────────────────────────
+    const periodicElements = [
+      { number: 1,  symbol: 'H',  name: 'Hydrogen',   weight: '1.008',  category: 'nonmetal',   group: 1,  period: 1 },
+      { number: 2,  symbol: 'He', name: 'Helium',     weight: '4.003',  category: 'noble-gas',  group: 18, period: 1 },
+      { number: 3,  symbol: 'Li', name: 'Lithium',    weight: '6.941',  category: 'alkali',     group: 1,  period: 2 },
+      { number: 4,  symbol: 'Be', name: 'Beryllium',  weight: '9.012',  category: 'alkaline',   group: 2,  period: 2 },
+      { number: 5,  symbol: 'B',  name: 'Boron',      weight: '10.81',  category: 'metalloid',  group: 13, period: 2 },
+      { number: 6,  symbol: 'C',  name: 'Carbon',     weight: '12.01',  category: 'nonmetal',   group: 14, period: 2 },
+      { number: 7,  symbol: 'N',  name: 'Nitrogen',   weight: '14.01',  category: 'nonmetal',   group: 15, period: 2 },
+      { number: 8,  symbol: 'O',  name: 'Oxygen',     weight: '16.00',  category: 'nonmetal',   group: 16, period: 2 },
+      { number: 9,  symbol: 'F',  name: 'Fluorine',   weight: '19.00',  category: 'nonmetal',   group: 17, period: 2 },
+      { number: 10, symbol: 'Ne', name: 'Neon',       weight: '20.18',  category: 'noble-gas',  group: 18, period: 2 },
+      { number: 11, symbol: 'Na', name: 'Sodium',     weight: '22.99',  category: 'alkali',     group: 1,  period: 3 },
+      { number: 12, symbol: 'Mg', name: 'Magnesium',  weight: '24.31',  category: 'alkaline',   group: 2,  period: 3 },
+      { number: 13, symbol: 'Al', name: 'Aluminum',   weight: '26.98',  category: 'transition', group: 13, period: 3 },
+      { number: 14, symbol: 'Si', name: 'Silicon',    weight: '28.09',  category: 'metalloid',  group: 14, period: 3 },
+      { number: 15, symbol: 'P',  name: 'Phosphorus', weight: '30.97',  category: 'nonmetal',   group: 15, period: 3 },
+      { number: 16, symbol: 'S',  name: 'Sulfur',     weight: '32.07',  category: 'nonmetal',   group: 16, period: 3 },
+      { number: 17, symbol: 'Cl', name: 'Chlorine',   weight: '35.45',  category: 'nonmetal',   group: 17, period: 3 },
+      { number: 18, symbol: 'Ar', name: 'Argon',      weight: '39.95',  category: 'noble-gas',  group: 18, period: 3 },
+      { number: 19, symbol: 'K',  name: 'Potassium',  weight: '39.10',  category: 'alkali',     group: 1,  period: 4 },
+      { number: 20, symbol: 'Ca', name: 'Calcium',    weight: '40.08',  category: 'alkaline',   group: 2,  period: 4 },
+      { number: 21, symbol: 'Sc', name: 'Scandium',   weight: '44.96',  category: 'transition', group: 3,  period: 4 },
+      { number: 22, symbol: 'Ti', name: 'Titanium',   weight: '47.87',  category: 'transition', group: 4,  period: 4 },
+      { number: 23, symbol: 'V',  name: 'Vanadium',   weight: '50.94',  category: 'transition', group: 5,  period: 4 },
+      { number: 24, symbol: 'Cr', name: 'Chromium',   weight: '52.00',  category: 'transition', group: 6,  period: 4 },
+      { number: 25, symbol: 'Mn', name: 'Manganese',  weight: '54.94',  category: 'transition', group: 7,  period: 4 },
+      { number: 26, symbol: 'Fe', name: 'Iron',       weight: '55.85',  category: 'transition', group: 8,  period: 4 },
+      { number: 27, symbol: 'Co', name: 'Cobalt',     weight: '58.93',  category: 'transition', group: 9,  period: 4 },
+      { number: 28, symbol: 'Ni', name: 'Nickel',     weight: '58.69',  category: 'transition', group: 10, period: 4 },
+      { number: 29, symbol: 'Cu', name: 'Copper',     weight: '63.55',  category: 'transition', group: 11, period: 4 },
+      { number: 30, symbol: 'Zn', name: 'Zinc',       weight: '65.38',  category: 'transition', group: 12, period: 4 },
+      { number: 31, symbol: 'Ga', name: 'Gallium',    weight: '69.72',  category: 'transition', group: 13, period: 4 },
+      { number: 32, symbol: 'Ge', name: 'Germanium',  weight: '72.63',  category: 'metalloid',  group: 14, period: 4 },
+      { number: 33, symbol: 'As', name: 'Arsenic',    weight: '74.92',  category: 'metalloid',  group: 15, period: 4 },
+      { number: 34, symbol: 'Se', name: 'Selenium',   weight: '78.97',  category: 'nonmetal',   group: 16, period: 4 },
+      { number: 35, symbol: 'Br', name: 'Bromine',    weight: '79.90',  category: 'nonmetal',   group: 17, period: 4 },
+      { number: 36, symbol: 'Kr', name: 'Krypton',    weight: '83.80',  category: 'noble-gas',  group: 18, period: 4 },
+    ];
+
+
+    // ─── DATA: EXPERIMENTS ────────────────────────────────────────────────────
+    const experiments = [
+      {
+        id: 1,
+        title: 'Acid-Base Titration',
+        description: 'Determine the concentration of an unknown acid solution using a standardized base.',
+        emoji: '🧪',
+        difficulty: 'intermediate',
+        duration: '25 min',
+        aim: 'To determine the concentration of HCl using NaOH solution.',
+        materials: ['Burette', 'Pipette', 'Conical flask', 'HCl solution', 'NaOH solution', 'Phenolphthalein indicator'],
+        procedure: [
+          'Rinse burette with NaOH and fill with 0.1 M NaOH',
+          'Pipette 25 mL HCl into flask',
+          'Add 2-3 drops phenolphthalein',
+          'Note initial burette reading',
+          'Add NaOH slowly while swirling',
+          'Stop when solution turns light pink',
+          'Calculate volume used',
+        ],
+        cautions: [
+          'Wear safety goggles and lab coat',
+          'Never pipette by mouth',
+          'Add acid to water, never reverse',
+          'Wash immediately if skin contact',
+        ],
+        videoId: 'tJDaKYmax08',
+        hasSimulation: true,
+      },
+      {
+        id: 2,
+        title: 'Crystal Growing',
+        description: 'Grow beautiful crystals using supersaturated solutions.',
+        emoji: '💎',
+        difficulty: 'beginner',
+        duration: '3-7 days',
+        aim: 'To grow crystals from supersaturated solution.',
+        materials: ['Sugar or salt', 'Water', 'Glass jar', 'String', 'Pencil'],
+        procedure: [
+          'Heat water until warm',
+          'Add sugar/salt until saturated',
+          'Pour into jar',
+          'Suspend string in solution',
+          'Observe daily for 3-7 days',
+        ],
+        cautions: ['Handle hot water carefully', 'Do not disturb jar', 'Keep away from children'],
+        videoId: 'gPLNkTpe8hI',
+        hasSimulation: false,
+      },
+      {
+        id: 3,
+        title: 'Baking Soda Volcano',
+        description: 'Create a dramatic chemical reaction simulating volcanic eruption.',
+        emoji: '🌋',
+        difficulty: 'beginner',
+        duration: '15 min',
+        aim: 'To demonstrate acid-base reaction producing CO2.',
+        materials: ['Baking soda', 'Vinegar', 'Dish soap', 'Food coloring', 'Container'],
+        procedure: [
+          'Place container in tray',
+          'Add 2 tbsp baking soda',
+          'Add soap and coloring',
+          'Pour vinegar',
+          'Observe reaction',
+        ],
+        cautions: ['Use well-ventilated area', 'Avoid eye contact', 'Clean spills promptly'],
+        videoId: 'BLxiAHurb0M',
+        hasSimulation: false,
+      },
+      {
+        id: 4,
+        title: 'Paper Chromatography',
+        description: 'Separate ink components using chromatography.',
+        emoji: '🎨',
+        difficulty: 'beginner',
+        duration: '20 min',
+        aim: 'To separate pigments in colored inks.',
+        materials: ['Filter paper', 'Markers', 'Water', 'Glass', 'Pencil'],
+        procedure: [
+          'Cut paper strips',
+          'Draw pencil line 2cm from bottom',
+          'Make marker dots on line',
+          'Add 1cm water to glass',
+          'Place strip without submerging dots',
+          'Watch colors separate',
+        ],
+        cautions: ['Use washable markers', 'Handle wet paper carefully', 'Protect work surface'],
+        videoId: 'aZY8ohQ4M6Y',
+        hasSimulation: false,
+      },
+      {
+        id: 5,
+        title: 'Flame Test',
+        description: 'Identify metal ions by characteristic flame colors.',
+        emoji: '🔥',
+        difficulty: 'intermediate',
+        duration: '30 min',
+        aim: 'To identify metal ions by flame color.',
+        materials: ['Bunsen burner', 'Metal salt solutions', 'Nichrome wire', 'HCl'],
+        procedure: [
+          'Clean wire with HCl',
+          'Dip in metal salt solution',
+          'Hold in flame',
+          'Record color',
+          'Repeat for all samples',
+        ],
+        cautions: [
+          'Never leave flame unattended',
+          'Use tongs for hot wire',
+          'Well-ventilated area',
+          'Keep flammables away',
+        ],
+        videoId: 'h4dPbS9s0AE',
+        hasSimulation: false,
+      },
+      {
+        id: 6,
+        title: 'Making Slime',
+        description: 'Create a non-Newtonian fluid by polymerizing PVA glue.',
+        emoji: '🧬',
+        difficulty: 'beginner',
+        duration: '15 min',
+        aim: 'To create a polymer and observe non-Newtonian properties.',
+        materials: ['PVA glue', 'Borax powder', 'Water', 'Bowl', 'Food coloring'],
+        procedure: [
+          'Pour 4 oz glue into bowl',
+          'Add food coloring',
+          'Mix 1 tsp borax with 1 cup water',
+          'Add borax solution slowly',
+          'Mix until slime forms',
+          'Knead with hands',
+        ],
+        cautions: ['Wash hands before and after', 'Do not eat', 'Store in airtight container'],
+        videoId: 'ZDLn0jYvCMc',
+        hasSimulation: false,
+      },
+      {
+        id: 7,
+        title: 'Copper Electroplating',
+        description: 'Coat an object with copper metal using electrochemical deposition.',
+        emoji: '🔩',
+        difficulty: 'advanced',
+        duration: '40 min',
+        aim: 'To plate copper onto metal object using electrolysis.',
+        materials: ['Copper sulfate solution', '9V battery', 'Copper strip', 'Metal object', 'Wires', 'Beaker'],
+        procedure: [
+          'Sand metal object until shiny',
+          'Prepare copper sulfate solution',
+          'Connect copper strip to positive',
+          'Connect object to negative',
+          'Immerse electrodes',
+          'Observe copper depositing',
+          'Remove and rinse after 30 min',
+        ],
+        cautions: [
+          'Copper sulfate is toxic - avoid contact',
+          'Well-ventilated area',
+          'Dispose properly',
+          'Wear gloves and goggles',
+        ],
+        videoId: 'dQw4w9WgXcQ',
+        hasSimulation: false,
+      },
+      {
+        id: 8,
+        title: 'Red Cabbage pH Indicator',
+        description: 'Extract natural pH indicator from red cabbage.',
+        emoji: '🥬',
+        difficulty: 'beginner',
+        duration: '30 min',
+        aim: 'To create natural pH indicator and test household substances.',
+        materials: ['Red cabbage', 'Water', 'Pot', 'Strainer', 'Test tubes', 'Household liquids'],
+        procedure: [
+          'Chop red cabbage',
+          'Boil in water 10 minutes',
+          'Strain liquid',
+          'Pour into test tubes',
+          'Add different substances',
+          'Observe color changes',
+          'Record observations',
+        ],
+        cautions: ['Handle hot liquids carefully', 'Do not taste solutions', 'Label all containers'],
+        videoId: 'RaE1ezaq3TY',
+        hasSimulation: false,
+      },
+      {
+        id: 9,
+        title: 'Enzyme Activity',
+        description: 'Observe enzyme catalase activity in decomposing hydrogen peroxide.',
+        emoji: '🥔',
+        difficulty: 'intermediate',
+        duration: '25 min',
+        aim: 'To demonstrate enzyme catalase activity.',
+        materials: ['Potato', 'Hydrogen peroxide 3%', 'Test tubes', 'Knife', 'Grater', 'Thermometer'],
+        procedure: [
+          'Grate raw potato',
+          'Add potato to test tube with H2O2',
+          'Observe rapid bubbling',
+          'Test with boiled potato',
+          'Try different temperatures',
+          'Compare with liver or yeast',
+          'Record reaction speeds',
+        ],
+        cautions: ['Handle H2O2 carefully', 'Use care with sharp knives', 'Well-ventilated area'],
+        videoId: 'V-Q_OZZu6X0',
+        hasSimulation: false,
+      },
+      {
+        id: 10,
+        title: 'Electrolysis of Water',
+        description: 'Split water into hydrogen and oxygen gases using electrical energy.',
+        emoji: '⚡',
+        difficulty: 'intermediate',
+        duration: '30 min',
+        aim: 'To decompose water into hydrogen and oxygen through electrolysis.',
+        materials: ['9V battery', 'Two pencils', 'Water', 'Salt', 'Test tubes', 'Container', 'Wires'],
+        procedure: [
+          'Fill container with salt water',
+          'Fill test tubes with salt water',
+          'Sharpen both ends of pencils',
+          'Connect pencils to battery',
+          'Place under test tubes',
+          'Observe gas collection',
+          'Note 2:1 hydrogen:oxygen ratio',
+        ],
+        cautions: [
+          'Do not touch battery terminals',
+          'Keep electrical parts from water',
+          'Well-ventilated area - hydrogen flammable',
+        ],
+        videoId: 'VJTNyW36VCw',
+        hasSimulation: false,
+      },
+    ];
+
+
+    // ─── DATA: QUIZ QUESTIONS ─────────────────────────────────────────────────
+    const quizQuestions = [
+      {
+        question: 'What is the pH of a neutral solution at 25°C?',
+        options: ['6', '7', '8', '14'],
+        correct: 1,
+      },
+      {
+        question: 'Which indicator turns pink in basic solutions?',
+        options: ['Methyl orange', 'Litmus', 'Phenolphthalein', 'Bromothymol blue'],
+        correct: 2,
+      },
+      {
+        question: 'In titration, equivalence point is when:',
+        options: ['Acid is completely neutralized', 'Solution turns pink', 'pH equals 7', 'Indicator has reacted'],
+        correct: 0,
+      },
+      {
+        question: 'What is the formula for hydrochloric acid?',
+        options: ['H2SO4', 'HNO3', 'HCl', 'CH3COOH'],
+        correct: 2,
+      },
+      {
+        question: 'pH 3 is how many times more acidic than pH 5?',
+        options: ['2 times', '10 times', '100 times', '1000 times'],
+        correct: 2,
+      },
+      {
+        question: 'Which of the following is a noble gas?',
+        options: ['Nitrogen', 'Oxygen', 'Helium', 'Hydrogen'],
+        correct: 2,
+      },
+      {
+        question: 'What is the atomic number of Carbon?',
+        options: ['4', '6', '8', '12'],
+        correct: 1,
+      },
+      {
+        question: 'Which element is represented by the symbol Fe?',
+        options: ['Fluorine', 'Iron', 'Fermium', 'Francium'],
+        correct: 1,
+      },
+    ];
+
+
+    // ─── STATE ────────────────────────────────────────────────────────────────
+    let currentUser           = null;
+    let userAnswers           = [];
+    let quizSubmitted         = false;
+    let currentDifficultyFilter = 'all';
+
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    function initApp() {
+      currentUser = localStorage.getItem('currentUser');
+
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      if (darkMode) document.body.classList.add('dark-mode');
+
+      if (currentUser) showLoggedIn(currentUser);
+
+      renderExperiments();
+      renderQuiz();
+      renderPeriodicTable();
+    }
+
+
+    // ─── NAVIGATION ───────────────────────────────────────────────────────────
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+
+      if (sectionId === 'progress')     renderProgressSection();
+      else if (sectionId === 'experiments') filterExperiments();
+    }
+
+    function setActiveBottomNav(element) {
+      document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
+      if (element) element.classList.add('active');
+    }
+
+
+    // ─── THEME ────────────────────────────────────────────────────────────────
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+    }
+
+
+    // ─── AUTH ─────────────────────────────────────────────────────────────────
+    function login() {
+      const name = document.getElementById('studentName').value.trim();
+      if (!name) return;
+
+      currentUser = name;
+      localStorage.setItem('currentUser', name);
+
+      // Create user data if first time
+      if (!localStorage.getItem(`user_${name}_data`)) {
+        const userData = {
+          name: name,
+          completedExperiments: [],
+          quizScore: null,
+          quizCompleted: false,
+        };
+        localStorage.setItem(`user_${name}_data`, JSON.stringify(userData));
+      }
+
+      showLoggedIn(name);
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      document.getElementById('loginForm').style.display    = 'flex';
+      document.getElementById('loggedInUser').style.display = 'none';
+      document.getElementById('studentName').value = '';
+    }
+
+    function showLoggedIn(name) {
+      document.getElementById('loginForm').style.display    = 'none';
+      document.getElementById('loggedInUser').style.display = 'block';
+    }
+
+
+    // ─── USER DATA HELPERS ────────────────────────────────────────────────────
+    function getUserData() {
+      if (!currentUser) return null;
+      const data = localStorage.getItem(`user_${currentUser}_data`);
+      return data ? JSON.parse(data) : null;
+    }
+
+    function saveUserData(data) {
+      if (!currentUser) return;
+      localStorage.setItem(`user_${currentUser}_data`, JSON.stringify(data));
+    }
+
+
+    // ─── PERIODIC TABLE ───────────────────────────────────────────────────────
+    function renderPeriodicTable() {
+      const table = document.getElementById('periodicTable');
+      const grid  = [];
+
+      for (let period = 1; period <= 7; period++) {
+        for (let group = 1; group <= 18; group++) {
+          const element = periodicElements.find(e => e.period === period && e.group === group);
+
+          if (element) {
+            grid.push(`
+              <div class="element ${element.category}" onclick="showElementDetail(${element.number})">
+                <div class="element-number">${element.number}</div>
+                <div class="element-symbol">${element.symbol}</div>
+                <div class="element-name">${element.name}</div>
+              </div>
+            `);
+          } else {
+            grid.push('<div class="element-spacer"></div>');
+          }
+        }
+      }
+
+      table.innerHTML = grid.join('');
+    }
+
+    function showElementDetail(number) {
+      const element = periodicElements.find(e => e.number === number);
+      if (!element) return;
+
+      const categoryNames = {
+        'nonmetal':   'Nonmetal',
+        'noble-gas':  'Noble Gas',
+        'alkali':     'Alkali Metal',
+        'alkaline':   'Alkaline Earth Metal',
+        'transition': 'Transition Metal',
+        'metalloid':  'Metalloid',
+      };
+
+      document.getElementById('modalSymbol').textContent = element.symbol;
+      document.getElementById('modalName').textContent   = element.name;
+      document.getElementById('modalInfo').innerHTML = `
+        <div class="element-info-item">
+          <div class="element-info-label">Atomic Number</div>
+          <div class="element-info-value">${element.number}</div>
+        </div>
+        <div class="element-info-item">
+          <div class="element-info-label">Atomic Weight</div>
+          <div class="element-info-value">${element.weight}</div>
+        </div>
+        <div class="element-info-item">
+          <div class="element-info-label">Group</div>
+          <div class="element-info-value">${element.group}</div>
+        </div>
+        <div class="element-info-item">
+          <div class="element-info-label">Period</div>
+          <div class="element-info-value">${element.period}</div>
+        </div>
+        <div class="element-info-item" style="grid-column: 1 / -1;">
+          <div class="element-info-label">Category</div>
+          <div class="element-info-value" style="font-size: 1rem;">
+            ${categoryNames[element.category] || 'Other'}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('elementModal').classList.add('active');
+    }
+
+    function closeElementModal() {
+      document.getElementById('elementModal').classList.remove('active');
+    }
+
+
+    // ─── EXPERIMENTS ──────────────────────────────────────────────────────────
+    function renderExperiments() {
+      // Dashboard: show first 3 featured
+      const grid = document.getElementById('experimentsGrid');
+      grid.innerHTML = experiments.slice(0, 3).map(exp => experimentCardHTML(exp)).join('');
+
+      // Experiments page: show all, filtered
+      filterExperiments();
+    }
+
+    function experimentCardHTML(exp) {
+      return `
+        <div class="experiment-card" onclick="openExperiment(${exp.id})">
+          <div class="experiment-image">${exp.emoji}</div>
+          <div class="experiment-content">
+            <div class="experiment-meta">
+              <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
+              <span class="experiment-duration">⏱️ ${exp.duration}</span>
+            </div>
+            <h3 class="experiment-title">${exp.title}</h3>
+            <p class="experiment-description">${exp.description}</p>
+            <button class="btn btn-primary">Open Experiment</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterExperiments() {
+      const searchTerm  = document.getElementById('experimentSearch')?.value.toLowerCase() || '';
+      const filteredGrid = document.getElementById('experimentsGridFiltered');
+      if (!filteredGrid) return;
+
+      const filtered = experiments.filter(exp => {
+        const matchesSearch = exp.title.toLowerCase().includes(searchTerm) ||
+                              exp.description.toLowerCase().includes(searchTerm);
+        const matchesDiff   = currentDifficultyFilter === 'all' || exp.difficulty === currentDifficultyFilter;
+        return matchesSearch && matchesDiff;
+      });
+
+      if (filtered.length === 0) {
+        filteredGrid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 3rem;">No experiments found.</p>';
+        return;
+      }
+
+      filteredGrid.innerHTML = filtered.map(exp => experimentCardHTML(exp)).join('');
+    }
+
+    function setDifficultyFilter(difficulty) {
+      currentDifficultyFilter = difficulty;
+      document.querySelectorAll('.filter-tab[data-filter]').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === difficulty);
+      });
+      filterExperiments();
+    }
+
+    function openExperiment(id) {
+      const exp = experiments.find(e => e.id === id);
+      if (!exp) return;
+
+      document.getElementById('experimentDetailContent').innerHTML = `
+        <div class="back-btn" onclick="showSection('experiments'); setActiveBottomNav(document.querySelector('[data-section=experiments]'))">← Back</div>
+        <div class="experiment-meta" style="margin-bottom: 1rem;">
+          <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
+          <span class="experiment-duration">⏱️ ${exp.duration}</span>
+        </div>
+        <h2>${exp.title}</h2>
+        <h3>Aim</h3>
+        <p style="color: var(--text-secondary); line-height: 1.8;">${exp.aim}</p>
+        <div class="caution-box">
+          <h3>⚠️ Safety Cautions</h3>
+          <ul>${exp.cautions.map(c => `<li>${c}</li>`).join('')}</ul>
+        </div>
+        <h3>Materials</h3>
+        <ul class="materials-list">${exp.materials.map(m => `<li>${m}</li>`).join('')}</ul>
+        <h3>Procedure</h3>
+        <ol class="procedure-list">${exp.procedure.map(p => `<li>${p}</li>`).join('')}</ol>
+        <h3>Video Demonstration</h3>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/${exp.videoId}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        ${exp.hasSimulation ? '<button class="btn btn-primary" onclick="startSimulation()">Start Simulation</button>' : ''}
+      `;
+
+      showSection('experimentDetail');
+    }
+
+
+    // ─── TITRATION SIMULATION ─────────────────────────────────────────────────
+    function startSimulation() {
+      showSection('simulation');
+      setupTitration();
+    }
+
+    function setupTitration() {
+      const slider = document.getElementById('volumeSlider');
+      slider.value = 0;
+      updateTitration(0);
+
+      slider.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value);
+        updateTitration(volume);
+
+        // Trigger drip animation
+        const drip = document.getElementById('drip');
+        drip.classList.remove('active');
+        void drip.offsetWidth; // force reflow
+        drip.classList.add('active');
+
+        // Mark experiment complete at near-end point
+        if (volume >= 45) {
+          document.getElementById('statusDisplay').textContent  = 'Complete!';
+          document.getElementById('statusDisplay').style.color  = 'var(--success)';
+
+          if (currentUser) {
+            const userData = getUserData();
+            if (userData && !userData.completedExperiments.includes(1)) {
+              userData.completedExperiments.push(1);
+              saveUserData(userData);
+            }
+          }
+        } else {
+          document.getElementById('statusDisplay').textContent = 'In Progress';
+          document.getElementById('statusDisplay').style.color = 'var(--accent)';
+        }
+      });
+    }
+
+    function updateTitration(volume) {
+      document.getElementById('volumeDisplay').textContent = `${volume} mL`;
+
+      const ph = 2 + (volume * 0.14);
+      document.getElementById('phDisplay').textContent = ph.toFixed(2);
+
+      // Burette liquid drops as NaOH is added
+      const buretteHeight = (50 - volume) / 50 * 400;
+      document.getElementById('buretteLiquid').style.height = `${buretteHeight}px`;
+
+      // Beaker liquid rises
+      const beakerHeight  = 50 + (volume * 2);
+      const beakerLiquid  = document.getElementById('beakerLiquid');
+      beakerLiquid.style.height = `${beakerHeight}px`;
+
+      // Colour change at equivalence point (pH 8.2)
+      if (ph >= 8.2) {
+        beakerLiquid.classList.add('pink');
+        document.getElementById('colorDisplay').textContent  = 'Pink';
+        document.getElementById('colorDisplay').style.color  = '#ec4899';
+      } else {
+        beakerLiquid.classList.remove('pink');
+        document.getElementById('colorDisplay').textContent  = 'Colorless';
+        document.getElementById('colorDisplay').style.color  = 'var(--accent)';
+      }
+    }
+
+
+    // ─── QUIZ ─────────────────────────────────────────────────────────────────
+    function renderQuiz() {
+      const container = document.getElementById('quizQuestions');
+      userAnswers = new Array(quizQuestions.length).fill(-1);
+
+      container.innerHTML = quizQuestions.map((q, qIndex) => `
+        <div class="question-card">
+          <div class="question-number">Question ${qIndex + 1}</div>
+          <div class="question-text">${q.question}</div>
+          <ul class="options">
+            ${q.options.map((opt, oIndex) => `
+              <li class="option"
+                  onclick="selectAnswer(${qIndex}, ${oIndex})"
+                  data-question="${qIndex}"
+                  data-option="${oIndex}">
+                ${opt}
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    function selectAnswer(questionIndex, optionIndex) {
+      userAnswers[questionIndex] = optionIndex;
+
+      const options = document.querySelectorAll('.question-card')[questionIndex].querySelectorAll('.option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      options[optionIndex].classList.add('selected');
+    }
+
+    function submitQuiz() {
+      if (quizSubmitted) {
+        alert('You have already submitted this quiz!');
+        return;
+      }
+
+      if (userAnswers.includes(-1)) {
+        alert('Please answer all questions before submitting!');
+        return;
+      }
+
+      let correct = 0;
+      quizQuestions.forEach((q, index) => {
+        if (userAnswers[index] === q.correct) correct++;
+      });
+
+      const percentage = (correct / quizQuestions.length * 100).toFixed(1);
+
+      document.getElementById('scoreDisplay').innerHTML = `
+        <div class="score-display">
+          <h3 style="margin-bottom: 1rem;">Quiz Results</h3>
+          <div class="score-value">${percentage}%</div>
+          <p style="margin-top: 1rem; font-size: 1.125rem;">
+            You got ${correct} out of ${quizQuestions.length} questions correct!
+          </p>
+        </div>
+      `;
+
+      quizSubmitted = true;
+      document.querySelectorAll('.option').forEach(opt => { opt.style.pointerEvents = 'none'; });
+
+      // Save quiz score
+      if (currentUser) {
+        const userData = getUserData();
+        if (userData) {
+          userData.quizScore     = percentage;
+          userData.quizCompleted = true;
+          saveUserData(userData);
+        }
+      }
+    }
+
+
+    // ─── PROGRESS ─────────────────────────────────────────────────────────────
+    function renderProgressSection() {
+      const content = document.getElementById('progressContent');
+
+      if (!currentUser) {
+        content.innerHTML = '<p style="color: var(--text-secondary);">Please log in to view your progress.</p>';
+        return;
+      }
+
+      const userData = getUserData();
+      if (!userData) {
+        content.innerHTML = '<p style="color: var(--text-secondary);">No progress data available.</p>';
+        return;
+      }
+
+      const experimentProgress = (userData.completedExperiments.length / experiments.length) * 100;
+      const quizProgress       = userData.quizCompleted ? 100 : 0;
+
+      const completedTitles = userData.completedExperiments.map(id => {
+        const exp = experiments.find(e => e.id === id);
+        return exp ? exp.title : `Experiment ${id}`;
+      });
+
+      content.innerHTML = `
+        <div class="progress-card">
+          <h3>Experiments</h3>
+          <div style="color: var(--accent); font-size: 2rem;">
+            ${userData.completedExperiments.length}/${experiments.length}
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" style="width: ${experimentProgress}%;"></div>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <h3>Quiz</h3>
+          <div style="color: var(--accent); font-size: 2rem;">
+            ${userData.quizScore !== null ? userData.quizScore + '%' : 'Not Taken'}
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" style="width: ${quizProgress}%;"></div>
+          </div>
+        </div>
+
+        ${completedTitles.length > 0 ? `
+          <div class="progress-card">
+            <h3>Completed Experiments</h3>
+            <ul class="completed-list">
+              ${completedTitles.map(title => `<li class="completed-item">✓ ${title}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+      `;
+    }
+
+
+    // ─── START ────────────────────────────────────────────────────────────────
+    initApp();
+
+  </script>
+
+</body>
+</html>
