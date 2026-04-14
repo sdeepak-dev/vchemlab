@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Virtual Chemistry Lab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-
-    /* ─── RESET & VARIABLES ─── */
+    /* ─── RESET & NEW THEMING VARIABLES ─── */
     * {
       margin: 0;
       padding: 0;
@@ -17,1123 +16,467 @@
     }
 
     :root {
-      --bg-primary:    #f3f6fb;
-      --bg-white:      #fff;
-      --accent:        #38bdf8;
-      --accent-dark:   #0ea5e9;
-      --text-primary:  #1e293b;
-      --text-secondary:#64748b;
-      --border:        #e2e8f0;
-      --success:       #10b981;
-      --danger:        #ef4444;
-      --warning:       #f59e0b;
-      --gradient-bg:   linear-gradient(135deg, #f3f6fb 0%, #e0e7ff 100%);
+      --bg: #0a0f1e;
+      --bg-card: #111827;
+      --bg-card2: #1a2235;
+      --bg-input: #0f1729;
+      --accent: #3b82f6;
+      --accent-h: #2563eb;
+      --accent-glow: rgba(59,130,246,0.18);
+      --text: #f1f5f9;
+      --text-soft: #94a3b8;
+      --text-muted: #64748b;
+      --border: rgba(255,255,255,0.07);
+      --border-s: rgba(255,255,255,0.14);
+      --shadow: 0 4px 24px rgba(0,0,0,0.45);
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.3);
+      --radius: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --nav-h: 64px;
+      --max-w: 1240px;
     }
 
-    /* ─── DARK MODE ─── */
-    body.dark-mode {
-      --bg-primary:    #0f172a;
-      --bg-white:      #1e293b;
-      --text-primary:  #f1f5f9;
-      --text-secondary:#94a3b8;
-      --border:        #334155;
-      --gradient-bg:   linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    [data-theme="light"] {
+      --bg: #f0f4ff;
+      --bg-card: #ffffff;
+      --bg-card2: #f8faff;
+      --bg-input: #f0f4ff;
+      --accent: #2563eb;
+      --accent-h: #1d4ed8;
+      --accent-glow: rgba(37,99,235,0.12);
+      --text: #0f172a;
+      --text-soft: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(0,0,0,0.08);
+      --border-s: rgba(0,0,0,0.16);
+      --shadow: 0 4px 24px rgba(0,0,0,0.1);
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.07);
     }
 
-    /* ─── BASE ─── */
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Outfit', sans-serif;
-      background: var(--gradient-bg);
-      color: var(--text-primary);
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      transition: all 0.3s;
-    }
-
-    .app-container {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      padding-bottom: 100px;
-    }
-
-    /* ─── HEADER ─── */
-    .header {
-      background: var(--bg-white);
-      padding: 1.5rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .header-title {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ─── LOGIN FORM ─── */
-    .login-form {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .input {
-      padding: 0.75rem 1rem;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      transition: all 0.3s;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-
-    .input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-    }
-
-    /* ─── BUTTONS ─── */
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
-    }
-
-    .btn-secondary {
-      background: var(--bg-white);
-      color: var(--accent);
-      border: 2px solid var(--accent);
-    }
-
-    .btn-secondary:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    /* ─── PAGE SECTIONS ─── */
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-      animation: fadeIn 0.5s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── EXPERIMENT GRID ─── */
-    .experiments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    /* ─── EXPERIMENT CARD ─── */
-    .experiment-card {
-      background: var(--bg-white);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .experiment-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.2);
-    }
-
-    .experiment-image {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-    }
-
-    .experiment-content {
-      padding: 1.5rem;
-    }
-
-    .experiment-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .experiment-description {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
+      transition: background 0.3s, color 0.3s;
+      padding-top: var(--nav-h);
+      font-size: 15px;
       line-height: 1.6;
-      margin-bottom: 1rem;
     }
 
-    /* ─── EXPERIMENT DETAIL PAGE ─── */
-    .experiment-detail {
-      background: var(--bg-white);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    /* ─── NEW NAVBAR ─── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      background: var(--bg-card); border-bottom: 1px solid var(--border-s);
+      z-index: 1000; backdrop-filter: blur(12px);
     }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--accent);
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.3s;
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; height: 100%;
+      display: flex; align-items: center; gap: 2rem;
     }
-
-    .back-btn:hover {
-      background: rgba(56, 189, 248, 0.1);
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; flex-shrink: 0; }
+    .nav-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .nav-logo span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+    .nav-logo span strong { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; flex: 1; justify-content: center; }
+    .nav-link {
+      padding: 0.45rem 0.9rem; border-radius: var(--radius-pill); font-size: 0.9rem;
+      font-weight: 500; color: var(--text-soft); transition: all 0.2s; cursor: pointer; white-space: nowrap;
     }
+    .nav-link:hover { color: var(--text); background: var(--border); }
+    .nav-link.active { color: var(--accent); background: var(--accent-glow); }
+    
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 50%; background: var(--border);
+      display: flex; align-items: center; justify-content: center; color: var(--text-soft);
+      transition: all 0.2s; cursor: pointer;
+    }
+    .icon-btn:hover { background: var(--border-s); color: var(--text); }
+    .icon-btn svg { width: 18px; height: 18px; }
 
+    /* Login Form aligned for top nav */
+    .login-form { display: flex; gap: 0.5rem; align-items: center; }
+    .input {
+      padding: 0.4rem 1rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill);
+      font-family: 'Outfit', sans-serif; font-size: 0.85rem; background: var(--bg-input); color: var(--text);
+    }
+    .input:focus { outline: none; border-color: var(--accent); }
+    
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.3rem;
+      border-radius: var(--radius-pill); font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; border: none; font-family: 'Outfit', sans-serif;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+    .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border-s); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+
+    /* ─── PAGE SYSTEM ─── */
+    .page { display: none; min-height: calc(100vh - var(--nav-h)); padding: 2.5rem 1.5rem; max-width: var(--max-w); margin: 0 auto; }
+    .page.active { display: block; animation: fadeIn 0.4s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ─── NEW HERO UI (HOME PAGE) ─── */
+    .hero { text-align: center; padding: 4rem 1rem 3rem; max-width: 700px; margin: 0 auto; }
+    .hero-eyebrow {
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.25rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.05rem; color: var(--text-soft); margin-bottom: 2.25rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; padding: 2rem 0 3rem; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1.75rem 1.5rem; cursor: pointer; transition: all 0.25s; text-align: left;
+    }
+    .feature-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm); transform: translateY(-3px); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center;
+      justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; background: var(--accent-glow);
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .feature-card p { font-size: 0.84rem; color: var(--text-soft); line-height: 1.5; }
+
+    /* ─── LEGACY VIEWS ADAPTED TO NEW STYLE ─── */
+    .sec-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.35rem; }
+    
+    .experiments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .experiment-card {
+      background: var(--bg-card); border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow-sm); transition: all 0.3s; cursor: pointer; border: 1px solid var(--border);
+    }
+    .experiment-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 12px 30px var(--accent-glow); }
+    .experiment-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--bg-card2) 0%, var(--border-s) 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+    .experiment-content { padding: 1.5rem; }
+    .experiment-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .experiment-description { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+    
+    /* Search & Filters */
+    .search-box { width: 100%; padding: 1rem 1.5rem; border: 1.5px solid var(--border-s); border-radius: var(--radius-pill); background: var(--bg-card); color: var(--text); transition: all 0.3s; margin-bottom: 1rem; font-family: 'Outfit', sans-serif;}
+    .search-box:focus { outline: none; border-color: var(--accent); }
+    .filter-tabs { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .filter-tab { padding: 0.5rem 1.2rem; border-radius: var(--radius-pill); border: 1.5px solid var(--border-s); background: transparent; color: var(--text-soft); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .filter-tab:hover { border-color: var(--border-s); color: var(--text); }
+    .filter-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Difficulty Badges */
+    .difficulty-badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .difficulty-beginner    { background: rgba(34,197,94,.15); color: #22c55e; }
+    .difficulty-intermediate{ background: rgba(245,158,11,.15); color: #f59e0b; }
+    .difficulty-advanced    { background: rgba(239,68,68,.15); color: #ef4444; }
+
+    .experiment-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .experiment-duration { display: flex; align-items: center; gap: 0.375rem; color: var(--text-soft); font-size: 0.875rem; }
+
+    /* Details */
+    .experiment-detail { background: var(--bg-card); border-radius: var(--radius-lg); padding: 2rem; border: 1px solid var(--border); }
+    .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-soft); font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: all 0.2s; }
+    .back-btn:hover { color: var(--accent); }
     .experiment-detail h2 { font-size: 2rem; margin-bottom: 1rem; }
-    .experiment-detail h3 {
-      font-size: 1.25rem;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: var(--accent);
-    }
+    .experiment-detail h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--accent); }
+    .materials-list, .procedure-list { list-style-position: inside; line-height: 1.8; color: var(--text-soft); }
+    
+    .procedure-list { counter-reset: step-counter; list-style: none; }
+    .procedure-list li { counter-increment: step-counter; margin-bottom: 1rem; padding-left: 2.5rem; position: relative; }
+    .procedure-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; width: 2rem; height: 2rem; background: var(--accent-glow); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
 
-    .materials-list,
-    .procedure-list {
-      list-style-position: inside;
-      line-height: 1.8;
-      color: var(--text-secondary);
-    }
+    .video-container { margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
 
-    .procedure-list {
-      counter-reset: step-counter;
-      list-style: none;
-    }
+    .caution-box { background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 1.5rem 0; }
+    .caution-box h3 { color: #f59e0b; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+    .caution-box ul { margin: 0; padding-left: 1.5rem; color: var(--text-soft); line-height: 1.8; }
 
-    .procedure-list li {
-      counter-increment: step-counter;
-      margin-bottom: 1rem;
-      padding-left: 2.5rem;
-      position: relative;
-    }
+    /* Simulation basics */
+    .simulation-container { background: var(--bg-card2); padding: 2rem; border-radius: var(--radius-lg); margin-top: 2rem; border: 1px solid var(--border-s); }
+    .lab-equipment { display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; align-items: flex-end; }
+    .burette-container { position: relative; width: 80px; }
+    .burette { width: 80px; height: 400px; background: #fff; border: 3px solid var(--accent); border-radius: 8px; position: relative; overflow: hidden; }
+    .burette-liquid { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, #ef4444 0%, #f87171 100%); transition: height 0.5s; }
+    .burette-tip { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: var(--accent); clip-path: polygon(50% 100%, 0 0, 100% 0); }
+    .drip { position: absolute; width: 8px; height: 12px; background: #ef4444; border-radius: 50%; left: 50%; transform: translateX(-50%); top: -10px; opacity: 0; }
+    .drip.active { animation: drip 0.8s; }
+    @keyframes drip { 0%   { top: -10px; opacity: 1; } 100% { top: 420px; opacity: 0; } }
+    .beaker { width: 200px; height: 250px; background: #fff; border: 3px solid var(--accent); border-top: none; border-radius: 0 0 20px 20px; position: relative; overflow: hidden; }
+    .beaker-liquid { position: absolute; bottom: 0; width: 100%; transition: all 0.5s; background: #f0f9ff; }
+    .beaker-liquid.pink { background: linear-gradient(to top, #fce7f3 0%, #fbcfe8 100%); }
+    .controls { margin-top: 2rem; }
+    .slider-container { margin: 1.5rem 0; }
+    .slider-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 600; }
+    .slider { width: 100%; height: 8px; border-radius: 5px; background: var(--border-s); outline: none; -webkit-appearance: none; }
+    .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .result-card { background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border-s); text-align: center; }
+    .result-label { font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0.5rem; }
+    .result-value { font-size: 1.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent); }
 
-    .procedure-list li::before {
-      content: counter(step-counter);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 2rem;
-      height: 2rem;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.875rem;
-    }
+    /* Quiz */
+    .quiz-container { max-width: 800px; }
+    .question-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
+    .question-number { font-size: 0.875rem; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+    .question-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .options { list-style: none; }
+    .option { padding: 1rem 1.5rem; margin-bottom: 0.75rem; border-radius: var(--radius); border: 1.5px solid var(--border-s); cursor: pointer; transition: all 0.3s; }
+    .option:hover { border-color: var(--accent); background: var(--accent-glow); }
+    .option.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .score-display { background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2rem; border-radius: var(--radius-lg); text-align: center; margin-top: 2rem; border: 1px solid #10b981; }
+    .score-value { font-size: 3rem; font-weight: 700; font-family: 'Space Mono', monospace; }
 
-    /* ─── VIDEO EMBED ─── */
-    .video-container {
-      margin: 2rem 0;
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
+    /* Periodic table */
+    .periodic-table { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; max-width: 1400px; margin: 2rem auto; }
+    .element { aspect-ratio: 1; background: var(--bg-card); border: 1.5px solid var(--border-s); border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    .element:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); border-color: var(--accent); }
+    .element-number { font-size: 0.625rem; color: var(--text-soft); position: absolute; top: 4px; left: 4px; }
+    .element-symbol { font-size: 1.25rem; font-weight: 700; font-family: 'Space Mono', monospace; }
+    .element-name { font-size: 0.5rem; color: var(--text-soft); text-align: center; }
 
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ─── TITRATION SIMULATION ─── */
-    .simulation-container {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      padding: 2rem;
-      border-radius: 16px;
-      margin-top: 2rem;
-    }
-
-    .lab-equipment {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin: 2rem 0;
-      align-items: flex-end;
-    }
-
-    .burette-container {
-      position: relative;
-      width: 80px;
-    }
-
-    .burette {
-      width: 80px;
-      height: 400px;
-      background: linear-gradient(to bottom, #fff 0%, #f0f9ff 100%);
-      border: 3px solid var(--accent);
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .burette-liquid {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: linear-gradient(to top, #ef4444 0%, #f87171 100%);
-      transition: height 0.5s;
-    }
-
-    .burette-tip {
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 20px;
-      background: var(--accent);
-      clip-path: polygon(50% 100%, 0 0, 100% 0);
-    }
-
-    .drip {
-      position: absolute;
-      width: 8px;
-      height: 12px;
-      background: #ef4444;
-      border-radius: 50%;
-      left: 50%;
-      transform: translateX(-50%);
-      top: -10px;
-      opacity: 0;
-    }
-
-    .drip.active {
-      animation: drip 0.8s;
-    }
-
-    @keyframes drip {
-      0%   { top: -10px; opacity: 1; }
-      100% { top: 420px; opacity: 0; }
-    }
-
-    .beaker {
-      width: 200px;
-      height: 250px;
-      background: linear-gradient(to bottom, #fff 0%, #f8fafc 100%);
-      border: 3px solid var(--accent);
-      border-top: none;
-      border-radius: 0 0 20px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .beaker-liquid {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      transition: all 0.5s;
-      background: #f0f9ff;
-    }
-
-    .beaker-liquid.pink {
-      background: linear-gradient(to top, #fce7f3 0%, #fbcfe8 100%);
-    }
-
-    /* Simulation controls */
-    .controls {
-      margin-top: 2rem;
-    }
-
-    .slider-container {
-      margin: 1.5rem 0;
-    }
-
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .slider {
-      width: 100%;
-      height: 8px;
-      border-radius: 5px;
-      background: var(--border);
-      outline: none;
-      -webkit-appearance: none;
-    }
-
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
-    }
-
-    .slider::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      cursor: pointer;
-      border: none;
-    }
-
-    /* Simulation result cards */
-    .results {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .result-card {
-      background: var(--bg-white);
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .result-label {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-
-    .result-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      font-family: 'Space Mono', monospace;
-      color: var(--accent);
-    }
-
-    /* ─── QUIZ ─── */
-    .quiz-container {
-      max-width: 800px;
-    }
-
-    .question-card {
-      background: var(--bg-white);
-      padding: 2rem;
-      border-radius: 16px;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .question-number {
-      font-size: 0.875rem;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .question-text {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .options {
-      list-style: none;
-    }
-
-    .option {
-      padding: 1rem 1.5rem;
-      margin-bottom: 0.75rem;
-      border-radius: 10px;
-      border: 2px solid var(--border);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .option:hover {
-      border-color: var(--accent);
-      background: rgba(56, 189, 248, 0.05);
-    }
-
-    .option.selected {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .score-display {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
-      padding: 2rem;
-      border-radius: 16px;
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    .score-value {
-      font-size: 3rem;
-      font-weight: 700;
-      font-family: 'Space Mono', monospace;
-    }
-
-    /* ─── PERIODIC TABLE ─── */
-    .periodic-table {
-      display: grid;
-      grid-template-columns: repeat(18, 1fr);
-      gap: 4px;
-      max-width: 1400px;
-      margin: 2rem auto;
-    }
-
-    .element {
-      aspect-ratio: 1;
-      background: var(--bg-white);
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      padding: 0.5rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .element:hover {
-      transform: scale(1.1);
-      z-index: 10;
-      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
-      border-color: var(--accent);
-    }
-
-    .element-number {
-      font-size: 0.625rem;
-      color: var(--text-secondary);
-      position: absolute;
-      top: 4px;
-      left: 4px;
-    }
-
-    .element-symbol {
-      font-size: 1.25rem;
-      font-weight: 700;
-      font-family: 'Space Mono', monospace;
-    }
-
-    .element-name {
-      font-size: 0.5rem;
-      color: var(--text-secondary);
-      text-align: center;
-    }
-
-    /* Element category colours */
-    .element.nonmetal    { background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%); border-color: #3b82f6; }
-    .element.noble-gas   { background: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 100%); border-color: #ec4899; }
-    .element.alkali      { background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%); border-color: #f59e0b; }
-    .element.alkaline    { background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%); border-color: #f97316; }
-    .element.transition  { background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%); border-color: #ef4444; }
-    .element.metalloid        { background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%); border-color: #6366f1; }
-    .element.post-transition  { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-color: #10b981; }
-    .element.lanthanide       { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); border-color: #fb923c; }
-    .element.actinide         { background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); border-color: #f87171; }
-
+    .element.nonmetal    { background: linear-gradient(135deg, rgba(191,219,254,0.1), rgba(147,197,253,0.1)); border-color: #3b82f6; }
+    .element.noble-gas   { background: linear-gradient(135deg, rgba(251,207,232,0.1), rgba(249,168,212,0.1)); border-color: #ec4899; }
+    .element.alkali      { background: linear-gradient(135deg, rgba(253,230,138,0.1), rgba(252,211,77,0.1)); border-color: #f59e0b; }
+    .element.alkaline    { background: linear-gradient(135deg, rgba(253,186,116,0.1), rgba(251,146,60,0.1)); border-color: #f97316; }
+    .element.transition  { background: linear-gradient(135deg, rgba(252,165,165,0.1), rgba(248,113,113,0.1)); border-color: #ef4444; }
+    .element.metalloid        { background: linear-gradient(135deg, rgba(199,210,254,0.1), rgba(165,180,252,0.1)); border-color: #6366f1; }
+    .element.post-transition  { background: linear-gradient(135deg, rgba(209,250,229,0.1), rgba(167,243,208,0.1)); border-color: #10b981; }
+    .element.lanthanide       { background: linear-gradient(135deg, rgba(254,215,170,0.1), rgba(253,186,116,0.1)); border-color: #fb923c; }
+    .element.actinide         { background: linear-gradient(135deg, rgba(254,202,202,0.1), rgba(252,165,165,0.1)); border-color: #f87171; }
     .element-spacer { grid-column: span 1; }
 
-    /* ─── ELEMENT DETAIL MODAL ─── */
-    .element-detail-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-    }
+    /* Element Detail Modal */
+    .element-detail-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+    .element-detail-modal.active { display: flex; }
+    .element-detail-card { background: var(--bg-card); border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; border: 1px solid var(--border-s); }
+    .element-detail-close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: var(--text-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; }
+    .element-detail-close:hover { background: var(--border-s); color: var(--text); }
+    .element-detail-symbol { font-size: 4rem; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent); text-align: center; }
+    .element-detail-name { font-size: 2rem; font-weight: 700; text-align: center; margin-top: 0.5rem; }
+    .element-detail-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem; }
+    .element-info-item { padding: 1rem; background: var(--bg-card2); border-radius: 8px; border: 1px solid var(--border-s); }
+    .element-info-label { font-size: 0.75rem; color: var(--text-soft); margin-bottom: 0.25rem; }
+    .element-info-value { font-size: 1.125rem; font-weight: 600; }
 
-    .element-detail-modal.active {
-      display: flex;
-    }
-
-    .element-detail-card {
-      background: var(--bg-white);
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
-
-    .element-detail-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text-secondary);
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: all 0.3s;
-    }
-
-    .element-detail-close:hover {
-      background: var(--border);
-    }
-
-    .element-detail-symbol {
-      font-size: 4rem;
-      font-weight: 700;
-      font-family: 'Space Mono', monospace;
-      color: var(--accent);
-      text-align: center;
-    }
-
-    .element-detail-name {
-      font-size: 2rem;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-
-    .element-detail-info {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .element-info-item {
-      padding: 1rem;
-      background: var(--bg-primary);
-      border-radius: 8px;
-    }
-
-    .element-info-label {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
-    }
-
-    .element-info-value {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
-
-    /* ─── CAUTION BOX ─── */
-    .caution-box {
-      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-      padding: 1.5rem;
-      border-radius: 12px;
-      border-left: 4px solid #f59e0b;
-      margin: 1.5rem 0;
-    }
-
-    .caution-box h3 {
-      color: #92400e;
-      margin-top: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .caution-box ul {
-      margin: 0;
-      padding-left: 1.5rem;
-      color: #78350f;
-      line-height: 1.8;
-    }
-
-    /* ─── DASHBOARD STATS ─── */
-    .stats-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card-home {
-      background: var(--bg-white);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      text-align: center;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .stat-card-home:hover {
-      transform: translateY(-4px);
-    }
-
-    .stat-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 1rem;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-    }
-
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 700;
-      font-family: 'Space Mono', monospace;
-      color: var(--accent);
-    }
-
-    .stat-label {
-      margin-top: 0.5rem;
-      color: var(--text-secondary);
-    }
-
-    /* ─── SEARCH & FILTERS ─── */
-    .search-box {
-      width: 100%;
-      padding: 1rem 1.5rem;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      background: var(--bg-white);
-      color: var(--text-primary);
-      transition: all 0.3s;
-      margin-bottom: 1rem;
-    }
-
-    .search-box:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-
-    .filter-tab {
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      border: 2px solid var(--border);
-      background: var(--bg-white);
-      color: var(--text-secondary);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .filter-tab:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .filter-tab.active {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    /* ─── DIFFICULTY BADGES ─── */
-    .difficulty-badge {
-      display: inline-block;
-      padding: 0.375rem 0.875rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .difficulty-beginner    { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; }
-    .difficulty-intermediate{ background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; }
-    .difficulty-advanced    { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; }
-
-    .experiment-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .experiment-duration {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-    }
-
-    /* ─── PROGRESS SECTION ─── */
-    .progress-card {
-      background: var(--bg-white);
-      padding: 2rem;
-      border-radius: 16px;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 12px;
-      background: var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-      transition: width 0.5s;
-      border-radius: 6px;
-    }
-
+    /* Progress */
+    .progress-card { background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 1px solid var(--border); }
+    .progress-bar { width: 100%; height: 12px; background: var(--border-s); border-radius: 6px; overflow: hidden; margin-top: 1rem; }
+    .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.5s; border-radius: 6px; }
     .completed-list { list-style: none; margin-top: 1rem; }
+    .completed-item { padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; margin-bottom: 0.5rem; border-radius: 4px; }
 
-    .completed-item {
-      padding: 0.75rem;
-      background: rgba(16, 185, 129, 0.1);
-      border-left: 3px solid var(--success);
-      margin-bottom: 0.5rem;
-      border-radius: 4px;
-    }
-
-    /* ─── BOTTOM NAV ─── */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg-white);
-      border-top: 1px solid var(--border);
-      padding: 0.5rem;
-      z-index: 100;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .bottom-nav-items {
-      display: flex;
-      justify-content: space-around;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .bottom-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.2rem;
-      padding: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 600;
-      border-radius: 8px;
-    }
-
-    .bottom-nav-item:hover { background: rgba(56, 189, 248, 0.1); }
-    .bottom-nav-item.active { color: var(--accent); }
-    .bottom-nav-item span:first-child { font-size: 1.25rem; }
-
-    /* ─── DARK MODE TOGGLE ─── */
-    .dark-mode-toggle {
-      width: 60px;
-      height: 30px;
-      background: var(--border);
-      border-radius: 15px;
-      position: relative;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .dark-mode-toggle::before {
-      content: '☀️';
-      position: absolute;
-      left: 3px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.25rem;
-    }
-
-    body.dark-mode .dark-mode-toggle { background: var(--accent); }
-    body.dark-mode .dark-mode-toggle::before { content: '🌙'; left: 32px; }
-
-    /* ─── RESPONSIVE ─── */
+    /* Responsive */
     @media (max-width: 768px) {
-      .main-content { padding: 1rem; padding-bottom: 100px; }
-      .header { flex-direction: column; }
+      .nav-links { display: none; }
       .periodic-table { grid-template-columns: repeat(9, 1fr); }
       .element-symbol { font-size: 1rem; }
       .element-name { display: none; }
     }
-
   </style>
 </head>
 
 <body>
 
-  <div class="app-container">
-
-    <!-- ========== MAIN CONTENT ========== -->
-    <main class="main-content">
-
-      <!-- Header -->
-      <header class="header">
-        <h1 class="header-title">Virtual Chemistry Lab</h1>
-
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <div class="dark-mode-toggle" onclick="toggleDarkMode()"></div>
-
-          <!-- Login form (shown when logged out) -->
-          <div class="login-form" id="loginForm">
-            <input type="text" class="input" id="studentName" placeholder="Enter your name">
-            <button class="btn btn-primary" onclick="login()">Login</button>
-          </div>
-
-          <!-- Logout button (shown when logged in) -->
-          <div id="loggedInUser" style="display: none;">
-            <button class="btn btn-secondary" onclick="logout()">Logout</button>
-          </div>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo" onclick="navigateTo('home')">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#3b82f6"/>
+          <path d="M10 8h4v6l-5 9h14l-5-9V8h4M10 8h12" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="13" cy="20" r="1.2" fill="#60a5fa"/>
+          <circle cx="18" cy="22" r="1" fill="#93c5fd"/>
+        </svg>
+        <span>VChem<strong>Lab</strong></span>
+      </div>
+      <div class="nav-links">
+        <div class="nav-link active" data-page="home" onclick="navigateTo('home')">Home</div>
+        <div class="nav-link" data-page="experiments" onclick="navigateTo('experiments')">Experiments</div>
+        <div class="nav-link" data-page="periodic" onclick="navigateTo('periodic')">Elements</div>
+        <div class="nav-link" data-page="quiz" onclick="navigateTo('quiz')">Quiz</div>
+        <div class="nav-link" data-page="progress" onclick="navigateTo('progress')">Progress</div>
+      </div>
+      <div class="nav-actions">
+        <div class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
         </div>
-      </header>
-
-      <!-- ── DASHBOARD ── -->
-      <section id="dashboard" class="section active">
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Welcome to the Virtual Chemistry Lab</h2>
-          <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">
-            Explore experiments, discover elements, and learn lab techniques safely
-          </p>
-
-          <!-- Stats cards -->
-          <div class="stats-cards">
-            <div class="stat-card-home" onclick="showSection('experiments'); setActiveBottomNav(document.querySelector('[data-section=experiments]'))">
-              <div class="stat-icon">🧪</div>
-              <div class="stat-number">10</div>
-              <div class="stat-label">Experiments</div>
-            </div>
-
-            <div class="stat-card-home" onclick="showSection('periodic'); setActiveBottomNav(document.querySelector('[data-section=periodic]'))">
-              <div class="stat-icon">⚛️</div>
-              <div class="stat-number">118</div>
-              <div class="stat-label">Elements</div>
-            </div>
-
-            <div class="stat-card-home" onclick="showSection('quiz'); setActiveBottomNav(document.querySelector('[data-section=quiz]'))">
-              <div class="stat-icon">📝</div>
-              <div class="stat-number">8</div>
-              <div class="stat-label">Quiz Questions</div>
-            </div>
-          </div>
-
-          <h3 style="margin: 2rem 0 1.5rem;">✨ Featured Experiments</h3>
-          <div class="experiments-grid" id="experimentsGrid"></div>
-        </div>
-      </section>
-
-      <!-- ── EXPERIMENTS LIST ── -->
-      <section id="experiments" class="section">
-        <h2 style="margin-bottom: 1.5rem;">Experiments</h2>
-
-        <input
-          type="text"
-          class="search-box"
-          id="experimentSearch"
-          placeholder="Search experiments..."
-          oninput="filterExperiments()"
-        >
-
-        <div class="filter-tabs">
-          <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All</div>
-          <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
-          <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
-          <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
+        
+        <div class="login-form" id="loginForm">
+          <input type="text" class="input" id="studentName" placeholder="Enter your name">
+          <button class="btn btn-primary btn-sm" onclick="login()">Login</button>
         </div>
 
-        <div class="experiments-grid" id="experimentsGridFiltered"></div>
-      </section>
-
-      <!-- ── EXPERIMENT DETAIL ── -->
-      <section id="experimentDetail" class="section">
-        <div class="experiment-detail" id="experimentDetailContent"></div>
-      </section>
-
-      <!-- ── TITRATION SIMULATION ── -->
-      <section id="simulation" class="section">
-        <div class="experiment-detail">
-          <div class="back-btn" onclick="showSection('experimentDetail')">← Back to Experiment</div>
-          <h2>Acid-Base Titration Simulation</h2>
-
-          <div class="simulation-container">
-            <div class="lab-equipment">
-
-              <!-- Burette -->
-              <div class="burette-container">
-                <div class="burette">
-                  <div class="burette-liquid" id="buretteLiquid"></div>
-                  <div class="drip" id="drip"></div>
-                  <div class="burette-tip"></div>
-                </div>
-              </div>
-
-              <!-- Beaker -->
-              <div class="beaker">
-                <div class="beaker-liquid" id="beakerLiquid"></div>
-              </div>
-
-            </div>
-
-            <!-- Controls -->
-            <div class="controls">
-              <div class="slider-container">
-                <div class="slider-label">
-                  <span>Volume of NaOH added</span>
-                  <span id="volumeDisplay">0 mL</span>
-                </div>
-                <input type="range" min="0" max="50" value="0" class="slider" id="volumeSlider">
-              </div>
-
-              <div class="results">
-                <div class="result-card">
-                  <div class="result-label">Current pH</div>
-                  <div class="result-value" id="phDisplay">2.00</div>
-                </div>
-                <div class="result-card">
-                  <div class="result-label">Color</div>
-                  <div class="result-value" id="colorDisplay" style="font-size: 1.25rem;">Colorless</div>
-                </div>
-                <div class="result-card">
-                  <div class="result-label">Status</div>
-                  <div class="result-value" id="statusDisplay" style="font-size: 1rem;">In Progress</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div id="loggedInUser" style="display: none; align-items: center; gap: 0.5rem;">
+          <span style="font-weight: 600;" id="displayStudentName"></span>
+          <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
         </div>
-      </section>
+      </div>
+    </div>
+  </nav>
 
-      <!-- ── QUIZ ── -->
-      <section id="quiz" class="section">
-        <div class="quiz-container">
-          <h2 style="margin-bottom: 2rem;">Chemistry Quiz</h2>
-          <div id="quizQuestions"></div>
-          <div style="text-align: center; margin-top: 2rem;">
-            <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
-          </div>
-          <div id="scoreDisplay"></div>
+  <main class="main-content">
+
+    <div id="page-home" class="page active">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+          Virtual Laboratory Experience
         </div>
-      </section>
-
-      <!-- ── PERIODIC TABLE ── -->
-      <section id="periodic" class="section">
-        <div style="max-width: 1400px;">
-          <h2 style="margin-bottom: 1rem;">Periodic Table of Elements</h2>
-          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Click on any element to view detailed information
-          </p>
-          <div class="periodic-table" id="periodicTable"></div>
+        <h1>Explore Chemistry<br><span>Through Virtual Experiments</span></h1>
+        <p>A comprehensive virtual lab platform to safely explore experiments, discover elements, and test your knowledge.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="navigateTo('experiments')">Start Experimenting</button>
+          <button class="btn btn-outline" onclick="navigateTo('periodic')">Periodic Table</button>
         </div>
-      </section>
-
-      <!-- ── PROGRESS ── -->
-      <section id="progress" class="section">
-        <h2 style="margin-bottom: 2rem;">My Progress</h2>
-        <div id="progressContent"></div>
-      </section>
-
-      <!-- Element detail modal -->
-      <div class="element-detail-modal" id="elementModal">
-        <div class="element-detail-card">
-          <div class="element-detail-close" onclick="closeElementModal()">×</div>
-          <div class="element-detail-symbol" id="modalSymbol"></div>
-          <div class="element-detail-name"   id="modalName"></div>
-          <div class="element-detail-info"   id="modalInfo"></div>
+      </div>
+      
+      <div class="feature-grid">
+        <div class="feature-card" onclick="navigateTo('experiments')">
+          <div class="feature-icon">🧪</div>
+          <h3>Experiments</h3>
+          <p>Explore hands-on interactive virtual chemistry labs.</p>
+        </div>
+        <div class="feature-card" onclick="navigateTo('periodic')">
+          <div class="feature-icon">⚛️</div>
+          <h3>Elements</h3>
+          <p>Full interactive periodic table with 118 elements.</p>
+        </div>
+        <div class="feature-card" onclick="navigateTo('quiz')">
+          <div class="feature-icon">📝</div>
+          <h3>Quiz</h3>
+          <p>Test your knowledge with our built-in chemistry quizzes.</p>
+        </div>
+        <div class="feature-card" onclick="navigateTo('progress')">
+          <div class="feature-icon">📊</div>
+          <h3>Progress</h3>
+          <p>Track your learning journey and quiz scores.</p>
         </div>
       </div>
 
-    </main>
+      <h3 class="sec-title" style="margin-top: 2rem;">✨ Featured Experiments</h3>
+      <div class="experiments-grid" id="experimentsGrid"></div>
+    </div>
 
-    <!-- ========== BOTTOM NAV ========== -->
-    <nav class="bottom-nav">
-      <div class="bottom-nav-items">
-        <div class="bottom-nav-item active" data-section="dashboard"    onclick="showSection('dashboard');    setActiveBottomNav(this)"><span>🏠</span><span>Lab</span></div>
-        <div class="bottom-nav-item"        data-section="experiments"  onclick="showSection('experiments');  setActiveBottomNav(this)"><span>🧪</span><span>Experiments</span></div>
-        <div class="bottom-nav-item"        data-section="periodic"     onclick="showSection('periodic');     setActiveBottomNav(this)"><span>⚛️</span><span>Elements</span></div>
-        <div class="bottom-nav-item"        data-section="quiz"         onclick="showSection('quiz');         setActiveBottomNav(this)"><span>📝</span><span>Quiz</span></div>
-        <div class="bottom-nav-item"        data-section="progress"     onclick="showSection('progress');     setActiveBottomNav(this); renderProgressSection()"><span>📊</span><span>Progress</span></div>
+    <div id="page-experiments" class="page">
+      <h2 class="sec-title">Experiments</h2>
+
+      <input
+        type="text"
+        class="search-box"
+        id="experimentSearch"
+        placeholder="Search experiments..."
+        oninput="filterExperiments()"
+      >
+
+      <div class="filter-tabs">
+        <div class="filter-tab active" data-filter="all"          onclick="setDifficultyFilter('all')">All</div>
+        <div class="filter-tab"        data-filter="beginner"     onclick="setDifficultyFilter('beginner')">Beginner</div>
+        <div class="filter-tab"        data-filter="intermediate" onclick="setDifficultyFilter('intermediate')">Intermediate</div>
+        <div class="filter-tab"        data-filter="advanced"     onclick="setDifficultyFilter('advanced')">Advanced</div>
       </div>
-    </nav>
 
-  </div><!-- end .app-container -->
+      <div class="experiments-grid" id="experimentsGridFiltered"></div>
+    </div>
+
+    <div id="page-experimentDetail" class="page">
+      <div class="experiment-detail" id="experimentDetailContent"></div>
+    </div>
+
+    <div id="page-simulation" class="page">
+      <div class="experiment-detail">
+        <div class="back-btn" onclick="navigateTo('experimentDetail')">← Back to Experiment</div>
+        <h2 class="sec-title">Acid-Base Titration Simulation</h2>
+
+        <div class="simulation-container">
+          <div class="lab-equipment">
+            <div class="burette-container">
+              <div class="burette">
+                <div class="burette-liquid" id="buretteLiquid"></div>
+                <div class="drip" id="drip"></div>
+                <div class="burette-tip"></div>
+              </div>
+            </div>
+
+            <div class="beaker">
+              <div class="beaker-liquid" id="beakerLiquid"></div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="slider-container">
+              <div class="slider-label">
+                <span>Volume of NaOH added</span>
+                <span id="volumeDisplay">0 mL</span>
+              </div>
+              <input type="range" min="0" max="50" value="0" class="slider" id="volumeSlider">
+            </div>
+
+            <div class="results">
+              <div class="result-card">
+                <div class="result-label">Current pH</div>
+                <div class="result-value" id="phDisplay">2.00</div>
+              </div>
+              <div class="result-card">
+                <div class="result-label">Color</div>
+                <div class="result-value" id="colorDisplay" style="font-size: 1.25rem;">Colorless</div>
+              </div>
+              <div class="result-card">
+                <div class="result-label">Status</div>
+                <div class="result-value" id="statusDisplay" style="font-size: 1rem;">In Progress</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-quiz" class="page">
+      <div class="quiz-container">
+        <h2 class="sec-title" style="margin-bottom: 2rem;">Chemistry Quiz</h2>
+        <div id="quizQuestions"></div>
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+        <div id="scoreDisplay"></div>
+      </div>
+    </div>
+
+    <div id="page-periodic" class="page">
+      <div style="max-width: 1400px;">
+        <h2 class="sec-title">Periodic Table of Elements</h2>
+        <p style="color: var(--text-soft); margin-bottom: 1.5rem;">
+          Click on any element to view detailed information
+        </p>
+        <div class="periodic-table" id="periodicTable"></div>
+      </div>
+    </div>
+
+    <div id="page-progress" class="page">
+      <h2 class="sec-title" style="margin-bottom: 2rem;">My Progress</h2>
+      <div id="progressContent"></div>
+    </div>
+
+    <div class="element-detail-modal" id="elementModal">
+      <div class="element-detail-card">
+        <div class="element-detail-close" onclick="closeElementModal()">×</div>
+        <div class="element-detail-symbol" id="modalSymbol"></div>
+        <div class="element-detail-name"   id="modalName"></div>
+        <div class="element-detail-info"   id="modalInfo"></div>
+      </div>
+    </div>
+
+  </main>
 
 
-  <!-- ========== JAVASCRIPT ========== -->
   <script>
 
-    // ─── DATA: PERIODIC ELEMENTS (all 118) ───────────────────────────────────
+    // ─── DATA: PERIODIC ELEMENTS (all 118 - From OLD File) ───────────────────
     const periodicElements = [
       { number: 1,   symbol: 'H',  name: 'Hydrogen',      weight: '1.008',  category: 'nonmetal',        group: 1,  period: 1 },
       { number: 2,   symbol: 'He', name: 'Helium',        weight: '4.003',  category: 'noble-gas',       group: 18, period: 1 },
@@ -1256,7 +599,7 @@
     ];
 
 
-    // ─── DATA: EXPERIMENTS ────────────────────────────────────────────────────
+    // ─── DATA: EXPERIMENTS (10 from OLD file) ─────────────────────────────────
     const experiments = [
       {
         id: 1,
@@ -1491,54 +834,16 @@
       },
     ];
 
-
-    // ─── DATA: QUIZ QUESTIONS ─────────────────────────────────────────────────
+    // ─── DATA: QUIZ QUESTIONS (OLD file) ──────────────────────────────────────
     const quizQuestions = [
-      {
-        question: 'What is the pH of a neutral solution at 25°C?',
-        options: ['6', '7', '8', '14'],
-        correct: 1,
-      },
-      {
-        question: 'Which indicator turns pink in basic solutions?',
-        options: ['Methyl orange', 'Litmus', 'Phenolphthalein', 'Bromothymol blue'],
-        correct: 2,
-      },
-      {
-        question: 'In titration, equivalence point is when:',
-        options: ['Acid is completely neutralized', 'Solution turns pink', 'pH equals 7', 'Indicator has reacted'],
-        correct: 0,
-      },
-      {
-        question: 'What is the formula for hydrochloric acid?',
-        options: ['H2SO4', 'HNO3', 'HCl', 'CH3COOH'],
-        correct: 2,
-      },
-      {
-        question: 'pH 3 is how many times more acidic than pH 5?',
-        options: ['2 times', '10 times', '100 times', '1000 times'],
-        correct: 2,
-      },
-      {
-        question: 'Which of the following is a noble gas?',
-        options: ['Nitrogen', 'Oxygen', 'Helium', 'Hydrogen'],
-        correct: 2,
-      },
-      {
-        question: 'Which of the following is a noble gas?',
-        options: ['Nitrogen', 'Oxygen', 'Helium', 'Hydrogen'],
-        correct: 2,
-      },
-      {
-        question: 'What is the atomic number of Carbon?',
-        options: ['4', '6', '8', '12'],
-        correct: 1,
-      },
-      {
-        question: 'Which element is represented by the symbol Fe?',
-        options: ['Fluorine', 'Iron', 'Fermium', 'Francium'],
-        correct: 1,
-      },
+      { question: 'What is the pH of a neutral solution at 25°C?', options: ['6', '7', '8', '14'], correct: 1 },
+      { question: 'Which indicator turns pink in basic solutions?', options: ['Methyl orange', 'Litmus', 'Phenolphthalein', 'Bromothymol blue'], correct: 2 },
+      { question: 'In titration, equivalence point is when:', options: ['Acid is completely neutralized', 'Solution turns pink', 'pH equals 7', 'Indicator has reacted'], correct: 0 },
+      { question: 'What is the formula for hydrochloric acid?', options: ['H2SO4', 'HNO3', 'HCl', 'CH3COOH'], correct: 2 },
+      { question: 'pH 3 is how many times more acidic than pH 5?', options: ['2 times', '10 times', '100 times', '1000 times'], correct: 2 },
+      { question: 'Which of the following is a noble gas?', options: ['Nitrogen', 'Oxygen', 'Helium', 'Hydrogen'], correct: 2 },
+      { question: 'What is the atomic number of Carbon?', options: ['4', '6', '8', '12'], correct: 1 },
+      { question: 'Which element is represented by the symbol Fe?', options: ['Fluorine', 'Iron', 'Fermium', 'Francium'], correct: 1 },
     ];
 
 
@@ -1548,13 +853,15 @@
     let quizSubmitted         = false;
     let currentDifficultyFilter = 'all';
 
-
     // ─── INIT ─────────────────────────────────────────────────────────────────
     function initApp() {
       currentUser = localStorage.getItem('currentUser');
 
       const darkMode = localStorage.getItem('darkMode') === 'true';
-      if (darkMode) document.body.classList.add('dark-mode');
+      if (darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('themeIcon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      }
 
       if (currentUser) showLoggedIn(currentUser);
 
@@ -1563,29 +870,36 @@
       renderPeriodicTable();
     }
 
+    // ─── NAVIGATION (Adapted for Navbar) ──────────────────────────────────────
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('page-' + pageId);
+      if (target) target.classList.add('active');
 
-    // ─── NAVIGATION ───────────────────────────────────────────────────────────
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(sectionId).classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.toggle('active', l.dataset.page === pageId);
+      });
 
-      if (sectionId === 'progress')     renderProgressSection();
-      else if (sectionId === 'experiments') filterExperiments();
+      if (pageId === 'progress')     renderProgressSection();
+      else if (pageId === 'experiments') filterExperiments();
+      
+      window.scrollTo(0,0);
     }
 
-    function setActiveBottomNav(element) {
-      document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
-      if (element) element.classList.add('active');
+    // ─── THEME TOGGLE ─────────────────────────────────────────────────────────
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('darkMode', !isDark);
+      
+      const icon = document.getElementById('themeIcon');
+      if (!isDark) {
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      } else {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+      }
     }
-
-
-    // ─── THEME ────────────────────────────────────────────────────────────────
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDark);
-    }
-
 
     // ─── AUTH ─────────────────────────────────────────────────────────────────
     function login() {
@@ -1595,17 +909,10 @@
       currentUser = name;
       localStorage.setItem('currentUser', name);
 
-      // Create user data if first time
       if (!localStorage.getItem(`user_${name}_data`)) {
-        const userData = {
-          name: name,
-          completedExperiments: [],
-          quizScore: null,
-          quizCompleted: false,
-        };
+        const userData = { name: name, completedExperiments: [], quizScore: null, quizCompleted: false };
         localStorage.setItem(`user_${name}_data`, JSON.stringify(userData));
       }
-
       showLoggedIn(name);
     }
 
@@ -1619,9 +926,9 @@
 
     function showLoggedIn(name) {
       document.getElementById('loginForm').style.display    = 'none';
-      document.getElementById('loggedInUser').style.display = 'block';
+      document.getElementById('loggedInUser').style.display = 'flex';
+      document.getElementById('displayStudentName').textContent = name;
     }
-
 
     // ─── USER DATA HELPERS ────────────────────────────────────────────────────
     function getUserData() {
@@ -1636,7 +943,7 @@
     }
 
 
-    // ─── PERIODIC TABLE ───────────────────────────────────────────────────────
+    // ─── PERIODIC TABLE (Old Logic, New Theme integration) ────────────────────
     function renderPeriodicTable() {
       const table = document.getElementById('periodicTable');
       const grid  = [];
@@ -1658,7 +965,6 @@
           }
         }
       }
-
       table.innerHTML = grid.join('');
     }
 
@@ -1681,30 +987,12 @@
       document.getElementById('modalSymbol').textContent = element.symbol;
       document.getElementById('modalName').textContent   = element.name;
       document.getElementById('modalInfo').innerHTML = `
-        <div class="element-info-item">
-          <div class="element-info-label">Atomic Number</div>
-          <div class="element-info-value">${element.number}</div>
-        </div>
-        <div class="element-info-item">
-          <div class="element-info-label">Atomic Weight</div>
-          <div class="element-info-value">${element.weight}</div>
-        </div>
-        <div class="element-info-item">
-          <div class="element-info-label">Group</div>
-          <div class="element-info-value">${element.group}</div>
-        </div>
-        <div class="element-info-item">
-          <div class="element-info-label">Period</div>
-          <div class="element-info-value">${element.period}</div>
-        </div>
-        <div class="element-info-item" style="grid-column: 1 / -1;">
-          <div class="element-info-label">Category</div>
-          <div class="element-info-value" style="font-size: 1rem;">
-            ${categoryNames[element.category] || 'Other'}
-          </div>
-        </div>
+        <div class="element-info-item"><div class="element-info-label">Atomic Number</div><div class="element-info-value">${element.number}</div></div>
+        <div class="element-info-item"><div class="element-info-label">Atomic Weight</div><div class="element-info-value">${element.weight}</div></div>
+        <div class="element-info-item"><div class="element-info-label">Group</div><div class="element-info-value">${element.group}</div></div>
+        <div class="element-info-item"><div class="element-info-label">Period</div><div class="element-info-value">${element.period}</div></div>
+        <div class="element-info-item" style="grid-column: 1 / -1;"><div class="element-info-label">Category</div><div class="element-info-value" style="font-size: 1rem;">${categoryNames[element.category] || 'Other'}</div></div>
       `;
-
       document.getElementById('elementModal').classList.add('active');
     }
 
@@ -1712,14 +1000,10 @@
       document.getElementById('elementModal').classList.remove('active');
     }
 
-
-    // ─── EXPERIMENTS ──────────────────────────────────────────────────────────
+    // ─── EXPERIMENTS (Old Logic) ──────────────────────────────────────────────
     function renderExperiments() {
-      // Dashboard: show first 3 featured
       const grid = document.getElementById('experimentsGrid');
       grid.innerHTML = experiments.slice(0, 3).map(exp => experimentCardHTML(exp)).join('');
-
-      // Experiments page: show all, filtered
       filterExperiments();
     }
 
@@ -1734,7 +1018,7 @@
             </div>
             <h3 class="experiment-title">${exp.title}</h3>
             <p class="experiment-description">${exp.description}</p>
-            <button class="btn btn-primary">Open Experiment</button>
+            <button class="btn btn-primary btn-sm">Open Experiment</button>
           </div>
         </div>
       `;
@@ -1746,17 +1030,15 @@
       if (!filteredGrid) return;
 
       const filtered = experiments.filter(exp => {
-        const matchesSearch = exp.title.toLowerCase().includes(searchTerm) ||
-                              exp.description.toLowerCase().includes(searchTerm);
+        const matchesSearch = exp.title.toLowerCase().includes(searchTerm) || exp.description.toLowerCase().includes(searchTerm);
         const matchesDiff   = currentDifficultyFilter === 'all' || exp.difficulty === currentDifficultyFilter;
         return matchesSearch && matchesDiff;
       });
 
       if (filtered.length === 0) {
-        filteredGrid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 3rem;">No experiments found.</p>';
+        filteredGrid.innerHTML = '<p style="color: var(--text-soft); text-align: center; padding: 3rem;">No experiments found.</p>';
         return;
       }
-
       filteredGrid.innerHTML = filtered.map(exp => experimentCardHTML(exp)).join('');
     }
 
@@ -1773,14 +1055,14 @@
       if (!exp) return;
 
       document.getElementById('experimentDetailContent').innerHTML = `
-        <div class="back-btn" onclick="showSection('experiments'); setActiveBottomNav(document.querySelector('[data-section=experiments]'))">← Back</div>
+        <div class="back-btn" onclick="navigateTo('experiments')">← Back to Experiments</div>
         <div class="experiment-meta" style="margin-bottom: 1rem;">
           <span class="difficulty-badge difficulty-${exp.difficulty}">${exp.difficulty}</span>
           <span class="experiment-duration">⏱️ ${exp.duration}</span>
         </div>
         <h2>${exp.title}</h2>
         <h3>Aim</h3>
-        <p style="color: var(--text-secondary); line-height: 1.8;">${exp.aim}</p>
+        <p style="color: var(--text-soft); line-height: 1.8;">${exp.aim}</p>
         <div class="caution-box">
           <h3>⚠️ Safety Cautions</h3>
           <ul>${exp.cautions.map(c => `<li>${c}</li>`).join('')}</ul>
@@ -1795,14 +1077,12 @@
         </div>
         ${exp.hasSimulation ? '<button class="btn btn-primary" onclick="startSimulation()">Start Simulation</button>' : ''}
       `;
-
-      showSection('experimentDetail');
+      navigateTo('experimentDetail');
     }
 
-
-    // ─── TITRATION SIMULATION ─────────────────────────────────────────────────
+    // ─── TITRATION SIMULATION (Old Logic) ─────────────────────────────────────
     function startSimulation() {
-      showSection('simulation');
+      navigateTo('simulation');
       setupTitration();
     }
 
@@ -1815,16 +1095,14 @@
         const volume = parseFloat(e.target.value);
         updateTitration(volume);
 
-        // Trigger drip animation
         const drip = document.getElementById('drip');
         drip.classList.remove('active');
-        void drip.offsetWidth; // force reflow
+        void drip.offsetWidth; 
         drip.classList.add('active');
 
-        // Mark experiment complete at near-end point
         if (volume >= 45) {
           document.getElementById('statusDisplay').textContent  = 'Complete!';
-          document.getElementById('statusDisplay').style.color  = 'var(--success)';
+          document.getElementById('statusDisplay').style.color  = '#10b981';
 
           if (currentUser) {
             const userData = getUserData();
@@ -1842,20 +1120,16 @@
 
     function updateTitration(volume) {
       document.getElementById('volumeDisplay').textContent = `${volume} mL`;
-
       const ph = 2 + (volume * 0.14);
       document.getElementById('phDisplay').textContent = ph.toFixed(2);
 
-      // Burette liquid drops as NaOH is added
       const buretteHeight = (50 - volume) / 50 * 400;
       document.getElementById('buretteLiquid').style.height = `${buretteHeight}px`;
 
-      // Beaker liquid rises
       const beakerHeight  = 50 + (volume * 2);
       const beakerLiquid  = document.getElementById('beakerLiquid');
       beakerLiquid.style.height = `${beakerHeight}px`;
 
-      // Colour change at equivalence point (pH 8.2)
       if (ph >= 8.2) {
         beakerLiquid.classList.add('pink');
         document.getElementById('colorDisplay').textContent  = 'Pink';
@@ -1867,8 +1141,7 @@
       }
     }
 
-
-    // ─── QUIZ ─────────────────────────────────────────────────────────────────
+    // ─── QUIZ (Old Logic) ─────────────────────────────────────────────────────
     function renderQuiz() {
       const container = document.getElementById('quizQuestions');
       userAnswers = new Array(quizQuestions.length).fill(-1);
@@ -1893,28 +1166,19 @@
 
     function selectAnswer(questionIndex, optionIndex) {
       userAnswers[questionIndex] = optionIndex;
-
       const options = document.querySelectorAll('.question-card')[questionIndex].querySelectorAll('.option');
       options.forEach(opt => opt.classList.remove('selected'));
       options[optionIndex].classList.add('selected');
     }
 
     function submitQuiz() {
-      if (quizSubmitted) {
-        alert('You have already submitted this quiz!');
-        return;
-      }
-
-      if (userAnswers.includes(-1)) {
-        alert('Please answer all questions before submitting!');
-        return;
-      }
+      if (quizSubmitted) { alert('You have already submitted this quiz!'); return; }
+      if (userAnswers.includes(-1)) { alert('Please answer all questions before submitting!'); return; }
 
       let correct = 0;
       quizQuestions.forEach((q, index) => {
         if (userAnswers[index] === q.correct) correct++;
       });
-
       const percentage = (correct / quizQuestions.length * 100).toFixed(1);
 
       document.getElementById('scoreDisplay').innerHTML = `
@@ -1930,7 +1194,6 @@
       quizSubmitted = true;
       document.querySelectorAll('.option').forEach(opt => { opt.style.pointerEvents = 'none'; });
 
-      // Save quiz score
       if (currentUser) {
         const userData = getUserData();
         if (userData) {
@@ -1941,19 +1204,18 @@
       }
     }
 
-
-    // ─── PROGRESS ─────────────────────────────────────────────────────────────
+    // ─── PROGRESS (Old Logic) ─────────────────────────────────────────────────
     function renderProgressSection() {
       const content = document.getElementById('progressContent');
 
       if (!currentUser) {
-        content.innerHTML = '<p style="color: var(--text-secondary);">Please log in to view your progress.</p>';
+        content.innerHTML = '<p style="color: var(--text-soft);">Please log in to view your progress.</p>';
         return;
       }
 
       const userData = getUserData();
       if (!userData) {
-        content.innerHTML = '<p style="color: var(--text-secondary);">No progress data available.</p>';
+        content.innerHTML = '<p style="color: var(--text-soft);">No progress data available.</p>';
         return;
       }
 
@@ -1996,7 +1258,6 @@
         ` : ''}
       `;
     }
-
 
     // ─── START ────────────────────────────────────────────────────────────────
     initApp();
