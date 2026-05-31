@@ -9,10 +9,8 @@
 
 ## Screenshots
 
-> *(Add 2–3 screenshots here. Drag and drop images directly into this file on GitHub.)*  
-> Suggested shots: Home page, an experiment page, the periodic table, the progress tracker.
-
----
+<img width="1919" height="1033" alt="Screenshot 2026-05-31 132058" src="https://github.com/user-attachments/assets/3627ce2e-ffab-49ae-8a1a-8280c7aa840a" />
+<img width="1919" height="1010" alt="Screenshot 2026-05-31 132118" src="https://github.com/user-attachments/assets/d7092815-f5e2-488b-a6cc-6f3efe0fd9bd" />
 
 ## What It Does
 
