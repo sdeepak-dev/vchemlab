@@ -74,11 +74,12 @@ Built entirely with vanilla HTML, CSS, and JavaScript.
 
 ```
 vchemlab/
-├── index.html          ← markup and page structure
-├── style.css           ← all styles, variables, responsive rules
-├── app.js              ← all data (40 experiments, 20 apparatus, 118 elements) + app logic
+├── index.html              ← markup and page structure
+├── style.css               ← all styles, variables, responsive rules
+├── app.js                  ← all data (40 experiments, 20 apparatus, 118 elements) + app logic
 ├── images/
-│   └── experiments/    ← category banner images (c9.png, c10.png, ug.png, pg.png)
+│   ├── apparatus/          ← 20 apparatus PNG images (beaker.png, burette.png, ...)
+│   └── experiments/        ← category banner images (c9.png, c10.png, ug.png, pg.png)
 └── README.md
 ```
 
