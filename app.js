@@ -2,10 +2,7 @@
    VChemLab — Application Logic
    app.js
    ============================================= */
-
 // ── Category-based experiment card images ──
-// Keys: category id OR experiment id (experiment id takes priority)
-// Add images to images/experiments/ folder in your repo.
 const expImages = {
   'class9':    'images/experiments/c9.png',
   'class11':   'images/experiments/c10.png',
@@ -18,30 +15,27 @@ function _getExpImagePath(expId, catId) {
 }
 
 // ── Apparatus image paths ──
-// Priority: 1) your own local PNG  2) SVG illustration
-// To use local images: add files to images/apparatus/ in your repo,
-// then uncomment and fill in the paths below.
 const apparatusLocalImages = {
-  // 'beaker':             'images/apparatus/beaker.png',
-  // 'burette':            'images/apparatus/burette.png',
-  // 'conical-flask':      'images/apparatus/conical-flask.png',
-  // 'pipette':            'images/apparatus/pipette.png',
-  // 'test-tube':          'images/apparatus/test-tube.png',
-  // 'bunsen-burner':      'images/apparatus/bunsen-burner.png',
-  // 'round-bottom-flask': 'images/apparatus/round-bottom-flask.png',
-  // 'measuring-cylinder': 'images/apparatus/measuring-cylinder.png',
-  // 'dropper':            'images/apparatus/dropper.png',
-  // 'thermometer':        'images/apparatus/thermometer.png',
-  // 'tripod-stand':       'images/apparatus/tripod-stand.png',
-  // 'clamp-stand':        'images/apparatus/clamp-stand.png',
-  // 'funnel':             'images/apparatus/funnel.png',
-  // 'evaporating-dish':   'images/apparatus/evaporating-dish.png',
-  // 'watch-glass':        'images/apparatus/watch-glass.png',
-  // 'spatula':            'images/apparatus/spatula.png',
-  // 'condenser':          'images/apparatus/condenser.png',
-  // 'separating-funnel':  'images/apparatus/separating-funnel.png',
-  // 'dropper-bottle':     'images/apparatus/dropper-bottle.png',
-  // 'wire-gauze':         'images/apparatus/wire-gauze.png',
+  'beaker':             'images/apparatus/beaker.png',
+  'burette':            'images/apparatus/burette.png',
+  'conical-flask':      'images/apparatus/conical-flask.png',
+  'pipette':            'images/apparatus/pipette.png',
+  'test-tube':          'images/apparatus/test-tube.png',
+  'bunsen-burner':      'images/apparatus/bunsen-burner.png',
+  'round-bottom-flask': 'images/apparatus/round-bottom-flask.png',
+  'measuring-cylinder': 'images/apparatus/measuring-cylinder.png',
+  'dropper':            'images/apparatus/dropper.png',
+  'thermometer':        'images/apparatus/thermometer.png',
+  'tripod-stand':       'images/apparatus/tripod-stand.png',
+  'clamp-stand':        'images/apparatus/clamp-stand.png',
+  'funnel':             'images/apparatus/funnel.png',
+  'evaporating-dish':   'images/apparatus/evaporating-dish.png',
+  'watch-glass':        'images/apparatus/watch-glass.png',
+  'spatula':            'images/apparatus/spatula.png',
+  'condenser':          'images/apparatus/condenser.png',
+  'separating-funnel':  'images/apparatus/separating-funnel.png',
+  'dropper-bottle':     'images/apparatus/dropper-bottle.png',
+  'wire-gauze':         'images/apparatus/wire-gauze.png',
 };
 
 function getApparatusImg(app) {
